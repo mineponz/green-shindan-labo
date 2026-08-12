@@ -1,0 +1,158 @@
+---
+import PlantIcon from './PlantIcon.astro';
+import type { Plant } from '../lib/plants.ts';
+
+/**
+ * 植物1種のカード。
+ *
+ * `variant="result"` は診断結果として出す詳細版。**結果カードもビルド時に5種すべてを
+ * HTMLへ書き出しておき**、クライアント側では表示・非表示と並び順を切り替えるだけにする。
+ * こうしないとクローラーには空のページに見える
+ * （vault: 3-resources/knowledge/20260811-client-render-kills-seo.md）。
+ * innerHTML を使わないので、Astroのスコープ付きスタイルもそのまま効く
+ * （同: 20260811-astro-scoped-style-innerhtml.md）。
+ */
+interface Props {
+  plant: Plant;
+  variant?: 'list' | 'result';
+}
+
+const { plant, variant = 'list' } = Astro.props;
+const href = `/plants/${plant.slug}/`;
+---
+
+<article class={`plant-card plant-card-${variant}`}>
+  <div class="head">
+    <PlantIcon slug={plant.slug} size={variant === 'result' ? 40 : 32} />
+    <div class="names">
+      <h3 class="name">
+        {variant === 'result' ? plant.name : <a href={href}>{plant.name}</a>}
+      </h3>
+      <p class="scientific">{plant.scientificName}</p>
+    </div>
+  </div>
+
+  <p class="summary">{plant.summary}</p>
+
+  {variant === 'result' && (
+    <ul class="strengths">
+      {plant.strengths.map((s) => (
+        <li>{s}</li>
+      ))}
+    </ul>
+  )}
+
+  <p class="for-who"><span class="for-who-label">向いている人</span>{plant.forWho}</p>
+
+  {plant.petSafe ? (
+    <p class="pet-note pet-safe">
+      犬・猫にとって毒性が低いとされている種類です（それでも食べさせないに越したことはありません）。
+    </p>
+  ) : (
+    <p class="pet-note pet-warn">
+      <span class="pet-label">ペット注意</span>{plant.petNote}
+    </p>
+  )}
+
+  <p class="more"><a class="more-link" href={href}>{plant.name}の育て方をくわしく見る</a></p>
+</article>
+
+<style>
+  .plant-card {
+    /* 強調は「枠線」のみに統一（枠線＋濃いシャドウの二重使いは重くなるので避ける） */
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-2);
+  }
+  .plant-card-result {
+    padding: var(--space-3);
+  }
+
+  .head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-1);
+  }
+
+  .names { min-width: 0; }
+
+  .name {
+    margin: 0;
+    font-size: var(--text-lg);
+    line-height: 1.4;
+  }
+  .name a { text-decoration: none; }
+  .name a:hover { text-decoration: underline; }
+
+  .scientific {
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--text-sm);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .summary {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-base);
+  }
+
+  .strengths {
+    margin: 0 0 var(--space-2);
+    padding: 0;
+    list-style: none;
+  }
+  .strengths li {
+    position: relative;
+    padding-left: var(--space-3);
+    font-size: var(--text-base);
+  }
+  .strengths li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .for-who {
+    margin: 0 0 var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--muted);
+  }
+  .for-who-label {
+    display: inline-block;
+    margin-right: var(--space-1);
+    padding: 0 var(--space-1);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .pet-note {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-sm);
+    line-height: 1.7;
+  }
+  .pet-safe { color: var(--muted); }
+  .pet-warn {
+    /* セマンティック警告色。CTA（--accent）とは役割を分ける */
+    color: var(--warn);
+    background: var(--warn-weak);
+    border-radius: 4px;
+    padding: var(--space-1);
+  }
+  .pet-label {
+    display: inline-block;
+    margin-right: var(--space-1);
+    font-weight: 700;
+  }
+
+  .more { margin: 0; }
+  .more-link {
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+</style>

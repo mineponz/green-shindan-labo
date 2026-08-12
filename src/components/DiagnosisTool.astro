@@ -1,0 +1,457 @@
+---
+import PlantCard from './PlantCard.astro';
+import { PLANTS, QUESTIONS } from '../lib/plants.ts';
+
+/**
+ * 観葉植物の診断ツール。
+ *
+ * 設計方針:
+ * - 設問（QUESTIONS）も結果カード（PLANTS）も **ビルド時にHTMLへ書き出す**。
+ *   クライアントJSがやるのは「どの結果カードを見せるか」「どの順に並べるか」の切り替えだけ。
+ *   一覧や本文をJSのinnerHTMLで描くとクローラーには空ページに見えるため
+ *   （vault: 3-resources/knowledge/20260811-client-render-kills-seo.md）、この分担を守る。
+ * - innerHTML は使わない（textContent と hidden 属性のみ）。XSSの余地を作らず、
+ *   Astroのスコープ付きCSSもそのまま効く（同: 20260811-astro-scoped-style-innerhtml.md）。
+ * - 回答はサーバーへ送らない。保存するとしても localStorage（このブラウザの中）だけ。
+ */
+---
+
+<section class="diagnosis" id="diagnosis" aria-labelledby="diagnosis-title">
+  <h2 id="diagnosis-title">4つの質問で診断する</h2>
+  <p class="privacy-note">
+    回答はこのブラウザの中だけで処理していて、サーバーには送っていません。
+    次に来たときのために、最後の回答だけこの端末に保存します。
+  </p>
+
+  <form class="quiz" id="diagnosis-form" novalidate>
+    {QUESTIONS.map((question) => (
+      <fieldset class="question">
+        <legend class="question-title">
+          <span class="question-number">Q{question.number}</span>
+          {question.title}
+        </legend>
+        <div class="options">
+          {question.options.map((option) => (
+            <label class="option">
+              <input type="radio" name={question.key} value={option.value} />
+              <span class="option-body">
+                <span class="option-label">{option.label}</span>
+                <span class="option-hint">{option.hint}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    ))}
+
+    <p class="form-error" id="diagnosis-error" role="alert" hidden>
+      まだ答えていない質問があります。4つすべてを選んでください。
+    </p>
+
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">診断する</button>
+      <button type="button" class="btn btn-outline" id="diagnosis-reset">選び直す</button>
+    </div>
+  </form>
+
+  <div class="results" id="diagnosis-results" hidden>
+    <h3 class="results-title" id="diagnosis-results-title" tabindex="-1">
+      <span class="results-badge">診断結果</span>
+      あなたの部屋に合いそうなのは…
+    </h3>
+    <p class="restored-note" id="diagnosis-restored" hidden>
+      前回の診断結果を表示しています。選び直すこともできます。
+    </p>
+    <p class="your-answers" id="diagnosis-answers"></p>
+
+    <div class="result-cards">
+      {PLANTS.map((plant) => (
+        <div class="result-slot" data-plant-slug={plant.slug} hidden>
+          <p class="rank">
+            <span class="rank-badge rank-best">いちばんのおすすめ</span>
+            <span class="rank-badge rank-also">こちらも合います</span>
+          </p>
+          <PlantCard plant={plant} variant="result" />
+        </div>
+      ))}
+    </div>
+
+    <p class="disclaimer">
+      診断は、このサイトが各植物に付けている性質（耐陰性・乾燥への強さ・虫のつきにくさ・見ばえ・
+      ペットへの安全性）と回答の相性を点数にして選んでいます。実際の育ち方は置き場所や季節でも
+      変わるので、あくまで一鉢目を選ぶときの目安としてどうぞ。
+    </p>
+  </div>
+</section>
+
+<script>
+  import {
+    QUESTIONS,
+    answerLabel,
+    parseAnswers,
+    recommendPlants,
+    type DiagnosisAnswers,
+  } from '../lib/plants.ts';
+
+  const LOG = '[diagnosis]';
+  const STORAGE_KEY = 'green-shindan-labo:last-answers';
+
+  const form = document.getElementById('diagnosis-form') as HTMLFormElement | null;
+  const results = document.getElementById('diagnosis-results');
+  const resultsTitle = document.getElementById('diagnosis-results-title');
+  const answersLine = document.getElementById('diagnosis-answers');
+  const errorLine = document.getElementById('diagnosis-error');
+  const restoredNote = document.getElementById('diagnosis-restored');
+  const resetButton = document.getElementById('diagnosis-reset');
+  const slots = Array.from(
+    document.querySelectorAll<HTMLElement>('.result-slot[data-plant-slug]')
+  );
+
+  if (!form || !results || !answersLine || !errorLine || slots.length === 0) {
+    // 静的HTMLは出ているので、JSが動かなくてもページ自体は読める（結果だけ出ない）
+    console.warn(LOG, '必要な要素が見つからないため診断ツールを初期化しませんでした', {
+      form: !!form,
+      results: !!results,
+      answersLine: !!answersLine,
+      errorLine: !!errorLine,
+      slots: slots.length,
+    });
+  } else {
+    /** フォームの選択状態を読み、4問そろっていれば回答を返す */
+    function readAnswers(): DiagnosisAnswers | null {
+      const data = new FormData(form as HTMLFormElement);
+      const raw: Record<string, unknown> = {};
+      for (const question of QUESTIONS) {
+        const value = data.get(question.key);
+        if (typeof value === 'string') raw[question.key] = value;
+      }
+      return parseAnswers(raw);
+    }
+
+    /** 結果を描画する。DOMは作らず、静的に出力済みのカードの表示・並び順だけを変える */
+    function render(answers: DiagnosisAnswers, restored: boolean): void {
+      const picks = recommendPlants(answers);
+      const pickedSlugs = picks.map((p) => p.plant.slug);
+
+      answersLine!.textContent = QUESTIONS.map(
+        (q) => `${q.summaryLabel}: ${answerLabel(q.key, answers[q.key])}`
+      ).join(' ／ ');
+
+      for (const slot of slots) {
+        const index = pickedSlugs.indexOf(slot.dataset.plantSlug ?? '');
+        if (index === -1) {
+          slot.hidden = true;
+          delete slot.dataset.rank;
+          slot.style.removeProperty('order');
+        } else {
+          slot.hidden = false;
+          slot.dataset.rank = picks[index].rank;
+          // DOMを動かさずCSSのorderだけで並べ替える（要素の作り直しをしない）
+          slot.style.setProperty('order', String(index));
+        }
+      }
+
+      if (restoredNote) restoredNote.hidden = !restored;
+      results!.hidden = false;
+      errorLine!.hidden = true;
+
+      console.debug(LOG, '結果を描画しました', {
+        answers,
+        picks: picks.map((p) => ({ slug: p.plant.slug, score: p.score, rank: p.rank })),
+        restored,
+      });
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const answers = readAnswers();
+
+      if (!answers) {
+        errorLine!.hidden = false;
+        results!.hidden = true;
+        console.warn(LOG, '未回答の設問があるため診断しませんでした');
+        return;
+      }
+
+      render(answers, false);
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
+      } catch (error) {
+        // プライベートブラウズ等で保存できないことがある。診断自体は続けられる
+        console.warn(LOG, '回答をこの端末に保存できませんでした', error);
+      }
+
+      resultsTitle?.focus();
+      resultsTitle?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    resetButton?.addEventListener('click', () => {
+      (form as HTMLFormElement).reset();
+      results!.hidden = true;
+      errorLine!.hidden = true;
+      for (const slot of slots) {
+        slot.hidden = true;
+        delete slot.dataset.rank;
+        slot.style.removeProperty('order');
+      }
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (error) {
+        console.warn(LOG, '保存した回答を消せませんでした', error);
+      }
+      console.debug(LOG, '選び直しのためリセットしました');
+      form!.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    /** 前回の回答があれば復元する（保存先はこの端末のlocalStorageのみ） */
+    (function restore(): void {
+      let stored: string | null = null;
+      try {
+        stored = localStorage.getItem(STORAGE_KEY);
+      } catch (error) {
+        console.warn(LOG, '保存した回答を読めませんでした', error);
+        return;
+      }
+      if (!stored) return;
+
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(stored);
+      } catch (error) {
+        console.warn(LOG, '保存された回答が壊れていたので捨てます', error);
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch {
+          /* 消せなくても実害はない */
+        }
+        return;
+      }
+
+      // 保存値も外部入力として扱い、必ず検査してから使う
+      const answers = parseAnswers(parsed);
+      if (!answers) {
+        console.warn(LOG, '保存された回答が現在の設問と合わないので捨てます', parsed);
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch {
+          /* 同上 */
+        }
+        return;
+      }
+
+      for (const question of QUESTIONS) {
+        const input = form!.querySelector<HTMLInputElement>(
+          `input[name="${question.key}"][value="${answers[question.key]}"]`
+        );
+        if (input) input.checked = true;
+      }
+      render(answers, true);
+      console.debug(LOG, '前回の回答を復元しました', answers);
+    })();
+  }
+</script>
+
+<style>
+  .diagnosis {
+    /* 診断ツールはこのサイトの主役。淡い背景でゾーンとして切り出す（枠線は使わない） */
+    background: var(--accent-weak);
+    border-radius: var(--radius);
+    padding: var(--space-3) var(--space-2);
+    margin-bottom: var(--space-6);
+  }
+
+  .diagnosis h2 {
+    margin-top: 0;
+  }
+
+  .privacy-note {
+    margin: 0 0 var(--space-3);
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+
+  .question {
+    margin: 0 0 var(--space-3);
+    padding: 0;
+    border: none;
+  }
+
+  .question-title {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    padding: 0;
+    margin-bottom: var(--space-1);
+    font-size: var(--text-base);
+    font-weight: 700;
+  }
+
+  .question-number {
+    /* 補助強調の色。CTA（--accent）とは役割を分ける */
+    color: var(--highlight);
+    font-size: var(--text-sm);
+  }
+
+  .options {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+  .option:hover {
+    border-color: var(--accent);
+  }
+  .option:has(input:checked) {
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+  .option input {
+    margin-top: 0.45rem;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+  }
+  .option:has(input:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .option-body {
+    display: flex;
+    flex-direction: column;
+  }
+  .option-label {
+    font-weight: 600;
+    line-height: 1.6;
+  }
+  .option-hint {
+    color: var(--muted);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+  }
+
+  .form-error {
+    margin: 0 0 var(--space-2);
+    color: var(--danger);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  .btn {
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: var(--text-base);
+    font-weight: 700;
+    line-height: 1.8;
+    cursor: pointer;
+  }
+  /* 主要アクション: 高コントラストの塗りつぶし */
+  .btn-primary {
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    color: var(--surface);
+  }
+  .btn-primary:hover { filter: brightness(1.1); }
+  /* 副次アクション: 枠線のみ */
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  .results {
+    margin-top: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border);
+  }
+
+  .results-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1);
+    margin-top: 0;
+    margin-bottom: var(--space-1);
+  }
+  .results-title:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  .results-badge {
+    padding: 0 var(--space-1);
+    background: var(--highlight-weak);
+    border-radius: 4px;
+    color: var(--highlight);
+    font-size: var(--text-sm);
+    font-weight: 700;
+  }
+
+  .restored-note,
+  .your-answers {
+    margin: 0 0 var(--space-2);
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+
+  .result-cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .rank {
+    margin: 0 0 var(--space-1);
+  }
+  /* 順位バッジは両方を静的に出しておき、data-rank で出し分ける（DOMを作り直さない） */
+  .rank-badge {
+    display: none;
+    padding: 0 var(--space-1);
+    border-radius: 4px;
+    font-size: var(--text-sm);
+    font-weight: 700;
+  }
+  .result-slot[data-rank="best"] .rank-best {
+    display: inline-block;
+    background: var(--highlight);
+    color: var(--surface);
+  }
+  .result-slot[data-rank="also"] .rank-also {
+    display: inline-block;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+  }
+
+  .disclaimer {
+    margin: var(--space-3) 0 0;
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+
+  @media (min-width: 40rem) {
+    .diagnosis {
+      padding: var(--space-4) var(--space-3);
+    }
+    .options {
+      grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    }
+  }
+</style>

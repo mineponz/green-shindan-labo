@@ -1,0 +1,182 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DiagnosisTool from '../components/DiagnosisTool.astro';
+import HeroIllustration from '../components/HeroIllustration.astro';
+import PlantIcon from '../components/PlantIcon.astro';
+import { PLANTS } from '../lib/plants.ts';
+import { SITE_TITLE, SITE_URL } from '../consts.ts';
+
+/**
+ * トップページ。診断ツールを主役に置き、その下に5種の図鑑一覧を静的に並べる。
+ * 植物の情報そのものはビルド時にHTMLへ入っている（JSが無効でも読める）。
+ */
+
+// 画面に出している見出し・文言と完全に一致させたFAQ構造化データ。
+// 表示とJSON-LDがずれないよう、同じ配列から両方を描く。
+const faqs = [
+  {
+    question: '観葉植物の診断はどうやって選んでいますか？',
+    answer:
+      '日当たり・お世話にかけられる手間・重視したいこと・ペットの有無の4つの回答と、各植物の性質（耐陰性・乾燥への強さ・虫のつきにくさ・見ばえ・ペットへの安全性）の相性を点数にして、合計点の高い1〜2種をおすすめしています。',
+  },
+  {
+    question: '回答した内容はどこかに送信されますか？',
+    answer:
+      '送信していません。診断はブラウザの中だけで完結します。次に来たときのために、最後の回答だけをこの端末のブラウザに保存しています。',
+  },
+  {
+    question: 'ペットがいる場合はどうなりますか？',
+    answer:
+      'ペットが「いる」を選ぶと、誤食しても比較的安全とされる植物が優先されます。それ以外の植物が2番目に出ることもありますが、その場合はカードに誤食の注意書きを添えています。',
+  },
+];
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const itemListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: '紹介している観葉植物',
+  itemListElement: PLANTS.map((plant, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: plant.name,
+    url: new URL(`/plants/${plant.slug}/`, SITE_URL).href,
+  })),
+};
+---
+
+<BaseLayout>
+  <h1>4つの質問で、あなたの部屋に合う観葉植物が見つかる</h1>
+  <p class="lead">
+    観葉植物は「どれがおしゃれか」より「その部屋で育つか」で選ぶと失敗しません。
+    日当たり・お世話にかけられる手間・重視したいこと・ペットの有無の4つに答えると、
+    パキラ・モンステラ・サンスベリア・ポトス・ガジュマルの5種から相性のいいものをおすすめします。
+  </p>
+
+  <HeroIllustration />
+
+  <DiagnosisTool />
+
+  <h2 id="plants">紹介している観葉植物5種</h2>
+  <p>
+    どれも育てやすさで定評のある定番です。名前をおしても、診断してからでも、
+    それぞれの育て方・虫対策・飾り方を読めます。
+  </p>
+  <ul class="plant-grid">
+    {PLANTS.map((plant) => (
+      <li>
+        <a href={`/plants/${plant.slug}/`}>
+          <PlantIcon slug={plant.slug} size={40} />
+          <span class="plant-name">{plant.name}</span>
+          <span class="plant-summary">{plant.summary}</span>
+          {!plant.petSafe && <span class="plant-flag">ペットの誤食に注意</span>}
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <h2>よくある質問</h2>
+  <dl class="faq">
+    {faqs.map((faq) => (
+      <div class="faq-item">
+        <dt>{faq.question}</dt>
+        <dd>{faq.answer}</dd>
+      </div>
+    ))}
+  </dl>
+
+  <h2>{SITE_TITLE}について</h2>
+  <p>
+    観葉植物を買ってはみたものの、日当たりが合わずに枯らしてしまったり、
+    土からコバエが湧いてしまったり——というのは、けっこうよくある話です。
+    このサイトは「置きたい場所と、かけられる手間」から先に考えて、
+    そのうえで見ためを選ぶための小さな診断ツールです。
+  </p>
+  <p>
+    記事の中のAmazon商品リンクには、Amazonアソシエイト・プログラムのリンクが含まれています
+    （くわしくは<a href="/privacy/">プライバシーポリシー</a>をどうぞ）。
+  </p>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(itemListJsonLd)} is:inline />
+
+  <style>
+    .lead {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .plant-grid {
+      display: grid;
+      gap: var(--space-2);
+      grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .plant-grid a {
+      display: grid;
+      justify-items: start;
+      gap: var(--space-1);
+      height: 100%;
+      padding: var(--space-2);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: inherit;
+      text-decoration: none;
+    }
+    .plant-grid a:hover {
+      border-color: var(--accent);
+    }
+
+    .plant-name {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      line-height: 1.4;
+      color: var(--accent);
+    }
+    .plant-grid a:hover .plant-name {
+      text-decoration: underline;
+    }
+
+    .plant-summary {
+      font-size: var(--text-sm);
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .plant-flag {
+      padding: 0 var(--space-1);
+      background: var(--warn-weak);
+      border-radius: 4px;
+      color: var(--warn);
+      font-size: var(--text-sm);
+      font-weight: 600;
+    }
+
+    .faq {
+      margin: 0;
+    }
+    .faq-item + .faq-item {
+      margin-top: var(--space-2);
+    }
+    .faq dt {
+      font-weight: 700;
+    }
+    .faq dd {
+      margin: 0;
+      color: var(--muted);
+    }
+  </style>
+</BaseLayout>

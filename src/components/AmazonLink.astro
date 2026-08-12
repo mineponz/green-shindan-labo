@@ -1,0 +1,53 @@
+---
+import { AMAZON_ASSOCIATE_TAG } from '../consts';
+
+/**
+ * Amazonの検索結果ページへの誘導リンク。
+ *
+ * 特定商品（ASIN）ではなく検索キーワードにリンクしている。個別商品ページへの直リンクは
+ * 実在する正しいASINでないと誤った商品に誘導してしまうため、実物を確認せずASINを
+ * 記事に書くのは避けた（本人が実際に使う商品を選定したら、その記事内のリンクだけを
+ * `https://www.amazon.co.jp/dp/<実在のASIN>?tag=...` に差し替えることを推奨）。
+ * `AMAZON_ASSOCIATE_TAG` が本物のタグに差し替わるまでは、生成されるURLは
+ * 実在するがトラッキングされない（＝報酬が発生しない）リンクになる。
+ *
+ * ボタンは「副次アクション」の見た目（枠線＋淡い背景）にしている。ページの主要CTAは
+ * 診断ツールの「診断する」ボタンなので、そちらより弱くする（design.md の視覚的階層）。
+ */
+interface Props {
+  keyword: string;
+  label: string;
+}
+
+const { keyword, label } = Astro.props;
+const href = `https://www.amazon.co.jp/s?k=${encodeURIComponent(keyword)}&tag=${AMAZON_ASSOCIATE_TAG}`;
+---
+
+<a class="amazon-link" href={href} rel="nofollow noopener sponsored" target="_blank">
+  {label}
+  <span class="external" aria-hidden="true">↗</span>
+</a>
+
+<style>
+  .amazon-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin-bottom: var(--space-2);
+    padding: var(--space-1) var(--space-2);
+    background: var(--accent-weak);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: 1.6;
+    text-decoration: none;
+  }
+  .amazon-link:hover {
+    background: var(--accent);
+    color: var(--surface);
+  }
+  .external {
+    font-size: 0.9em;
+  }
+</style>
