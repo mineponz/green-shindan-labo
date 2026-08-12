@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  PET_SAFE_BONUS,
   PLANTS,
   QUESTIONS,
   SECOND_PICK_THRESHOLD,
@@ -108,9 +109,23 @@ test('QUESTIONS: 各設問の選択肢は2つ以上あり、valueが一意', () 
   }
 });
 
+test('Q3「重視したいこと」は 虫／映え／どちらも の3択', () => {
+  const priority = QUESTIONS.find((q) => q.key === 'priority');
+  assert.ok(priority, 'priority の設問が無い');
+  assert.deepEqual(
+    priority.options.map((o) => o.value),
+    ['pest', 'interior', 'both']
+  );
+  // 選択肢を足したらフォームに出す補足も必ず書く（空のヒントを出さない）
+  for (const option of priority.options) {
+    assert.ok(option.label.trim().length > 0 && option.hint.trim().length > 0);
+  }
+});
+
 test('answerLabel: 既知の値はラベルを返し、未知の値は空文字', () => {
   assert.equal(answerLabel('light', 'low'), 'あまり当たらない');
   assert.equal(answerLabel('pet', 'yes'), 'いる（誤食に注意したい）');
+  assert.equal(answerLabel('priority', 'both'), 'どちらも');
   assert.equal(answerLabel('light', 'nonsense'), '');
 });
 
@@ -118,13 +133,13 @@ test('answerLabel: 既知の値はラベルを返し、未知の値は空文字'
 
 const COMBINATIONS = allAnswerCombinations();
 
-test('allAnswerCombinations: 3×2×2×2=24通りを重複なく返す', () => {
-  assert.equal(COMBINATIONS.length, 24);
+test('allAnswerCombinations: 3×2×3×2=36通りを重複なく返す', () => {
+  assert.equal(COMBINATIONS.length, 36);
   const keys = COMBINATIONS.map((c) => `${c.light}/${c.care}/${c.priority}/${c.pet}`);
-  assert.equal(new Set(keys).size, 24);
+  assert.equal(new Set(keys).size, 36);
 });
 
-test('全24パターンで、おすすめが1〜2種返る', () => {
+test('全36パターンで、おすすめが1〜2種返る', () => {
   for (const answers of COMBINATIONS) {
     const result = recommendPlants(answers);
     assert.ok(
@@ -136,7 +151,7 @@ test('全24パターンで、おすすめが1〜2種返る', () => {
   }
 });
 
-test('全24パターンで、返る植物はPLANTSに実在し重複しない', () => {
+test('全36パターンで、返る植物はPLANTSに実在し重複しない', () => {
   const slugs = new Set(PLANTS.map((p) => p.slug));
   for (const answers of COMBINATIONS) {
     const result = recommendPlants(answers);
@@ -145,7 +160,7 @@ test('全24パターンで、返る植物はPLANTSに実在し重複しない', 
   }
 });
 
-test('全24パターンで、2位は1位以下かつ僅差のときだけ返る', () => {
+test('全36パターンで、2位は1位以下かつ僅差のときだけ返る', () => {
   for (const answers of COMBINATIONS) {
     const result = recommendPlants(answers);
     if (result.length === 2) {
@@ -174,12 +189,24 @@ test('同じ回答なら常に同じ結果になる（決定的）', () => {
   }
 });
 
-test('全24パターンを合わせると、5種すべてが少なくとも1回はおすすめされる', () => {
+test('全36パターンを合わせると、5種すべてが少なくとも1回はおすすめされる', () => {
   const recommended = new Set<string>();
   for (const answers of COMBINATIONS) {
     for (const r of recommendPlants(answers)) recommended.add(r.plant.slug);
   }
   assert.deepEqual([...recommended].sort(), PLANTS.map((p) => p.slug).sort());
+});
+
+test('「どちらも」の12パターンだけでも、結果が1種に偏りきらない', () => {
+  // 按分が効かず片方の属性に引っ張られると、どの回答でも同じ植物しか出なくなる
+  const recommended = new Set<string>();
+  for (const answers of COMBINATIONS.filter((c) => c.priority === 'both')) {
+    for (const r of recommendPlants(answers)) recommended.add(r.plant.slug);
+  }
+  assert.ok(
+    recommended.size >= 3,
+    `「どちらも」で出たのは ${[...recommended].join(', ')} だけだった`
+  );
 });
 
 test('日当たりが悪い部屋では、耐陰性のいちばん高いポトスが日光好きのガジュマルより高得点', () => {
@@ -210,10 +237,79 @@ test('scorePlant: ペット「いない」ならペット加点は0', () => {
   }
 });
 
+// --- Q3「どちらも」の按分 -------------------------------------------------
+
+test('scorePlant:「どちらも」の配点は「虫だけ」と「映えだけ」のちょうど中間になる', () => {
+  // 片方に全振りした場合と配点の総量をそろえる＝「どちらも」を選んでも点が過大にならない
+  for (const plant of PLANTS) {
+    const base = { light: 'half', care: 'lazy', pet: 'no' } as const;
+    const pest = scorePlant(plant, { ...base, priority: 'pest' }).priority;
+    const interior = scorePlant(plant, { ...base, priority: 'interior' }).priority;
+    const both = scorePlant(plant, { ...base, priority: 'both' }).priority;
+
+    assert.equal(both * 2, pest + interior, `${plant.slug} の按分が中間になっていない`);
+    assert.ok(
+      both <= Math.max(pest, interior) && both >= Math.min(pest, interior),
+      `${plant.slug}: both=${both} が pest=${pest} / interior=${interior} の範囲外`
+    );
+  }
+});
+
+test('scorePlant:「どちらも」は虫のつきにくさと見ばえの両方が加点に効く', () => {
+  const base = { light: 'half', care: 'lazy', priority: 'both', pet: 'no' } as const;
+  const reference = PLANTS[0];
+
+  const morePest = scorePlant(
+    { ...reference, attributes: { ...reference.attributes, pest: reference.attributes.pest + 1 } },
+    base
+  ).priority;
+  const moreInterior = scorePlant(
+    {
+      ...reference,
+      attributes: { ...reference.attributes, interior: reference.attributes.interior - 1 },
+    },
+    base
+  ).priority;
+  const plain = scorePlant(reference, base).priority;
+
+  assert.equal(morePest, plain + 1, '虫のつきにくさが「どちらも」の点に反映されていない');
+  assert.equal(moreInterior, plain - 1, '見ばえが「どちらも」の点に反映されていない');
+});
+
+test('ペット加点（±6）は属性由来の点差の最大を上回る（36パターンで実測）', () => {
+  // AGENTS.md に書いた設計意図。ここが崩れると「ペットがいる＝安全な植物が1位」が保証できない
+  const safe = PLANTS.filter((p) => p.petSafe);
+  const unsafe = PLANTS.filter((p) => !p.petSafe);
+  assert.ok(safe.length > 0 && unsafe.length > 0);
+
+  // ペット加点を除いた素点で、危険な植物が安全な植物をどれだけ引き離せるか
+  const withoutPet = (plant: Plant, answers: DiagnosisAnswers) => {
+    const s = scorePlant(plant, answers);
+    return s.total - s.pet;
+  };
+  let maxGap = -Infinity;
+  for (const answers of COMBINATIONS) {
+    const bestSafe = Math.max(...safe.map((p) => withoutPet(p, answers)));
+    const bestUnsafe = Math.max(...unsafe.map((p) => withoutPet(p, answers)));
+    maxGap = Math.max(maxGap, bestUnsafe - bestSafe);
+  }
+
+  // ペット「いる」では安全側が+6・危険側が-6なので、逆転できる幅は 2×PET_SAFE_BONUS
+  assert.ok(
+    maxGap < PET_SAFE_BONUS * 2,
+    `属性由来の点差の最大 ${maxGap} が ペット加点の幅 ${PET_SAFE_BONUS * 2} 以上になっている`
+  );
+});
+
 // --- 入力の検査（localStorage / フォームの値は信用しない） ----------------
 
 test('parseAnswers: 正しい回答はそのまま返す', () => {
   const answers = { light: 'low', care: 'lazy', priority: 'interior', pet: 'no' };
+  assert.deepEqual(parseAnswers(answers), answers);
+});
+
+test('parseAnswers: 追加した「どちらも」も正しい回答として通る', () => {
+  const answers = { light: 'half', care: 'often', priority: 'both', pet: 'yes' };
   assert.deepEqual(parseAnswers(answers), answers);
 });
 

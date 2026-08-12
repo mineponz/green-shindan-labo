@@ -13,8 +13,8 @@
 export type LightAnswer = 'bright' | 'half' | 'low';
 /** Q2 お世話にかけられる手間 */
 export type CareAnswer = 'often' | 'lazy';
-/** Q3 重視したいこと */
-export type PriorityAnswer = 'pest' | 'interior';
+/** Q3 重視したいこと。'both' は「どちらも」（虫のつきにくさと見ばえを半分ずつ見る） */
+export type PriorityAnswer = 'pest' | 'interior' | 'both';
 /** Q4 ペットの有無 */
 export type PetAnswer = 'yes' | 'no';
 
@@ -76,6 +76,7 @@ export const QUESTIONS: Question[] = [
     options: [
       { value: 'pest', label: '虫がつきにくさ', hint: 'コバエやカイガラムシが苦手' },
       { value: 'interior', label: 'インテリア映え', hint: '部屋の主役になる見ためを重視したい' },
+      { value: 'both', label: 'どちらも', hint: '虫は避けたいけれど、見ためもあきらめたくない' },
     ],
   },
   {
@@ -247,8 +248,13 @@ export interface ScoreBreakdown {
  *
  * - 日当たり: よく当たる=sun*2 / 半日陰=sun+shade / あまり当たらない=shade*2
  * - 手間: ズボラ=ease*2 / こまめ=(6-ease)*2（手のかかる植物を許容できるため逆向きに配点）
- * - 重視: 虫=pest*2 / 映え=interior*2
+ * - 重視: 虫=pest*2 / 映え=interior*2 / どちらも=pest+interior
  * - ペット: いる場合のみ、安全なら+6 / そうでなければ-6
+ *
+ * 「どちらも」は2つの属性に配点を**按分**する（片方に全振りした場合と配点の総量を
+ * そろえる）。pest*2 と interior*2 のちょうど中間になるので、「どちらも」を選ぶと
+ * 総得点が他の選択肢より過大／過小になることはなく、ペット加点（±6）が属性由来の
+ * 点差を上回るという設計も崩れない。
  */
 export function scorePlant(plant: Plant, answers: DiagnosisAnswers): ScoreBreakdown {
   const a = plant.attributes;
@@ -258,7 +264,12 @@ export function scorePlant(plant: Plant, answers: DiagnosisAnswers): ScoreBreakd
 
   const care = answers.care === 'lazy' ? a.ease * 2 : (6 - a.ease) * 2;
 
-  const priority = answers.priority === 'pest' ? a.pest * 2 : a.interior * 2;
+  const priority =
+    answers.priority === 'pest'
+      ? a.pest * 2
+      : answers.priority === 'interior'
+        ? a.interior * 2
+        : a.pest + a.interior;
 
   const pet = answers.pet === 'yes' ? (plant.petSafe ? PET_SAFE_BONUS : -PET_SAFE_BONUS) : 0;
 
@@ -346,12 +357,12 @@ export function findPlant(slug: string): Plant | undefined {
   return PLANTS.find((p) => p.slug === slug);
 }
 
-/** 診断の全回答パターン（3×2×2×2=24通り）。テストと網羅確認に使う */
+/** 診断の全回答パターン（3×2×3×2=36通り）。テストと網羅確認に使う */
 export function allAnswerCombinations(): DiagnosisAnswers[] {
   const combos: DiagnosisAnswers[] = [];
   for (const light of ['bright', 'half', 'low'] as LightAnswer[]) {
     for (const care of ['often', 'lazy'] as CareAnswer[]) {
-      for (const priority of ['pest', 'interior'] as PriorityAnswer[]) {
+      for (const priority of ['pest', 'interior', 'both'] as PriorityAnswer[]) {
         for (const pet of ['yes', 'no'] as PetAnswer[]) {
           combos.push({ light, care, priority, pet });
         }

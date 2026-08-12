@@ -1,17 +1,24 @@
 ---
+import { Image } from 'astro:assets';
+
 import PlantIcon from './PlantIcon.astro';
 import PlantAttributes from './PlantAttributes.astro';
+import { findPlantPhoto } from '../lib/plant-photos.ts';
 import type { Plant } from '../lib/plants.ts';
 
 /**
- * 植物記事の共通ヘッダー。PR表記（景表法のステマ規制対応）・タイトル・性質表・
- * ペットへの注意をまとめて出す。5記事で同じ形にするためのコンポーネント。
+ * 植物記事の共通ヘッダー。PR表記（景表法のステマ規制対応）・タイトル・見出し写真・
+ * 性質表・ペットへの注意をまとめて出す。5記事で同じ形にするためのコンポーネント。
+ *
+ * 見出し写真は slug から引く（src/lib/plant-photos.ts）。素材が無い植物を足したときは
+ * 写真なしで組み上がるようにしてある（記事が出せなくなる方が困るため）。
  */
 interface Props {
   plant: Plant;
 }
 
 const { plant } = Astro.props;
+const photo = findPlantPhoto(plant.slug);
 ---
 
 <p class="pr-notice">本記事はプロモーションを含みます。</p>
@@ -21,6 +28,20 @@ const { plant } = Astro.props;
   <span>{plant.name}の育て方と選び方</span>
 </h1>
 <p class="scientific">{plant.scientificName}</p>
+
+{photo && (
+  <figure class="plant-photo">
+    <Image
+      src={photo.src}
+      alt={photo.alt}
+      widths={[480, 768, 1200]}
+      sizes="(min-width: 46rem) 44rem, 100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+  </figure>
+)}
+
 <p class="lead">{plant.summary}</p>
 
 {!plant.petSafe && (
@@ -59,6 +80,24 @@ const { plant } = Astro.props;
     color: var(--muted);
     font-size: var(--text-sm);
     font-style: italic;
+  }
+
+  /*
+   * 見出し写真。素材は縦長のものが多いので、比率を4:3に決めて切り抜き、
+   * 記事ごとに見出しの高さが変わらないようにしている。
+   * 装飾は角丸だけ（枠線と影の二重使いはしない / design.md）。
+   */
+  .plant-photo {
+    margin: var(--space-2) 0 var(--space-3);
+  }
+  .plant-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius);
+    background: var(--accent-weak);
   }
 
   .lead {

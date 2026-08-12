@@ -1,8 +1,10 @@
 ---
+import { Image } from 'astro:assets';
+
 import BaseLayout from '../layouts/BaseLayout.astro';
 import DiagnosisTool from '../components/DiagnosisTool.astro';
-import HeroIllustration from '../components/HeroIllustration.astro';
 import PlantIcon from '../components/PlantIcon.astro';
+import { HERO_PHOTO } from '../lib/plant-photos.ts';
 import { PLANTS } from '../lib/plants.ts';
 import { SITE_TITLE, SITE_URL } from '../consts.ts';
 
@@ -55,14 +57,25 @@ const itemListJsonLd = {
 ---
 
 <BaseLayout>
-  <h1>4つの質問で、あなたの部屋に合う観葉植物が見つかる</h1>
+  <h1>4つの質問に答えるだけで、今人気のパキラやモンステラなど、あなたのお部屋にぴったりの一鉢に出会えます</h1>
   <p class="lead">
-    観葉植物は「どれがおしゃれか」より「その部屋で育つか」で選ぶと失敗しません。
-    日当たり・お世話にかけられる手間・重視したいこと・ペットの有無の4つに答えると、
-    パキラ・モンステラ・サンスベリア・ポトス・ガジュマルの5種から相性のいいものをおすすめします。
+    おしゃれなだけじゃなく、ちゃんとそのお部屋で元気に育つかまで。あなたの暮らしに合う一鉢を診断します。
   </p>
 
-  <HeroIllustration />
+  {/*
+    ヒーロー写真。ページを開いて最初に目に入る画像なので遅延読み込みにしない。
+    widths/sizes を渡してビルド時に複数サイズを書き出す（表示幅は本文と同じ最大46rem）。
+  */}
+  <figure class="hero-photo">
+    <Image
+      src={HERO_PHOTO.src}
+      alt={HERO_PHOTO.alt}
+      widths={[480, 768, 1200]}
+      sizes="(min-width: 46rem) 44rem, 100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+  </figure>
 
   <DiagnosisTool />
 
@@ -113,6 +126,24 @@ const itemListJsonLd = {
     .lead {
       color: var(--muted);
       margin-top: 0;
+    }
+
+    /*
+     * 写真は角丸だけで馴染ませる（枠線＋影の二重使いはしない / design.md）。
+     * 縦長・横長どちらの素材でも高さが暴れないよう、比率を決めて切り抜く。
+     * 診断ツールを画面の下へ押しやりたくないので、ヒーローは横長（16:9）に固定する。
+     */
+    .hero-photo {
+      margin: 0 0 var(--space-4);
+    }
+    .hero-photo img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: var(--radius);
+      background: var(--accent-weak); /* 読み込み前・透過部分の下地 */
     }
 
     .plant-grid {
