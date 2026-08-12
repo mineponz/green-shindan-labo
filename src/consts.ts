@@ -26,6 +26,7 @@ export const CONTACT_EMAIL: string = CONTACT_EMAIL_PLACEHOLDER;
 
 /** プライバシーポリシーの最終更新日（ページ末尾の表示に使う）。内容を変えたら必ず更新する。 */
 export const PRIVACY_POLICY_UPDATED = '2026-08-12';
+// AMAZON_ASSOCIATE_TAG を実タグへ差し替えた日と同じ（2026-08-12）
 
 /**
  * Amazonアソシエイトのトラッキングタグ。
@@ -38,4 +39,4 @@ export const PRIVACY_POLICY_UPDATED = '2026-08-12';
  * （まだ収入を得ていないのに開示すると事実と異なるため。差し替えると自動で切り替わる）
  */
 export const AMAZON_ASSOCIATE_TAG_PLACEHOLDER = 'YOUR_ASSOCIATE_TAG';
-export const AMAZON_ASSOCIATE_TAG: string = AMAZON_ASSOCIATE_TAG_PLACEHOLDER;
+export const AMAZON_ASSOCIATE_TAG: string = 'greenlabo-22';
