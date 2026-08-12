@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_TITLE, CONTACT_EMAIL, CONTACT_EMAIL_PLACEHOLDER } from '../consts';
+
+/**
+ * お問い合わせページ。
+ *
+ * 連絡先は src/consts.ts の CONTACT_EMAIL に置いてある。
+ * !!! 現在はプレースホルダ。本番公開前に必ず実在のアドレスへ差し替えること !!!
+ * 差し替えるまでは mailto リンクを出さず「準備中」と表示する（存在しない宛先を案内しないため）。
+ */
+const title = 'お問い合わせ';
+const description = `${SITE_TITLE}へのご指摘・ご要望・その他のお問い合わせ先です。`;
+
+const isPlaceholder = CONTACT_EMAIL === CONTACT_EMAIL_PLACEHOLDER;
+---
+
+<BaseLayout title={title} description={description}>
+  <h1>お問い合わせ</h1>
+  <p class="lead">
+    記事の間違いやリンク切れ、診断がうまく動かない、そのほか気になることがあれば教えてください。
+    個人でやっているサイトなので、いただいたご連絡すべてにお返事できるとは限りません。
+    そこはご容赦ください。
+  </p>
+
+  <h2>連絡先</h2>
+  {isPlaceholder ? (
+    <p class="notice">
+      お問い合わせ用の連絡先はただいま準備中です。用意でき次第、このページに載せます。
+    </p>
+  ) : (
+    <p class="contact-address">
+      <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+    </p>
+  )}
+
+  <h2>ご連絡いただくときのお願い</h2>
+  <p>記事の間違いを教えていただけるときは、次の2つがあると確認がスムーズです。</p>
+  <ul>
+    <li>どのページか（URL）</li>
+    <li>間違っていそうな箇所と、できればその根拠</li>
+  </ul>
+  <p>
+    診断の不具合についてご連絡いただく場合は、選んだ4つの回答と、
+    お使いのブラウザ（Chrome / Safari など）を書き添えていただけると助かります。
+  </p>
+
+  <h2>お答えできないこと</h2>
+  <ul>
+    <li>
+      個別の株の診断（「うちの植物が枯れそうです」というご相談）。写真だけでは判断できないため、
+      園芸店や専門家にご相談ください。
+    </li>
+    <li>
+      ペットが植物を口にしてしまった場合の対処。獣医療にあたるため、
+      すぐに動物病院へご連絡ください。
+    </li>
+  </ul>
+
+  <style>
+    .lead {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .notice {
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-2);
+      color: var(--muted);
+    }
+
+    .contact-address {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-2);
+    }
+  </style>
+</BaseLayout>

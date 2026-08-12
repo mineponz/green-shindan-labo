@@ -1,0 +1,86 @@
+---
+import PlantIcon from './PlantIcon.astro';
+import PlantAttributes from './PlantAttributes.astro';
+import type { Plant } from '../lib/plants.ts';
+
+/**
+ * 植物記事の共通ヘッダー。PR表記（景表法のステマ規制対応）・タイトル・性質表・
+ * ペットへの注意をまとめて出す。5記事で同じ形にするためのコンポーネント。
+ */
+interface Props {
+  plant: Plant;
+}
+
+const { plant } = Astro.props;
+---
+
+<p class="pr-notice">本記事はプロモーションを含みます。</p>
+
+<h1 class="plant-title">
+  <PlantIcon slug={plant.slug} size={40} />
+  <span>{plant.name}の育て方と選び方</span>
+</h1>
+<p class="scientific">{plant.scientificName}</p>
+<p class="lead">{plant.summary}</p>
+
+{!plant.petSafe && (
+  <p class="pet-warn">
+    <span class="pet-label">ペット注意</span>{plant.petNote}
+  </p>
+)}
+{plant.petSafe && (
+  <p class="pet-safe">
+    犬・猫にとって毒性が低いとされている種類です。とはいえ、かじられて困るのは植物の方なので、
+    落ち着ける場所に置いてあげてください。
+  </p>
+)}
+
+<PlantAttributes attributes={plant.attributes} />
+
+<style>
+  .pr-notice {
+    display: inline-block;
+    margin: 0 0 var(--space-1);
+    padding: 0 var(--space-1);
+    background: var(--accent-weak);
+    border-radius: 4px;
+    font-size: var(--text-sm);
+    color: var(--muted);
+  }
+
+  .plant-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .scientific {
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--text-sm);
+    font-style: italic;
+  }
+
+  .lead {
+    margin-top: var(--space-1);
+    color: var(--muted);
+  }
+
+  .pet-warn {
+    /* セマンティック警告色。主要CTAの色とは役割を分けている */
+    padding: var(--space-1) var(--space-2);
+    background: var(--warn-weak);
+    border-radius: var(--radius);
+    color: var(--warn);
+    font-size: var(--text-sm);
+  }
+  .pet-label {
+    margin-right: var(--space-1);
+    font-weight: 700;
+  }
+
+  .pet-safe {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>

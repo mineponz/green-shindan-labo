@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 128 128">
+    <path d="M106 20c0 48-27 75-64 75-11 0-16-2-16-2S22 41 106 20Z" />
+    <path d="M95 32C63 43 42 70 26 112" stroke="#ffffff" stroke-width="7" stroke-linecap="round" />
+    <style>
+        path { fill: #146c43; }
+        @media (prefers-color-scheme: dark) {
+            path { fill: #5fd394; }
+        }
+    </style>
+</svg>

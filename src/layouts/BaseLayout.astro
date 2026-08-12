@@ -282,6 +282,13 @@ const breadcrumbJsonLd = {
       /* セクション見出しの直後は関連が強いので余白を詰める（余白でグルーピングを伝える） */
       h2 + p, h3 + p, h2 + ul, h3 + ul { margin-top: 0; }
 
+      /* 記事本文のリスト。クラス付きのリスト（カードグリッド等）は各自の指定が優先される */
+      main ul, main ol {
+        margin-block: 0 var(--space-2);
+        padding-left: var(--space-3);
+      }
+      main li { margin-bottom: var(--space-1); }
+
       .site-footer {
         border-top: 1px solid var(--border);
         padding-block: var(--space-3) var(--space-6);

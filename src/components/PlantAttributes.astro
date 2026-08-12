@@ -1,0 +1,100 @@
+---
+import type { PlantAttributes } from '../lib/plants.ts';
+
+/**
+ * 植物の性質（1〜5）を棒グラフで見せる表。
+ * ここに出している数値は診断のスコアリングにそのまま使っているものなので、
+ * 「なぜこの植物がおすすめされたのか」を読者が確かめられる。
+ * 色だけに頼らず数値（5段階中いくつか）もテキストで出す。
+ */
+interface Props {
+  attributes: PlantAttributes;
+}
+
+const { attributes } = Astro.props;
+
+const ROWS: { key: keyof PlantAttributes; label: string }[] = [
+  { key: 'shade', label: '耐陰性（暗い場所への強さ）' },
+  { key: 'sun', label: '日ざしへの強さ' },
+  { key: 'ease', label: 'ズボラ耐性（水やり忘れへの強さ）' },
+  { key: 'pest', label: '虫のつきにくさ' },
+  { key: 'interior', label: 'インテリアとしての存在感' },
+];
+---
+
+<table class="attributes">
+  <caption>このサイトでの評価（5段階・診断のスコアに使っている値）</caption>
+  <tbody>
+    {ROWS.map((row) => (
+      <tr>
+        <th scope="row">{row.label}</th>
+        <td>
+          {/* td 自体を flex にするとセルの縦位置計算が壊れるので、中の div を flex にする
+              （vault: 3-resources/knowledge/20260811-astro-scoped-style-innerhtml.md の関連事項） */}
+          <div class="meter">
+            <span class="bar" aria-hidden="true">
+              <span class="bar-fill" style={`width: ${(attributes[row.key] / 5) * 100}%`}></span>
+            </span>
+            <span class="value">{attributes[row.key]} / 5</span>
+          </div>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+<style>
+  .attributes {
+    width: 100%;
+    margin-bottom: var(--space-3);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+
+  caption {
+    margin-bottom: var(--space-1);
+    color: var(--muted);
+    text-align: left;
+  }
+
+  th,
+  td {
+    padding: var(--space-1) 0;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    font-weight: 600;
+    padding-right: var(--space-2);
+  }
+
+  .meter {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .bar {
+    display: block;
+    flex: 1;
+    min-width: 4rem;
+    height: 0.5rem;
+    background: var(--accent-weak);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    display: block;
+    height: 100%;
+    background: var(--accent);
+  }
+
+  .value {
+    flex-shrink: 0;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+</style>

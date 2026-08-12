@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PlantCard from '../../components/PlantCard.astro';
+import { PLANTS } from '../../lib/plants.ts';
+
+/**
+ * 植物図鑑の一覧。詳細版のカード（variant="result"）をビルド時にそのまま並べる。
+ * 診断を使わない人・JSが動かない人でも、全5種の情報にここから到達できる。
+ */
+const title = '植物図鑑';
+const description =
+  'グリーン診断ラボで紹介している観葉植物5種（パキラ・モンステラ・サンスベリア・ポトス・ガジュマル）の一覧です。それぞれの性質・向いている人・ペットへの注意をまとめています。';
+---
+
+<BaseLayout title={title} description={description}>
+  <h1>植物図鑑</h1>
+  <p class="lead">
+    このサイトで紹介している観葉植物5種の一覧です。
+    どれを選べばいいか迷ったら、<a href="/#diagnosis">4つの質問の診断</a>からどうぞ。
+  </p>
+
+  <ul class="plant-list">
+    {PLANTS.map((plant) => (
+      <li>
+        <PlantCard plant={plant} variant="result" />
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
+
+<style>
+  .lead {
+    color: var(--muted);
+    margin-top: 0;
+  }
+
+  .plant-list {
+    display: grid;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .plant-list li {
+    margin: 0;
+  }
+</style>
