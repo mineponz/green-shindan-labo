@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import PlantIcon from './PlantIcon.astro';
+import { findPlantPhoto } from '../lib/plant-photos.ts';
 import type { Plant } from '../lib/plants.ts';
 
 /**
@@ -19,11 +21,16 @@ interface Props {
 
 const { plant, variant = 'list' } = Astro.props;
 const href = `/plants/${plant.slug}/`;
+const photo = findPlantPhoto(plant.slug);
 ---
 
 <article class={`plant-card plant-card-${variant}`}>
   <div class="head">
-    <PlantIcon slug={plant.slug} size={variant === 'result' ? 40 : 32} />
+    {photo ? (
+      <Image src={photo.src} alt={photo.alt} width={56} height={56} class="thumb" loading="lazy" />
+    ) : (
+      <PlantIcon slug={plant.slug} size={variant === 'result' ? 40 : 32} />
+    )}
     <div class="names">
       <h3 class="name">
         {variant === 'result' ? plant.name : <a href={href}>{plant.name}</a>}
@@ -75,6 +82,14 @@ const href = `/plants/${plant.slug}/`;
     align-items: center;
     gap: var(--space-2);
     margin-bottom: var(--space-1);
+  }
+
+  .thumb {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    border-radius: var(--radius);
+    object-fit: cover;
   }
 
   .names { min-width: 0; }
