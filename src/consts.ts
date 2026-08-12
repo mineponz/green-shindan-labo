@@ -7,7 +7,8 @@
  */
 export const SITE_URL = 'https://green-shindan-labo.mineponz.workers.dev';
 export const SITE_TITLE = 'グリーン診断ラボ';
-export const SITE_TAGLINE = '4つの質問で、あなたの部屋に合う観葉植物が見つかる';
+/** ヘッダーに出す短い説明。トップページのh1と丸かぶりしない文言にしている */
+export const SITE_TAGLINE = '観葉植物の選び方・育て方・虫対策';
 export const SITE_DESCRIPTION =
   '日当たり・お世話にかけられる手間・重視したいこと・ペットの有無、4つの質問に答えるだけで、' +
   'あなたの部屋に合う観葉植物をおすすめします。パキラ・モンステラ・サンスベリア・ポトス・' +
