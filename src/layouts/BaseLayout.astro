@@ -6,6 +6,7 @@ import {
   SITE_DESCRIPTION,
   AMAZON_ASSOCIATE_TAG,
   AMAZON_ASSOCIATE_TAG_PLACEHOLDER,
+  GA_MEASUREMENT_ID,
 } from '../consts';
 import LeafMark from '../components/LeafMark.astro';
 
@@ -65,6 +66,21 @@ const breadcrumbJsonLd = {
 
     <link rel="sitemap" href="/sitemap-index.xml" />
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} is:inline />
+
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      is:inline
+      src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+    ></script>
+    <script define:vars={{ GA_MEASUREMENT_ID }} is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', GA_MEASUREMENT_ID);
+    </script>
   </head>
 
   <body>

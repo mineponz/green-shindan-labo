@@ -25,8 +25,8 @@ export const CONTACT_EMAIL_PLACEHOLDER = 'CONTACT_EMAIL_TODO';
 export const CONTACT_EMAIL: string = CONTACT_EMAIL_PLACEHOLDER;
 
 /** プライバシーポリシーの最終更新日（ページ末尾の表示に使う）。内容を変えたら必ず更新する。 */
-export const PRIVACY_POLICY_UPDATED = '2026-08-12';
-// AMAZON_ASSOCIATE_TAG を実タグへ差し替えた日と同じ（2026-08-12）
+export const PRIVACY_POLICY_UPDATED = '2026-08-13';
+// 2026-08-13、Google Analytics導入の開示を追加した際に更新
 
 /**
  * Amazonアソシエイトのトラッキングタグ。
@@ -40,3 +40,6 @@ export const PRIVACY_POLICY_UPDATED = '2026-08-12';
  */
 export const AMAZON_ASSOCIATE_TAG_PLACEHOLDER = 'YOUR_ASSOCIATE_TAG';
 export const AMAZON_ASSOCIATE_TAG: string = 'greenlabo-22';
+
+/** Google Analytics(GA4)の測定ID。2026-08-13、本人が発行したプロパティのIDを設定。 */
+export const GA_MEASUREMENT_ID = 'G-BK3NZZ8ZEE';
