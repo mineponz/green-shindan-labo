@@ -6,14 +6,17 @@
 
 | ファイル | 用途 | 撮影者 | 出典（ダウンロード元） |
 |---|---|---|---|
-| `hero-plants.jpg` | トップページのヒーロー | Sasha P | https://images.pexels.com/photos/11419079/pexels-photo-11419079.jpeg |
-| `pachira.jpg` | パキラ記事の見出し | Kha Ruxury | https://images.pexels.com/photos/17151138/pexels-photo-17151138.jpeg |
-| `monstera.jpg` | モンステラ記事の見出し | Anca | https://images.pexels.com/photos/7318283/pexels-photo-7318283.jpeg |
-| `sansevieria.jpg` | サンスベリア記事の見出し | Mustafa Akın | https://images.pexels.com/photos/29218657/pexels-photo-29218657.jpeg |
-| `pothos.jpg` | ポトス記事の見出し | Wendy Wei | https://images.pexels.com/photos/20337867/pexels-photo-20337867.jpeg |
-| `gajumaru.jpg` | ガジュマル記事の見出し | Apurva Chandwadkar | https://images.pexels.com/photos/34551143/pexels-photo-34551143.jpeg |
+| `hero-plants.jpg` | トップページのヒーロー | Alex Tyson | https://images.pexels.com/photos/19980205/pexels-photo-19980205.jpeg |
+| `pachira.jpg` | パキラ記事の見出し | Kenneth Surillo | https://images.pexels.com/photos/22610789/pexels-photo-22610789.jpeg |
+| `monstera.jpg` | モンステラ記事の見出し | Danna Putra | https://images.pexels.com/photos/32293880/pexels-photo-32293880.jpeg |
+| `sansevieria.jpg` | サンスベリア記事の見出し | Damian Apanasowicz | https://images.pexels.com/photos/4185555/pexels-photo-4185555.jpeg |
+| `pothos.jpg` | ポトス記事の見出し | Aleksander Dumała | https://images.pexels.com/photos/20075996/pexels-photo-20075996.jpeg |
+| `gajumaru.jpg` | ガジュマル記事の見出し | Elīna Arāja | https://images.pexels.com/photos/4050790/pexels-photo-4050790.jpeg |
 
-- 取得日: 2026-08-12（`?auto=compress&cs=tinysrgb&w=1600` を付けて長辺1600pxで取得）
+- 2026-08-13: 管理者の指示（「もっときれいめに」、参考: livingorchid.comの商品写真のような
+  明るい・背景がすっきりした雰囲気）で全6枚を差し替え。旧版（暗め・生活感のある写真）から、
+  白系の背景で鉢ごと写った明るい写真に統一。
+- 取得日: 2026-08-13（`?auto=compress&cs=tinysrgb&w=1600` を付けて長辺1600pxで取得）
 - 表示は `<Image>`（astro:assets）経由。リサイズとWebP変換はビルド時に走るので、
   ここに置く原本は加工せずそのまま残しておく。
 - alt文言とどのslugに使うかは `src/lib/plant-photos.ts` が持っている。

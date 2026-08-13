@@ -31,30 +31,30 @@ export interface Photo {
 /** トップページのヒーロー写真 */
 export const HERO_PHOTO: Photo = {
   src: heroPhoto,
-  alt: '朝の光が差し込む部屋の窓ぎわに、大小いくつもの鉢植えの観葉植物が並んでいる様子',
+  alt: '光が入る明るいミニマルな部屋に、棚や窓辺へ何鉢もの観葉植物がすっきりと飾られている様子',
 };
 
 /** 記事の見出し写真。キーは plants.ts の slug と一致させる */
 export const PLANT_PHOTOS: Record<string, Photo> = {
   pachira: {
     src: pachiraPhoto,
-    alt: '窓辺の木の棚に置かれた、手のひらを広げたような葉をつけるパキラの鉢植え',
+    alt: '明るい背景の中、テラコッタ鉢に植えられた、手のひらを広げたような葉をつけるパキラ',
   },
   monstera: {
     src: monsteraPhoto,
-    alt: '深い切れ込みの入った大きな葉を広げる、黒い鉢に植えられた床置きのモンステラ',
+    alt: '白い鉢に植えられ、白い背景の中で深い切れ込みの入った葉を広げるモンステラ',
   },
   sansevieria: {
     src: sansevieriaPhoto,
-    alt: '日の当たる壁ぎわで、肉厚の葉をまっすぐ上へ伸ばす白い鉢のサンスベリア',
+    alt: '白い鉢に植えられ、白い背景の中で肉厚の葉をまっすぐ上へ伸ばすサンスベリア',
   },
   pothos: {
     src: pothosPhoto,
-    alt: '壁の棚の上から、ハート形の葉をつけたつるを長く垂らしているポトス',
+    alt: '白いボウル型の鉢に植えられ、白い背景の中でハート形の葉を茂らせるポトス',
   },
   gajumaru: {
     src: gajumaruPhoto,
-    alt: '丸いテーブルの上に置かれた、根元がぷっくりと太ったガジュマルの小さな鉢植え',
+    alt: '黒い丸鉢に植えられ、白い背景の中で根元がぷっくりと太った幹を見せるガジュマル',
   },
 };
 
