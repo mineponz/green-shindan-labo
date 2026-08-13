@@ -27,7 +27,9 @@ const photo = findPlantPhoto(plant.slug);
 <article class={`plant-card plant-card-${variant}`}>
   <div class="head">
     {photo ? (
-      <Image src={photo.src} alt={photo.alt} width={56} height={56} class="thumb" loading="lazy" />
+      <span class="thumb-wrap">
+        <Image src={photo.thumbSrc ?? photo.src} alt={photo.alt} width={160} class="thumb" loading="lazy" />
+      </span>
     ) : (
       <PlantIcon slug={plant.slug} size={variant === 'result' ? 40 : 32} />
     )}
@@ -84,12 +86,20 @@ const photo = findPlantPhoto(plant.slug);
     margin-bottom: var(--space-1);
   }
 
-  .thumb {
+  .thumb-wrap {
+    display: block;
     width: 56px;
     height: 56px;
     flex-shrink: 0;
     border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .thumb {
+    display: block;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    object-position: center;
   }
 
   .names { min-width: 0; }

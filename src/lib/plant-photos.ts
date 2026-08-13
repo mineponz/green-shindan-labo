@@ -19,13 +19,23 @@ import heroPhoto from '../assets/photos/hero-plants.jpg';
 import pachiraPhoto from '../assets/photos/pachira.jpg';
 import monsteraPhoto from '../assets/photos/monstera.jpg';
 import sansevieriaPhoto from '../assets/photos/sansevieria.jpg';
+import sansevieriaThumbPhoto from '../assets/photos/sansevieria-thumb.jpg';
 import pothosPhoto from '../assets/photos/pothos.jpg';
 import gajumaruPhoto from '../assets/photos/gajumaru.jpg';
+import gajumaruThumbPhoto from '../assets/photos/gajumaru-thumb.jpg';
 
 export interface Photo {
   src: ImageMetadata;
   /** alt は「写真に何が写っているか」を日本語で書く。装飾ではなく内容の説明にする */
   alt: string;
+  /**
+   * 一覧・診断結果カードの小さいサムネイル用に、あらかじめ寄って切り出した別カット。
+   * 未指定なら `src` をそのまま中央基準でクロップする（PlantCard.astro側の処理）。
+   * サンスベリア・ガジュマルは元写真が横長/縦長すぎて56角のサムネイルだと
+   * 主役が真ん中に来なかったため専用カットを用意した
+   * （2026-08-13、管理者の見た目フィードバックで追加）。
+   */
+  thumbSrc?: ImageMetadata;
 }
 
 /** トップページのヒーロー写真 */
@@ -46,6 +56,7 @@ export const PLANT_PHOTOS: Record<string, Photo> = {
   },
   sansevieria: {
     src: sansevieriaPhoto,
+    thumbSrc: sansevieriaThumbPhoto,
     alt: '白い鉢に植えられ、白い背景の中で肉厚の葉をまっすぐ上へ伸ばすサンスベリア',
   },
   pothos: {
@@ -54,7 +65,8 @@ export const PLANT_PHOTOS: Record<string, Photo> = {
   },
   gajumaru: {
     src: gajumaruPhoto,
-    alt: '黒い丸鉢に植えられ、白い背景の中で根元がぷっくりと太った幹を見せるガジュマル',
+    thumbSrc: gajumaruThumbPhoto,
+    alt: '白い背景を大きく取り、上へまっすぐ伸びる枝先に茂る葉をアップで見せるガジュマル',
   },
 };
 
