@@ -1,0 +1,52 @@
+---
+import { otherGuides } from '../lib/guides.ts';
+
+/**
+ * 記事末尾に出す「ほかのガイド記事」。3本しかないので全部（自分以外）を出す。
+ * リンクは三次アクション扱い（リンクのみ・塗りつぶさない / design.md の視覚的階層）。
+ */
+interface Props {
+  /** 今読んでいる記事のslug。これ自身は一覧から外す */
+  currentSlug: string;
+}
+
+const { currentSlug } = Astro.props;
+const guides = otherGuides(currentSlug);
+---
+
+{guides.length > 0 && (
+  <section class="related">
+    <h2>ほかのガイド記事</h2>
+    <ul class="related-list">
+      {guides.map((guide) => (
+        <li>
+          <a href={`/guides/${guide.slug}/`}>{guide.title}</a>
+          <span class="summary">{guide.summary}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<style>
+  .related-list {
+    display: grid;
+    gap: var(--space-2);
+    list-style: none;
+    /* main ul の既定padding（インデント）を打ち消す */
+    margin: 0;
+    padding: 0;
+  }
+  .related-list li {
+    display: grid;
+    gap: 0;
+    margin: 0;
+  }
+  .related-list a {
+    font-weight: 600;
+  }
+  .summary {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>

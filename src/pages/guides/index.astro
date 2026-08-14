@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { GUIDES } from '../../lib/guides.ts';
+import { findPlant } from '../../lib/plants.ts';
+import { SITE_URL } from '../../consts.ts';
+
+/**
+ * ガイド記事の一覧。植物図鑑（/plants/）が「1種ずつ」なのに対して、こちらは
+ * 「虫」「日当たり」「ペット」といった悩みから入る横断記事の入口。
+ * カードの中身はビルド時にHTMLへ入る（JSが無効でも全記事に到達できる）。
+ */
+const title = 'ガイド記事';
+const description =
+  '観葉植物の虫対策、日当たりが悪い部屋でも育つ種類、ペットに安全な植物の選び方。悩みごとにまとめた横断ガイド記事の一覧です。';
+
+const itemListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'ガイド記事',
+  itemListElement: GUIDES.map((guide, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: guide.title,
+    url: new URL(`/guides/${guide.slug}/`, SITE_URL).href,
+  })),
+};
+---
+
+<BaseLayout title={title} description={description}>
+  <h1>ガイド記事</h1>
+  <p class="lead">
+    「虫が出た」「部屋が暗い」「ペットがいる」——植物選びでつまずきやすいところを、
+    種類をまたいでまとめました。どの一鉢にするか迷ったら、<a href="/#diagnosis">4つの質問の診断</a>からどうぞ。
+  </p>
+
+  <ul class="guide-list">
+    {GUIDES.map((guide) => (
+      <li>
+        <article class="guide-card">
+          <h2 class="guide-title">
+            <a href={`/guides/${guide.slug}/`}>{guide.title}</a>
+          </h2>
+          <p class="guide-summary">{guide.summary}</p>
+          <p class="guide-plants">
+            <span class="guide-plants-label">よく出てくる植物</span>
+            {guide.relatedPlants
+              .map((slug) => findPlant(slug))
+              .filter((plant) => plant !== undefined)
+              .map((plant) => plant!.name)
+              .join('・')}
+          </p>
+        </article>
+      </li>
+    ))}
+  </ul>
+
+  <script type="application/ld+json" set:html={JSON.stringify(itemListJsonLd)} is:inline />
+</BaseLayout>
+
+<style>
+  .lead {
+    color: var(--muted);
+    margin-top: 0;
+  }
+
+  .guide-list {
+    display: grid;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .guide-list li {
+    margin: 0;
+  }
+
+  /* 強調は枠線のみ（枠線＋影の二重使いはしない / design.md） */
+  .guide-card {
+    height: 100%;
+    padding: var(--space-2);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .guide-card:hover {
+    border-color: var(--accent);
+  }
+
+  .guide-title {
+    margin: 0 0 var(--space-1);
+    font-size: var(--text-lg);
+    line-height: 1.4;
+  }
+  .guide-title a {
+    text-decoration: none;
+  }
+  .guide-title a:hover {
+    text-decoration: underline;
+  }
+
+  .guide-summary {
+    margin: 0 0 var(--space-1);
+  }
+
+  .guide-plants {
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+  .guide-plants-label {
+    display: inline-block;
+    margin-right: var(--space-1);
+    padding: 0 var(--space-1);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-weight: 600;
+  }
+</style>

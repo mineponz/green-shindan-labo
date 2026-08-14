@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('pet-safe-plants')!;
+
+/**
+ * 安全／注意の区分と注意書きは src/lib/plants.ts の petSafe / petNote から作る。
+ * 診断の加点（ペットがいる＝安全な種を優先）と同じデータなので、記事とツールで
+ * 言うことが食い違わない。記事ごとの補足だけここで持つ。
+ *
+ * 記載は「一般に知られている情報のまとめ」であって獣医学的助言ではない（AGENTS.md）。
+ * 断定を避け、最後に必ず動物病院へつなぐ。
+ */
+const PET_EXTRA_NOTES: Record<string, string> = {
+  monstera:
+    'サトイモ科の植物です。かじると口の中がピリピリするようで、よだれが増えたり口をしきりに気にしたりする様子が知られています。葉が大きく低い位置まで広がるので、私は置き場所にいちばん気をつかう種類だと思っています。',
+  sansevieria:
+    '含まれるサポニンが原因で、嘔吐や下痢につながることがあるとされています。棚の上に置きやすい形なので、対策そのものは取りやすい種類です。',
+  pothos:
+    'こちらもサトイモ科。やっかいなのは、垂れ下がったつるが猫にとって格好のおもちゃに見えることです。吊るす位置を高くしても、つるが伸びれば届いてしまうので、伸びたら切って整えるところまでがセットになります。',
+  gajumaru:
+    '切り口から出る白い樹液が、皮膚や口の中を刺激することがあります。剪定したあとの枝葉を床に落としたままにしないよう、私はいつも先にゴミ袋を用意してから切っています。',
+};
+
+const safePlants = PLANTS.filter((plant) => plant.petSafe);
+const cautionPlants = PLANTS.filter((plant) => !plant.petSafe);
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>結論：紹介している5種のうち、安全とされているのはパキラだけです</h2>
+  <p>
+    先に結論を書いてしまいます。このサイトで紹介している5種のなかで、
+    <strong>犬や猫に対して非毒性と分類されているのは
+    <a href="/plants/pachira/">パキラ</a>だけ</strong>です。
+    残りの4種は、程度の差はあれ「かじられると困る」側に入ります。
+  </p>
+  <p>
+    こう書くと不安になるかもしれませんが、私は「4種はダメ」という話にはしたくありません。
+    置き場所を工夫すれば一緒に暮らせますし、実際そうしている人はたくさんいます。
+    大事なのは、<strong>どの植物に何が含まれていて、何に気をつければいいかを知っておくこと</strong>だと思っています。
+  </p>
+
+  <h2>パキラが選びやすい理由</h2>
+  {safePlants.map((plant) => (
+    <p>
+      <a href={`/plants/${plant.slug}/`}>{plant.name}</a>（{plant.scientificName}）は、
+      ASPCA（米国動物虐待防止協会）などの資料で、犬・猫に対して非毒性と分類されています。
+      海外の分類にもとづく情報なので「絶対に安全」と言い切ることはできませんが、
+      少なくとも<strong>毒性の心配で選択肢から外す必要はない種類</strong>です。
+    </p>
+  ))}
+  <p>
+    しかもパキラは、明るい日陰でよく育って乾燥にも強い。
+    ペットのことを気にしながら植物を選ぶと候補がぐっと減ってしまうので、
+    その中に育てやすい種類が入っているのは、正直かなりありがたいです。
+    ちなみに、毒性が低いといっても<strong>かじられて困るのは植物のほう</strong>なので、
+    落ち着いて育てられる場所には置いてあげてください。
+  </p>
+
+  <h2>ほかの4種を置きたい場合の注意点</h2>
+  <p>
+    「どうしてもこの子（植物のほう）が好きなんだよな」というときのために、
+    種類ごとに何に気をつければいいかをまとめました。
+  </p>
+
+  {cautionPlants.map((plant) => (
+    <section class="caution">
+      <h3><a href={`/plants/${plant.slug}/`}>{plant.name}</a></h3>
+      <p class="pet-note"><span class="pet-label">ペット注意</span>{plant.petNote}</p>
+      <p>{PET_EXTRA_NOTES[plant.slug]}</p>
+    </section>
+  ))}
+
+  <h2>置き方でできる工夫</h2>
+  <p>
+    結局のところ、いちばん確実なのは<strong>物理的に届かないようにすること</strong>です。
+    私が実際にやっている・見聞きしてよかったと思う工夫はこのあたりです。
+  </p>
+  <ul>
+    <li>
+      <strong>高い場所に置く。</strong> 背の高い棚の上や壁付けの棚へ。
+      ただし猫は思っているより跳びます。「登れる足場が近くにないか」まで見てください
+    </li>
+    <li>
+      <strong>ペットが入らない部屋に置く。</strong> 寝室や仕事部屋など、
+      扉を閉めておける部屋にまとめてしまうのがいちばん気が楽です
+    </li>
+    <li>
+      <strong>垂れ下がるつるは伸ばしすぎない。</strong> 吊るしていても、
+      つるが伸びれば届く高さまで下りてきます。伸びたら切って整えるのを習慣に
+    </li>
+    <li>
+      <strong>落ちた葉・剪定した枝はすぐ片づける。</strong> 床に落ちたものは、
+      たいてい高い場所の鉢より先に見つかります
+    </li>
+  </ul>
+
+  <h2 id="vet">気になる症状が出たら、動物病院へ</h2>
+  <p class="vet-note">
+    ここに書いているのは一般に知られている情報のまとめで、獣医学的な助言ではありません。
+    かじってしまった、よだれが増えた、嘔吐や下痢がある、口をしきりに気にしている——
+    そうした様子が見られたときは、<strong>自己判断せず、動物病院・獣医師に相談してください</strong>。
+    そのとき「どの植物を、いつ、どのくらい口にしたか」がわかると診察が早くなります。
+    植物の名前を写真に撮っておく、鉢のラベルを残しておく、といった備えも役に立ちます。
+  </p>
+
+  <h2>診断でQ4「ペットがいる」を選ぶと、安全な種が優先されます</h2>
+  <p>
+    <a href="/#diagnosis">4つの質問の診断</a>のQ4で<strong>「いる（誤食に注意したい）」</strong>を
+    選ぶと、ペットに安全とされる植物に大きく加点されます。
+    この加点幅は、日当たりやお世話の手間による点差より大きく取ってあるので、
+    <strong>ペットがいると答えた場合は必ずパキラが1位になります</strong>。
+    2番目に別の植物が出ることもありますが、その場合は結果カードに誤食の注意書きが付きます。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  .caution + .caution {
+    margin-top: var(--space-3);
+  }
+
+  /* セマンティック警告色。植物記事・結果カードの「ペット注意」と同じ見た目にそろえる */
+  .pet-note {
+    margin-bottom: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    background: var(--warn-weak);
+    border-radius: var(--radius);
+    color: var(--warn);
+    font-size: var(--text-sm);
+  }
+  .pet-label {
+    margin-right: var(--space-1);
+    font-weight: 700;
+  }
+
+  /* 安全上いちばん大事な段落。色は足さず、淡い背景だけで前に出す */
+  .vet-note {
+    padding: var(--space-2);
+    background: var(--surface);
+    border-radius: var(--radius);
+  }
+</style>

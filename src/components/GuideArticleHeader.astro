@@ -1,0 +1,71 @@
+---
+import { Image } from 'astro:assets';
+
+import { findGuidePhoto } from '../lib/plant-photos.ts';
+import type { Guide } from '../lib/guides.ts';
+
+/**
+ * 横断ガイド記事の共通ヘッダー。PR表記（景表法のステマ規制対応）・タイトル・見出し写真・
+ * リード文をまとめて出す。植物記事の PlantArticleHeader.astro と同じ役割で、
+ * 見た目（PR表記のバッジ・写真の比率4:3・リードの色）もそろえている。
+ *
+ * 見出し写真は slug から引く（src/lib/plant-photos.ts の GUIDE_PHOTOS）。
+ * 素材が無くても組み上がるようにしてある（記事が出せなくなる方が困るため）。
+ */
+interface Props {
+  guide: Guide;
+}
+
+const { guide } = Astro.props;
+const photo = findGuidePhoto(guide.slug);
+---
+
+<p class="pr-notice">本記事はプロモーションを含みます。</p>
+
+<h1>{guide.title}</h1>
+
+{photo && (
+  <figure class="guide-photo">
+    <Image
+      src={photo.src}
+      alt={photo.alt}
+      widths={[480, 768, 1200]}
+      sizes="(min-width: 46rem) 44rem, 100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+  </figure>
+)}
+
+<p class="lead">{guide.lead}</p>
+
+<style>
+  .pr-notice {
+    display: inline-block;
+    margin: 0 0 var(--space-1);
+    padding: 0 var(--space-1);
+    background: var(--accent-weak);
+    border-radius: 4px;
+    font-size: var(--text-sm);
+    color: var(--muted);
+  }
+
+  /* 植物記事の見出し写真と同じ扱い（比率4:3で切り抜き、装飾は角丸だけ / design.md） */
+  .guide-photo {
+    margin: var(--space-2) 0 var(--space-3);
+  }
+  .guide-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius);
+    background: var(--accent-weak);
+  }
+
+  .lead {
+    margin-top: var(--space-1);
+    color: var(--muted);
+  }
+</style>

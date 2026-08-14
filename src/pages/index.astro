@@ -5,6 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import DiagnosisTool from '../components/DiagnosisTool.astro';
 import PlantIcon from '../components/PlantIcon.astro';
 import { HERO_PHOTO } from '../lib/plant-photos.ts';
+import { GUIDES } from '../lib/guides.ts';
 import { PLANTS } from '../lib/plants.ts';
 import { SITE_TITLE, SITE_URL } from '../consts.ts';
 
@@ -93,6 +94,20 @@ const itemListJsonLd = {
           <span class="plant-summary">{plant.summary}</span>
           {!plant.petSafe && <span class="plant-flag">ペットの誤食に注意</span>}
         </a>
+      </li>
+    ))}
+  </ul>
+
+  <h2 id="guides">悩みから選ぶガイド記事</h2>
+  <p>
+    「虫が出た」「部屋が暗い」「ペットがいる」。
+    植物選びでつまずきやすいところを、種類をまたいでまとめました。
+  </p>
+  <ul class="guide-links">
+    {GUIDES.map((guide) => (
+      <li>
+        <a href={`/guides/${guide.slug}/`}>{guide.title}</a>
+        <span class="guide-summary">{guide.summary}</span>
       </li>
     ))}
   </ul>
@@ -194,6 +209,27 @@ const itemListJsonLd = {
       color: var(--warn);
       font-size: var(--text-sm);
       font-weight: 600;
+    }
+
+    /* ガイド記事へのリンク。カードにはせず「リンク＋補足」の三次アクション扱いにして、
+       上のカードグリッド（植物5種）と主張がぶつからないようにする（design.md） */
+    .guide-links {
+      display: grid;
+      gap: var(--space-2);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .guide-links li {
+      display: grid;
+      margin: 0;
+    }
+    .guide-links a {
+      font-weight: 600;
+    }
+    .guide-summary {
+      color: var(--muted);
+      font-size: var(--text-sm);
     }
 
     .faq {

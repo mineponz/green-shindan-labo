@@ -1,0 +1,190 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('pest-control')!;
+
+/**
+ * 「虫のつきにくさ」の比較表。順位も数値も src/lib/plants.ts の attributes.pest から作る
+ * （診断の点数に使っているのと同じ値。記事に数字を手書きすると診断結果とずれる）。
+ * ひとことコメントだけこの記事で持つ。
+ */
+const PEST_COMMENTS: Record<string, string> = {
+  sansevieria: '肉厚でかたい葉。乾かし気味に育てるので、コバエの好む湿った土になりにくいのも強みです',
+  pachira: '葉がしっかりしていて虫がつきにくいほう。水やりの間隔が空くぶん土も乾きやすいです',
+  pothos: '丈夫ですが湿った土を好むぶん、コバエは出やすめ。表面の土を工夫すると変わります',
+  gajumaru: '日当たりのよい場所で風が通れば安定。乾燥するとハダニが出ることがあります',
+  monstera: '葉が大きく重なりやすいので、風通しが悪いと虫の隠れ場所になります。そのぶん葉は拭きやすいです',
+};
+
+const pestRanking = [...PLANTS].sort((a, b) => b.attributes.pest - a.attributes.pest);
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>コバエ（キノコバエ）— 土のまわりをふわふわ飛ぶ小さな黒い虫</h2>
+  <p>
+    「観葉植物を置いてから小さい虫が飛ぶようになった」というとき、たいていの犯人がこれです。
+    体長1〜3mmほどの黒い小バエで、<strong>土のまわりを頼りなくふわふわ飛びます</strong>。
+    私は夜にテレビを見ていて目の前を横切られ、思わず声が出ました。刺したりはしないのですが、
+    とにかく気になってしまうんですよね。
+  </p>
+  <p>
+    原因ははっきりしています。腐葉土や堆肥のような<strong>有機質の多い土</strong>と、
+    水のやりすぎによる<strong>過湿</strong>。土の表面が湿りっぱなしだと、そこが産卵場所になります。
+    裏を返せば、そこさえ断てば数は確実に減ります。
+  </p>
+  <ul>
+    <li>
+      <strong>対処</strong> — 土の表面2〜3cmを、赤玉土やパーライトなど無機質の素材に入れ替えます。
+      幼虫のごはんも産卵場所もまとめて無くなるので、これがいちばん効きます
+    </li>
+    <li>
+      <strong>予防</strong> — 水やりは「土の表面が乾いてから」。受け皿にたまった水も必ず捨ててください
+    </li>
+    <li>
+      <strong>応急処置</strong> — すでに飛んでいる成虫は、黄色い粘着トラップで数を減らせます
+    </li>
+  </ul>
+  <p>
+    私の実感としては、化粧砂を敷いたときがいちばん変化がありました。
+    見ためもすっきりするので、正直これは早くやればよかったなと思っています。
+  </p>
+  <AmazonLink keyword="コバエ 粘着トラップ 観葉植物" label="Amazonで「コバエの粘着トラップ」を見る" />
+  <AmazonLink keyword="観葉植物 化粧砂 赤玉土 コバエ対策" label="Amazonで「土の表面に敷く化粧砂」を見る" />
+
+  <h2>ハダニ — 葉が白っぽくかすれてきたら疑う</h2>
+  <p>
+    葉の色がなんとなく白っぽく、かすれたようになってきたら、こちらの可能性があります。
+    大きさは0.5mm以下。私も最初は肉眼で見つけられず、「葉が汚れてるのかな」と拭いていました。
+    正体がわかったときは、なかなかの衝撃でした。
+  </p>
+  <ul>
+    <li><strong>見分け方</strong> — 葉の裏に赤や黄色の細かい点。ひどくなるとクモの巣のような細い糸を張ります</li>
+    <li><strong>症状</strong> — 葉の表が白っぽくかすれ、進むと葉全体が色あせて元気がなくなります</li>
+    <li><strong>原因</strong> — 乾燥した環境を好みます。エアコンの効いた室内はまさに好条件です</li>
+  </ul>
+  <p>
+    うれしいことに、ハダニは<strong>水が苦手</strong>です。だから対処も予防も、
+    やることは同じ。<strong>霧吹きで葉の裏表に葉水をする</strong>だけです。
+    すでについている場合は、濡らしたティッシュで葉裏を拭き取ってから葉水をすると早く落ち着きます。
+    数が多くて手に負えないときだけ、園芸用のスプレーを使ってください。
+  </p>
+  <p>
+    葉水はホコリ落としにもなって葉がきれいに見えるので、私は気づいたときにシュッとやる程度で続けています。
+    週に2〜3回でも十分。難しく考えなくて大丈夫です。
+  </p>
+  <AmazonLink keyword="霧吹き 園芸 スプレーボトル 葉水" label="Amazonで「葉水用の霧吹き」を見る" />
+  <AmazonLink keyword="観葉植物 殺虫剤 スプレー ハダニ" label="Amazonで「観葉植物用の殺虫スプレー」を見る" />
+
+  <h2>カイガラムシ — 動かないので「植物の一部」に見えてしまう</h2>
+  <p>
+    3種のなかでいちばん厄介なのがこれです。茎や葉の付け根に、
+    <strong>1〜3mmの貝殻のようなもの、あるいは白い綿のようなもの</strong>が付いていたらカイガラムシ。
+    動かないので、私は最初「これも植物の一部かな？」と思ってしばらく放っておいてしまいました。
+    あとで調べて青くなった記憶があります。
+  </p>
+  <ul>
+    <li>
+      <strong>対処（初期）</strong> — 使い古しの歯ブラシや綿棒でこすり落とします。
+      鉢ごと浴室やベランダに運んで、シャワーのジェット水流で吹き飛ばすのも早いです
+    </li>
+    <li>
+      <strong>薬より物理</strong> — 殻に覆われた成虫には薬剤が届きにくいので、
+      落とすのが基本。数が多いときは枝ごと切ってしまうのも手です
+    </li>
+    <li>
+      <strong>予防</strong> — 風通しを良くすること、月に一度は葉の裏と付け根まで見ること
+    </li>
+  </ul>
+  <p>
+    とにかく早期発見に尽きます。水やりのついでに葉を触っていると、
+    「あれ、ここだけざらっとする」と指先で気づけるようになります。
+  </p>
+
+  <h2>5種でみる「虫のつきにくさ」</h2>
+  <p>
+    このサイトで紹介している5種にも、虫のつきにくさには差があります。
+    下の数字は診断の点数に使っているものと同じ（5が最も虫がつきにくい）です。
+  </p>
+  <table class="pest-table">
+    <thead>
+      <tr>
+        <th scope="col">植物</th>
+        <th scope="col">虫のつきにくさ</th>
+        <th scope="col">ひとこと</th>
+      </tr>
+    </thead>
+    <tbody>
+      {pestRanking.map((plant) => (
+        <tr>
+          <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+          <td class="score">{plant.attributes.pest} / 5</td>
+          <td>{PEST_COMMENTS[plant.slug]}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p>
+    虫がとにかく苦手なら、<a href="/plants/sansevieria/">サンスベリア</a>か
+    <a href="/plants/pachira/">パキラ</a>から入るのがいちばん安心だと思います。
+    逆に<a href="/plants/monstera/">モンステラ</a>は要注意寄りですが、
+    「だからやめておけ」とは思いません。葉が大きいぶん一枚ずつ拭きやすいですし、
+    私はあの葉を拭いている時間がけっこう好きです。要は、置き場所と風通しを気にかけてあげられるかどうかです。
+  </p>
+
+  <h2>虫が苦手なら、診断で「虫のつきにくさ」を選んでみてください</h2>
+  <p>
+    どれを選べばいいか迷ったら、<a href="/#diagnosis">4つの質問の診断</a>を試してみてください。
+    Q3「とくに重視したいことは？」で<strong>「虫がつきにくさ」</strong>を選ぶと、
+    その分の配点が虫のつきにくさに寄るので、サンスベリアやパキラのような虫のつきにくい種が上位に出ます。
+    日当たりやお世話の手間も一緒に見て決められるので、「虫は嫌だけど暗い部屋なんだよな」という場合にも答えが出ます。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 比較表。枠線は横罫だけにして、囲みの重さを出さない（枠線＋影の二重使いを避ける / design.md）。
+   * 幅の狭い画面でも崩れないよう、横スクロールではなくセルの折り返しで逃がす。
+   */
+  .pest-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .pest-table th,
+  .pest-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .pest-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .pest-table tbody th {
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .score {
+    white-space: nowrap;
+  }
+</style>

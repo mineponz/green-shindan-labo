@@ -1,0 +1,171 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('low-light-plants')!;
+
+/**
+ * 紹介順は src/lib/plants.ts の attributes.shade（耐陰性）の高い順。
+ * 数字も順位もデータ側から作るので、属性を調整したら記事の並びも自動で追従する
+ * （診断の結果と記事の説明がずれない）。コメントだけこの記事で持つ。
+ */
+const SHADE_NOTES: Record<string, { verdict: string; body: string[] }> = {
+  pothos: {
+    verdict: 'まず試すならこれ',
+    body: [
+      '5種のなかでいちばん暗い場所に強いのがポトスです。北向きの部屋、窓から離れた棚、廊下、洗面所。「ここはさすがに無理かな」という場所でも、意外と平気な顔で育ってくれます。値段も手ごろなので、私も最初の一鉢はこれにしました。',
+      'ただし「暗くても枯れない」であって「暗いほうが好き」ではありません。暗い場所に長く置くと、斑がぼやけて緑一色に近づいたり、葉と葉の間隔が空いてつるだけが伸びたりします。たまに明るいところへ移してあげると、見ちがえるほどきれいになります。',
+    ],
+  },
+  pachira: {
+    verdict: '明るい日陰の優等生',
+    body: [
+      'パキラは明るい日陰でよく育ち、しかも乾燥に強い。レースカーテン越しの光が入るくらいの場所なら、かなり気持ちよく育ってくれます。幹の編み込みと手のひらのような葉で見ばえもするので、「日当たりは自信ないけど、部屋の主役がほしい」という人にはこれをおすすめしたいです。',
+      'ペットがいるお部屋でも選びやすい種類なのも、地味にありがたいところです。',
+    ],
+  },
+  monstera: {
+    verdict: '日陰でも育つが、生長はゆっくり',
+    body: [
+      'モンステラはもともと直射日光が苦手で、明るい日陰がちょうどいい植物です。暗めの部屋でも育ちますが、そのぶん生長はゆるやかになります。私の感覚では「枯れはしないけれど、新しい葉がなかなか出ない」という感じ。',
+      '暗い場所に置くと、あの深い切れ込みが入らない葉が出てくることがあります。切れ込みの入った大きな葉を楽しみたいなら、できるだけ明るい場所を用意してあげてください。',
+    ],
+  },
+  sansevieria: {
+    verdict: '耐陰性はあるが、本当は日光が好き',
+    body: [
+      'サンスベリアは耐陰性もあるのですが、本来は日光が大好きな植物です（日ざしへの強さは5段階で5）。暗い部屋でも枯れはしませんが、生育はゆっくりになります。',
+      '水やりを忘れがちな人には最高の相棒なので、暗い部屋に置くなら「育てる」というより「置いておく」くらいの気持ちのほうが、お互い幸せかもしれません。',
+    ],
+  },
+  gajumaru: {
+    verdict: '暗い部屋にはあまり向きません',
+    body: [
+      'ここは正直に書きます。ガジュマルは日光が大好きな木で、暗い部屋にはあまり向きません。日照が足りないと枝がひょろひょろ伸びて、あのぷっくりした幹の魅力も出にくくなります。',
+      '日当たりのよい窓ぎわを用意できるならとても楽しい木なので、暗い部屋では無理に選ばず、上の4種から選ぶほうが無難だと思います。',
+    ],
+  },
+};
+
+const shadeRanking = [...PLANTS].sort((a, b) => b.attributes.shade - a.attributes.shade);
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>そもそも「日当たりが悪い」ってどのくらい？</h2>
+  <p>
+    人によって思い浮かべる暗さがけっこう違うので、先にそろえておきます。
+    このページで「日当たりが悪め」と呼んでいるのは、だいたいこんな場所です。
+  </p>
+  <ul>
+    <li><strong>北向きの部屋</strong> — 直射日光は入らないけれど、日中は本が読めるくらいの明るさ</li>
+    <li><strong>窓から離れた場所</strong> — 部屋の奥の棚、廊下、洗面所など</li>
+    <li><strong>レースカーテン越しの光</strong> — やわらかい光が一日じゅう入る「明るい日陰」</li>
+  </ul>
+  <p>
+    逆に、<strong>昼間でも照明をつけないと手元が見えない場所</strong>は、
+    さすがにどの植物にとってもつらい環境です。そこに置きたい場合は、
+    後半に書いた「置きっぱなしにしない」工夫のほうを読んでみてください。
+  </p>
+
+  <h2>耐陰性が高い順に、5種を見ていきます</h2>
+  <p>
+    数字は耐陰性（暗い場所での育ちやすさ）の目安で、5がいちばん暗さに強いという意味です。
+    診断で使っている値をそのまま出しています。
+  </p>
+
+  {shadeRanking.map((plant) => (
+    <section class="plant-section">
+      <h3>
+        <a href={`/plants/${plant.slug}/`}>{plant.name}</a>
+        <span class="shade">耐陰性 {plant.attributes.shade} / 5</span>
+        <span class="verdict">{SHADE_NOTES[plant.slug].verdict}</span>
+      </h3>
+      {SHADE_NOTES[plant.slug].body.map((paragraph) => (
+        <p>{paragraph}</p>
+      ))}
+    </section>
+  ))}
+
+  <h2>日当たりが悪い部屋で育てるコツ</h2>
+  <p>
+    植物を選んだら、あとは置き方でずいぶん変わります。私が続けていて効果を感じているのは、この3つです。
+  </p>
+  <ul>
+    <li>
+      <strong>ときどき明るい場所へ移動させる。</strong> ずっと暗い場所に置きっぱなしにせず、
+      週末だけ窓ぎわに出す、といった「日光浴の日」をつくるだけでも違います。
+      ただし急に直射日光へ出すと葉焼けするので、レースカーテン越しから慣らしてください
+    </li>
+    <li>
+      <strong>植物育成ライトを使う。</strong> どうしても光が足りない場所なら、これがいちばん確実です。
+      最近はクリップ式や電球型で、部屋の雰囲気を壊さないものが増えました
+    </li>
+    <li>
+      <strong>水やりの回数を減らす。</strong> ここが見落とされがちです。
+      暗い場所は蒸散が少なく、土がなかなか乾きません。明るい部屋と同じペースで水をやると
+      根が傷みます。<strong>土の表面が乾いてから</strong>を、いつもより慎重に守ってください
+    </li>
+  </ul>
+  <p>
+    私も昔、暗い場所に置いた鉢を「元気がないから」とせっせと水をやって、
+    かえって弱らせてしまったことがあります。暗い部屋では、水は少なめが正解です。
+  </p>
+
+  <h2>迷ったら診断で、Q1「あまり当たらない」を選んでみてください</h2>
+  <p>
+    <a href="/#diagnosis">4つの質問の診断</a>のQ1「お部屋の日当たりは？」で
+    <strong>「あまり当たらない」</strong>を選ぶと、耐陰性の高い種に配点が寄るので、
+    ポトスやパキラのような暗さに強い植物が上位に出ます。
+    お世話にかけられる手間やペットの有無も一緒に見るので、
+    「暗い部屋だけど、水やりは忘れがち」といった条件でも答えが出ます。
+  </p>
+  <p>
+    ちなみに、日当たりが悪い部屋は<strong>土が乾きにくくコバエが出やすい</strong>という別の悩みもあります。
+    そちらは<a href="/guides/pest-control/">観葉植物の虫対策ガイド</a>にまとめました。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /* 見出し＋本文のまとまりを余白でグルーピングする（罫線や囲みは足さない / design.md） */
+  .plant-section + .plant-section {
+    margin-top: var(--space-3);
+  }
+
+  .plant-section h3 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1);
+  }
+
+  /* 数値は補助情報なので、色は使わず小さくして後退させる */
+  .shade {
+    color: var(--muted);
+    font-size: var(--text-sm);
+    font-weight: 400;
+  }
+
+  /* ひとこと評は「補助強調」の役割色（CTAの色とは分けている） */
+  .verdict {
+    padding: 0 var(--space-1);
+    background: var(--highlight-weak);
+    border-radius: 4px;
+    color: var(--highlight);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+</style>
