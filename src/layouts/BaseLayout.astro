@@ -26,6 +26,9 @@ const isAssociateTagPlaceholder = AMAZON_ASSOCIATE_TAG === AMAZON_ASSOCIATE_TAG_
 
 const fullTitle = title ? `${title} | ${SITE_TITLE}` : `${SITE_TITLE} — ${SITE_TAGLINE}`;
 const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+// SNSシェア用の画像。全ページ共通（1200x630、public/og-image.jpg）。
+// 記事ごとに変える場合はPropsに追加してここで出し分ける。
+const ogImage = new URL('/og-image.jpg', SITE_URL).href;
 
 // パンくずの構造化データ。トップ → 中間 → 現在ページ
 const crumbs = [
@@ -62,7 +65,13 @@ const breadcrumbJsonLd = {
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} is:inline />
