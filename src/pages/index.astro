@@ -10,7 +10,7 @@ import { PLANTS } from '../lib/plants.ts';
 import { SITE_TITLE, SITE_URL } from '../consts.ts';
 
 /**
- * トップページ。診断ツールを主役に置き、その下に5種の図鑑一覧を静的に並べる。
+ * トップページ。診断ツールを主役に置き、その下に図鑑一覧（PLANTS全種）を静的に並べる。
  * 植物の情報そのものはビルド時にHTMLへ入っている（JSが無効でも読める）。
  */
 
@@ -80,10 +80,12 @@ const itemListJsonLd = {
 
   <DiagnosisTool />
 
-  <h2 id="plants">紹介している観葉植物5種</h2>
+  <h2 id="plants">紹介している観葉植物{PLANTS.length}種</h2>
   <p>
     どれも育てやすさで定評のある定番です。名前をおしても、診断してからでも、
     それぞれの育て方・虫対策・飾り方を読めます。
+    犬や猫と暮らしている人向けに、<strong>非毒性とされている種</strong>も
+    {PLANTS.filter((plant) => plant.petSafe).length}種そろえました。
   </p>
   <ul class="plant-grid">
     {PLANTS.map((plant) => (
@@ -212,7 +214,7 @@ const itemListJsonLd = {
     }
 
     /* ガイド記事へのリンク。カードにはせず「リンク＋補足」の三次アクション扱いにして、
-       上のカードグリッド（植物5種）と主張がぶつからないようにする（design.md） */
+       上のカードグリッド（植物一覧）と主張がぶつからないようにする（design.md） */
     .guide-links {
       display: grid;
       gap: var(--space-2);

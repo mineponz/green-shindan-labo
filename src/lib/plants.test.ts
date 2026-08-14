@@ -35,11 +35,27 @@ test('PLANTS に形式エラーがない', () => {
   assert.deepEqual(validatePlants(PLANTS), []);
 });
 
-test('PLANTS は決定した5種を過不足なく持つ', () => {
+test('PLANTS は決定した8種を過不足なく持つ', () => {
   assert.deepEqual(
     PLANTS.map((p) => p.slug).sort(),
-    ['gajumaru', 'monstera', 'pachira', 'pothos', 'sansevieria']
+    [
+      'areca-palm',
+      'gajumaru',
+      'monstera',
+      'pachira',
+      'peperomia',
+      'pothos',
+      'sansevieria',
+      'tillandsia',
+    ]
   );
+});
+
+test('ペットに安全な種が複数ある（診断でペット「いる」を選んだときの選択肢を確保する）', () => {
+  // 2026-08-14にアレカヤシ・ペペロミア・チランジアを追加した狙いそのもの。
+  // ここが1種に戻ると「ペットがいる＝必ず同じ植物」になり、診断の意味が薄れる
+  const safe = PLANTS.filter((p) => p.petSafe).map((p) => p.slug);
+  assert.deepEqual(safe.sort(), ['areca-palm', 'pachira', 'peperomia', 'tillandsia']);
 });
 
 test('validatePlants: 重複slugを検出する', () => {
@@ -189,7 +205,7 @@ test('同じ回答なら常に同じ結果になる（決定的）', () => {
   }
 });
 
-test('全36パターンを合わせると、5種すべてが少なくとも1回はおすすめされる', () => {
+test('全36パターンを合わせると、8種すべてが少なくとも1回はおすすめされる', () => {
   const recommended = new Set<string>();
   for (const answers of COMBINATIONS) {
     for (const r of recommendPlants(answers)) recommended.add(r.plant.slug);

@@ -23,6 +23,11 @@ import sansevieriaThumbPhoto from '../assets/photos/sansevieria-thumb.jpg';
 import pothosPhoto from '../assets/photos/pothos.jpg';
 import gajumaruPhoto from '../assets/photos/gajumaru.jpg';
 import gajumaruThumbPhoto from '../assets/photos/gajumaru-thumb.jpg';
+import arecaPalmPhoto from '../assets/photos/areca-palm.jpg';
+import arecaPalmThumbPhoto from '../assets/photos/areca-palm-thumb.jpg';
+import peperomiaPhoto from '../assets/photos/peperomia.jpg';
+import tillandsiaPhoto from '../assets/photos/tillandsia.jpg';
+import tillandsiaThumbPhoto from '../assets/photos/tillandsia-thumb.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -34,6 +39,8 @@ export interface Photo {
    * サンスベリア・ガジュマルは元写真が横長/縦長すぎて56角のサムネイルだと
    * 主役が真ん中に来なかったため専用カットを用意した
    * （2026-08-13、管理者の見た目フィードバックで追加）。
+   * アレカヤシ・チランジアも同じ理由（株が小さく写っていて56角だと何の植物か伝わらない）で
+   * 寄せたカットを持たせている（2026-08-14）。
    */
   thumbSrc?: ImageMetadata;
 }
@@ -68,6 +75,20 @@ export const PLANT_PHOTOS: Record<string, Photo> = {
     thumbSrc: gajumaruThumbPhoto,
     alt: '白い背景を大きく取り、上へまっすぐ伸びる枝先に茂る葉をアップで見せるガジュマル',
   },
+  'areca-palm': {
+    src: arecaPalmPhoto,
+    thumbSrc: arecaPalmThumbPhoto,
+    alt: '白い鉢に植えられ、明るい窓辺のサイドテーブルの上で細い葉を涼しげに広げるアレカヤシ',
+  },
+  peperomia: {
+    src: peperomiaPhoto,
+    alt: '白い縞模様の入った厚みのある丸い葉が、画面いっぱいに重なり合っているペペロミア',
+  },
+  tillandsia: {
+    src: tillandsiaPhoto,
+    thumbSrc: tillandsiaThumbPhoto,
+    alt: '白い壁に置かれ、土も鉢も使わずに細く波打った葉を四方へ伸ばすチランジア（エアプランツ）',
+  },
 };
 
 /** slug に対応する写真を返す。未登録なら undefined（記事側で写真なしとして扱う） */
@@ -79,7 +100,7 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  * 横断ガイド記事（/guides/<slug>/）の見出し写真。キーは src/lib/guides.ts の slug と一致させる。
  *
  * 新規素材は増やさず既存写真を流用している（虫対策＝特定の植物に紐づかないのでヒーロー写真、
- * 日当たり＝いちばん耐陰性の高いポトス、ペット＝唯一の非毒性種パキラ）。
+ * 日当たり＝いちばん耐陰性の高いポトス、ペット＝非毒性種の筆頭であるパキラ）。
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {

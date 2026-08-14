@@ -5,17 +5,16 @@ import { PLANTS } from '../../lib/plants.ts';
 
 /**
  * 植物図鑑の一覧。詳細版のカード（variant="result"）をビルド時にそのまま並べる。
- * 診断を使わない人・JSが動かない人でも、全5種の情報にここから到達できる。
+ * 診断を使わない人・JSが動かない人でも、全種の情報にここから到達できる。
  */
 const title = '植物図鑑';
-const description =
-  'グリーン診断ラボで紹介している観葉植物5種（パキラ・モンステラ・サンスベリア・ポトス・ガジュマル）の一覧です。それぞれの性質・向いている人・ペットへの注意をまとめています。';
+const description = `グリーン診断ラボで紹介している観葉植物${PLANTS.length}種（${PLANTS.map((plant) => plant.name).join('・')}）の一覧です。それぞれの性質・向いている人・ペットへの注意をまとめています。`;
 ---
 
 <BaseLayout title={title} description={description}>
   <h1>植物図鑑</h1>
   <p class="lead">
-    このサイトで紹介している観葉植物5種の一覧です。
+    このサイトで紹介している観葉植物{PLANTS.length}種の一覧です。
     どれを選べばいいか迷ったら、<a href="/#diagnosis">4つの質問の診断</a>からどうぞ。
     虫対策・日当たり・ペットなど悩みから選びたい場合は<a href="/guides/">ガイド記事</a>もあります。
   </p>
