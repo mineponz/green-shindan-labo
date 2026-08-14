@@ -15,7 +15,7 @@
 | `sansevieria-thumb.jpg` | サンスベリアの一覧・診断結果カードのサムネイル専用 | Damian Apanasowicz（`sansevieria.jpg`と同じ原本） | 同上を`sips -c 1000 1000 --cropOffset 0 600`で株が中央に来るよう切り出し |
 | `gajumaru-thumb.jpg` | ガジュマルの一覧・診断結果カードのサムネイル専用 | Elīna Arāja（`gajumaru.jpg`と同じ原本） | 同上を`sips -c 900 900 --cropOffset 380 280`で葉のアップ・鉢が写らない構図に切り出し |
 | `areca-palm.jpg` | アレカヤシ記事の見出し | Tuğba Dönmez | https://images.pexels.com/photos/12982687/pexels-photo-12982687.jpeg |
-| `peperomia.jpg` | ペペロミア記事の見出し | TU HAN-WEI | https://images.pexels.com/photos/25408843/pexels-photo-25408843.jpeg |
+| `peperomia.jpg` | ペペロミア記事の見出し | Kenneth Surillo | https://images.pexels.com/photos/22610809/pexels-photo-22610809.jpeg |
 | `tillandsia.jpg` | チランジア記事の見出し | Chandra Lynch | https://images.pexels.com/photos/971214/pexels-photo-971214.jpeg を`sips -c 1200 1600 --cropOffset 1030 0`で切り出し（下記） |
 | `areca-palm-thumb.jpg` | アレカヤシの一覧・診断結果カードのサムネイル専用 | Tuğba Dönmez（`areca-palm.jpg`と同じ原本） | 同上を`sips -c 1250 1250 --cropOffset 470 95`で葉と鉢の口が入る構図に切り出し |
 | `tillandsia-thumb.jpg` | チランジアの一覧・診断結果カードのサムネイル専用 | Chandra Lynch（`tillandsia.jpg`と同じ原本） | ダウンロードした原本を`sips -c 1250 1250 --cropOffset 1000 50`で株が中央に来るよう切り出し |
@@ -35,6 +35,9 @@
   - アレカヤシ・チランジアは56角のサムネイルだと株が小さすぎて何の植物か分からないので、
     `-thumb.jpg`の別カットを用意した（`plant-photos.ts`の`thumbSrc`）。
     ペペロミアは葉が画面いっぱいに写っているので専用カットは不要。
+- 2026-08-14: 管理者から「ペペロミアはもう少し明るい色のものを」と指摘。スイカペペロミア
+  （濃い緑×白の縞、25408843）から、斑入り種（クリーム色×緑、22610809、撮影者Kenneth Surillo）へ
+  差し替え。altも中身に合わせて更新済み。
 - 取得日: 2026-08-13（`?auto=compress&cs=tinysrgb&w=1600` を付けて長辺1600pxで取得）
 - 表示は `<Image>`（astro:assets）経由。リサイズとWebP変換はビルド時に走るので、
   ここに置く原本は加工せずそのまま残しておく。

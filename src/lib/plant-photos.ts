@@ -82,7 +82,7 @@ export const PLANT_PHOTOS: Record<string, Photo> = {
   },
   peperomia: {
     src: peperomiaPhoto,
-    alt: '白い縞模様の入った厚みのある丸い葉が、画面いっぱいに重なり合っているペペロミア',
+    alt: 'クリーム色と緑の斑入りの葉が明るく茂る、白い背景に置かれたペペロミア',
   },
   tillandsia: {
     src: tillandsiaPhoto,
