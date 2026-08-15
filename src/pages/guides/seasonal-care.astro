@@ -1,0 +1,257 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('seasonal-care')!;
+
+/**
+ * 「季節との相性」の一覧。並び順も数値も src/lib/plants.ts の attributes.sun / shade から作る
+ * （診断の点数に使っているのと同じ値。記事に数字を手書きすると診断結果とずれる / AGENTS.md）。
+ * ひとことコメントだけこの記事で持つ。
+ *
+ * 注意: plants.ts は季節耐性（耐暑性・耐寒性）のデータを持っていない。ここで使っている
+ * sun / shade はあくまで「日ざしへの強さ」「耐陰性」なので、季節の話は
+ * 「日光を好む種は冬の日照不足がこたえやすい」といった一般論の範囲に留めている。
+ * 越冬温度のような具体的な数値をこの表から導かないこと。
+ */
+const SEASON_NOTES: Record<string, string> = {
+  sansevieria:
+    '冬の水やりでいちばん失敗しやすいのがこの子です。乾燥に強いぶん、寒い時期に夏と同じペースで水をやると根が耐えられません。冬は思いきって間隔を空けてください',
+  gajumaru:
+    '日光が大好きなので、冬の日照不足で葉をぱらぱら落とすことがあります。冬こそ一番明るい窓ぎわへ。ただし夜の窓ぎわは冷えるので、寝る前に少し部屋の内側へ寄せると安心です',
+  'areca-palm':
+    '明るさを欲しがるわりに乾燥には弱いので、冬は暖房の風がいちばんの敵になります。葉先が茶色くカサついてきたら、葉水が足りていない合図です',
+  pachira:
+    '夏の直射日光では葉焼けするので、レースカーテン越しくらいがちょうどいいです。冬は乾かし気味にしておけば、そこまで手はかかりません',
+  tillandsia:
+    '土がないぶん、季節の差が「乾くまでの時間」に出ます。夏はすぐ乾き、冬はなかなか乾かない。水にくぐらせたあと、数時間で乾く場所かどうかで置き場所を決めてください',
+  monstera:
+    'もともと直射日光が苦手なので、夏の窓ぎわは要注意です。冬は生長がほとんど止まるので、水やりを減らすのを忘れずに',
+  pothos:
+    '季節の光量の変化にいちばん動じないタイプです。冬に水をやりすぎない、これさえ守れば越えられます',
+  peperomia:
+    '厚い葉に水をためてくれるので乾燥には強め。むしろ夏の直射日光で葉が白く抜けてしまうほうが心配です',
+};
+
+/** 日ざしを好むタイプ（冬の日照不足がこたえやすい側） */
+const sunLovers = PLANTS.filter((plant) => plant.attributes.sun >= 4);
+/** 耐陰性が高く、強い日ざしはそこまで求めないタイプ（季節の光量変化に強い側） */
+const shadeTolerant = PLANTS.filter((plant) => plant.attributes.shade >= 4 && plant.attributes.sun <= 3);
+
+const seasonRanking = [...PLANTS].sort(
+  (a, b) => b.attributes.sun - a.attributes.sun || b.attributes.shade - a.attributes.shade
+);
+
+const nameList = (plants: typeof PLANTS) => plants.map((plant) => plant.name).join('・');
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>夏に気をつけたい3つのこと</h2>
+  <p>
+    夏は多くの観葉植物にとって<strong>生長期</strong>です。ぐんぐん葉を伸ばしてくれる楽しい季節なのですが、
+    そのぶん環境の変化も激しくて、私は毎年この時期にいちばんヒヤッとさせられます。
+    気をつけるのは、日ざし・水・風の3つだけです。
+  </p>
+
+  <h3>① 直射日光の葉焼け — 「明るくしてあげよう」が裏目に出る</h3>
+  <p>
+    「よく育つように」と思って夏の窓ぎわに出したら、数日で葉が白く抜けてしまった。
+    私はこれをモンステラでやってしまいました。焼けた葉はもう元に戻らないので、
+    けっこう長く落ち込みます。
+  </p>
+  <p>
+    観葉植物の多くは、もともと森の中でほかの木の陰に育っている植物です。
+    真夏の直射日光は、彼らにとって明るすぎます。
+    <strong>レースカーテン越しのやわらかい光</strong>が基本、と覚えておいてください。
+    ベランダに出したい場合も、いきなり炎天下ではなく、日陰から少しずつ慣らします。
+  </p>
+  <AmazonLink keyword="レースカーテン 遮熱 UVカット" label="Amazonで「遮熱レースカーテン」を見る" />
+
+  <h3>② 水切れに注意。ただし受け皿の水は溜めない</h3>
+  <p>
+    夏は生長期で、植物がよく水を欲しがります。土の乾きも早いので、
+    春や秋と同じ感覚でいると水切れさせてしまいます。
+    <strong>土の表面が乾いていたら、鉢底から流れ出るまでたっぷり</strong>。これが夏のリズムです。
+  </p>
+  <p>
+    ただし、ここで必ずセットにしてほしいことがあります。
+    <strong>受け皿に溜まった水は、必ず捨ててください。</strong>
+    溜めっぱなしにすると根が常に水に浸かった状態になり、根腐れの原因になります。
+    夏場はそこがコバエの発生源にもなるので、いいことがひとつもありません。
+    水やりのあとに受け皿を見にいく、というところまでを一連の動作にしてしまうのがおすすめです。
+  </p>
+
+  <h3>③ 風通しを良くする — 蒸れは水切れよりこわい</h3>
+  <p>
+    意外と見落とされがちなのが、風です。閉めきった夏の部屋は高温多湿で、
+    株が蒸れて弱ったり、根が傷んだりします。私の実感では、
+    <strong>夏に調子を崩す原因は、水切れより蒸れのほうが多い</strong>です。
+  </p>
+  <p>
+    やることは単純で、ときどき窓を開ける、サーキュレーターの風を壁に当てて
+    部屋の空気をゆるく回す、鉢と鉢の間隔を少し空ける。それだけで違います。
+    植物に直接強い風を当て続ける必要はありません。空気が動いていれば十分です。
+  </p>
+  <AmazonLink keyword="サーキュレーター 静音 空気循環" label="Amazonで「サーキュレーター」を見る" />
+
+  <h2>冬に気をつけたい4つのこと</h2>
+  <p>
+    そして冬。冒頭に書いたとおり、私が根腐れをやらかしたのはこの季節です。
+    夏の感覚のまま水をやり続けたのが原因でした。
+    <strong>冬の失敗は、たいてい「かまいすぎ」から起きます。</strong>
+  </p>
+
+  <h3>① 水やりの頻度を落とす</h3>
+  <p>
+    冬は多くの観葉植物の生長がゆっくりになります。水を吸い上げる力も落ちるので、
+    夏と同じペースで水をやると、土がいつまでも湿ったままになって根が傷みます。
+  </p>
+  <p>
+    目安は、<strong>土の表面が乾いてから、さらに2〜3日待ってから水をやる</strong>くらい。
+    「乾いた＝すぐ水」ではなく、ひと呼吸おく感じです。
+    最初はかわいそうな気がしますが、冬に関しては、待つほうが植物のためになります。
+  </p>
+
+  <h3>② 受け皿に溜まった水は都度捨てる</h3>
+  <p>
+    夏と同じ話ですが、冬はもっと大事です。気温が低くて水が減りにくいぶん、
+    受け皿の水は長く残り続けます。根腐れの原因にも、虫の発生源にもなります。
+    水やりの回数が減る季節だからこそ、一回ごとに受け皿まで見てあげてください。
+    虫のほうが気になる人は、<a href="/guides/pest-control/">観葉植物の虫対策ガイド</a>もどうぞ。
+  </p>
+
+  <h3>③ 暖房の風を直接当てない。乾燥対策には葉水</h3>
+  <p>
+    冬の室内は、私たちが思っている以上に乾燥しています。
+    そこにエアコンやヒーターの風が直接当たると、葉があっという間にカサカサになり、
+    葉先から茶色く枯れこんできます。乾燥した環境はハダニも呼びます。
+  </p>
+  <p>
+    まずは<strong>暖房の風が直接当たらない場所へ動かすこと</strong>。
+    そのうえで、<strong>霧吹きで葉に水をかける「葉水」</strong>が効きます。
+    土に水をやるのとは別物で、葉のまわりの湿度を上げるための作業です。
+    水やりの回数が減る冬でも、葉水はむしろ増やしていいくらい。
+    私は気づいたときにシュッとやる程度ですが、それでも葉の様子がずいぶん違います。
+  </p>
+  <AmazonLink keyword="霧吹き 園芸 スプレーボトル 葉水" label="Amazonで「葉水用の霧吹き」を見る" />
+
+  <h3>④ 水やりは、朝晩を避けて暖かい時間帯に</h3>
+  <p>
+    これは知らないとまずやらない工夫だと思います。冬の朝晩は冷え込むので、
+    その時間に水をやると、冷たい水と冷えた空気で根が一気に弱ります。
+    <strong>気温の上がった昼前後に水をやる</strong>と、それだけで負担がずいぶん減ります。
+  </p>
+  <p>
+    ついでにもうひとつ。冬の窓ぎわは日中こそ暖かいのですが、夜はかなり冷え込みます。
+    日中は窓ぎわ、夜は少し部屋の内側へ。面倒に感じるなら、
+    寝る前に鉢をひと足分だけ動かす、くらいの気持ちで大丈夫です。
+  </p>
+
+  <h2>{PLANTS.length}種でみる、季節との相性</h2>
+  <p>
+    このサイトで紹介している{PLANTS.length}種は、性質がそれぞれ違うので、
+    季節でつまずくポイントも変わります。下の数字は診断の点数に使っているものと同じで、
+    <strong>日ざしへの強さ</strong>（大きいほど強い光に耐えられる）と
+    <strong>耐陰性</strong>（大きいほど暗さに強い）です。
+  </p>
+  <p>
+    ざっくり言うと、日ざしを好む{nameList(sunLovers)}は
+    <strong>冬の日照不足</strong>がこたえやすいタイプ。日が短くなる時期は、
+    いちばん明るい場所を用意してあげてください。
+    反対に、耐陰性が高い{nameList(shadeTolerant)}は
+    <strong>季節による光量の変化に強く</strong>、置き場所をあまり動かさなくても機嫌よく育ちます。
+    はじめての一鉢なら、こちら側から選ぶと季節の変わり目で慌てずに済みます。
+  </p>
+  <table class="season-table">
+    <thead>
+      <tr>
+        <th scope="col">植物</th>
+        <th scope="col">日ざしへの強さ</th>
+        <th scope="col">耐陰性</th>
+        <th scope="col">季節のひとこと</th>
+      </tr>
+    </thead>
+    <tbody>
+      {seasonRanking.map((plant) => (
+        <tr>
+          <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+          <td class="score">{plant.attributes.sun} / 5</td>
+          <td class="score">{plant.attributes.shade} / 5</td>
+          <td>{SEASON_NOTES[plant.slug]}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p class="note">
+    なお、この表は日ざしと暗さへの強さを見たもので、耐寒性（何度まで耐えられるか）そのものではありません。
+    どの種類も、冬に窓ぎわで冷気に当て続けるのは避けたほうが無難です。
+  </p>
+
+  <h2>季節でつまずかない一鉢を選びたいなら</h2>
+  <p>
+    ここまで書いておいてなんですが、いちばん確実なのは
+    <strong>自分の部屋の環境に合った植物を選ぶこと</strong>です。
+    合っていない植物を頑張って世話するより、ずっと楽で、植物にとっても幸せだと思います。
+  </p>
+  <p>
+    <a href="/#diagnosis">4つの質問の診断</a>では、日当たりとお世話にかけられる手間から
+    向いている種類を出します。Q2で「ズボラでも平気なのがいい」を選べば、
+    水やりの間隔が空いても平気な種が上位に出るので、冬のかまいすぎで失敗しにくくなります。
+    暗めのお部屋なら、<a href="/guides/low-light-plants/">日当たりが悪い部屋でも育つ観葉植物まとめ</a>
+    もあわせて読んでみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 季節との相性の表。虫対策ガイドの比較表と見た目をそろえている
+   * （横罫だけ・囲みの重さを出さない / design.md）。
+   */
+  .season-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .season-table th,
+  .season-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .season-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .season-table tbody th {
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .score {
+    white-space: nowrap;
+  }
+
+  /* 補足は本文より一段弱く（色を足さずミュートで後退させる / design.md） */
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>

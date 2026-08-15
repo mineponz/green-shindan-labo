@@ -100,13 +100,15 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  * 横断ガイド記事（/guides/<slug>/）の見出し写真。キーは src/lib/guides.ts の slug と一致させる。
  *
  * 新規素材は増やさず既存写真を流用している（虫対策＝特定の植物に紐づかないのでヒーロー写真、
- * 日当たり＝いちばん耐陰性の高いポトス、ペット＝非毒性種の筆頭であるパキラ）。
+ * 日当たり＝いちばん耐陰性の高いポトス、ペット＝非毒性種の筆頭であるパキラ、
+ * 季節のお手入れ＝置き場所の話が中心なので窓辺の様子が写っているヒーロー写真）。
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
   'pest-control': HERO_PHOTO,
   'low-light-plants': PLANT_PHOTOS.pothos,
   'pet-safe-plants': PLANT_PHOTOS.pachira,
+  'seasonal-care': HERO_PHOTO,
 };
 
 export function findGuidePhoto(slug: string): Photo | undefined {
