@@ -1,6 +1,7 @@
 ---
 import PlantCard from './PlantCard.astro';
 import { PLANTS, QUESTIONS } from '../lib/plants.ts';
+import { SITE_URL } from '../consts.ts';
 
 /**
  * 観葉植物の診断ツール。
@@ -13,6 +14,9 @@ import { PLANTS, QUESTIONS } from '../lib/plants.ts';
  * - innerHTML は使わない（textContent と hidden 属性のみ）。XSSの余地を作らず、
  *   Astroのスコープ付きCSSもそのまま効く（同: 20260811-astro-scoped-style-innerhtml.md）。
  * - 回答はサーバーへ送らない。保存するとしても localStorage（このブラウザの中）だけ。
+ * - 結果の「Xでシェア」ボタンも同じ分担。<a>はビルド時に出しておき、クライアントJSは
+ *   1位の植物名からURLを組み立てて href に入れるだけ（文面の組み立ては src/lib/share.ts）。
+ *   押した人が自分でXの投稿画面へ行くだけなので、診断の回答が外部に送られることはない。
  */
 ---
 
@@ -76,6 +80,22 @@ import { PLANTS, QUESTIONS } from '../lib/plants.ts';
       ))}
     </div>
 
+    <div class="result-actions">
+      <!--
+        シェアは「選び直す」と同格の副次アクション（枠線のみ）。href はクライアントJSが
+        1位の植物名で組み立てて入れる（JSが動かなければトップページを開くだけになる）。
+      -->
+      <a
+        class="btn btn-outline"
+        id="diagnosis-share"
+        href={`${SITE_URL}/#diagnosis`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        結果をXでシェア
+      </a>
+    </div>
+
     <p class="disclaimer">
       診断は、このサイトが各植物に付けている性質（耐陰性・乾燥への強さ・虫のつきにくさ・見ばえ・
       ペットへの安全性）と回答の相性を点数にして選んでいます。実際の育ち方は置き場所や季節でも
@@ -92,6 +112,7 @@ import { PLANTS, QUESTIONS } from '../lib/plants.ts';
     recommendPlants,
     type DiagnosisAnswers,
   } from '../lib/plants.ts';
+  import { buildShareUrl } from '../lib/share.ts';
 
   const LOG = '[diagnosis]';
   const STORAGE_KEY = 'green-shindan-labo:last-answers';
@@ -103,6 +124,9 @@ import { PLANTS, QUESTIONS } from '../lib/plants.ts';
   const errorLine = document.getElementById('diagnosis-error');
   const restoredNote = document.getElementById('diagnosis-restored');
   const resetButton = document.getElementById('diagnosis-reset');
+  const shareLink = document.getElementById('diagnosis-share') as HTMLAnchorElement | null;
+  /** 結果が出ていないときのシェア先（ビルド時に埋めたトップページのURL） */
+  const shareHrefDefault = shareLink?.getAttribute('href') ?? '';
   const slots = Array.from(
     document.querySelectorAll<HTMLElement>('.result-slot[data-plant-slug]')
   );
@@ -151,6 +175,14 @@ import { PLANTS, QUESTIONS } from '../lib/plants.ts';
         }
       }
 
+      // シェア文面は1位の植物名だけを使う。新規診断でも前回結果の復元でも
+      // この関数を通るので、ここ1か所で href を更新すれば両方に効く
+      if (shareLink) {
+        shareLink.href = buildShareUrl(picks[0].plant.name);
+      } else {
+        console.warn(LOG, 'シェアボタンが見つからないためhrefを更新できません');
+      }
+
       if (restoredNote) restoredNote.hidden = !restored;
       results!.hidden = false;
       errorLine!.hidden = true;
@@ -159,6 +191,7 @@ import { PLANTS, QUESTIONS } from '../lib/plants.ts';
         answers,
         picks: picks.map((p) => ({ slug: p.plant.slug, score: p.score, rank: p.rank })),
         restored,
+        shareHref: shareLink?.href,
       });
     }
 
@@ -195,6 +228,8 @@ import { PLANTS, QUESTIONS } from '../lib/plants.ts';
         delete slot.dataset.rank;
         slot.style.removeProperty('order');
       }
+      // 結果を隠すので、前の結果の文面が残らないようシェア先も戻す
+      if (shareLink) shareLink.href = shareHrefDefault;
       try {
         localStorage.removeItem(STORAGE_KEY);
       } catch (error) {
@@ -375,6 +410,15 @@ import { PLANTS, QUESTIONS } from '../lib/plants.ts';
     color: var(--text);
   }
   .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  /* シェアボタンは <a>。ボタン2つの見た目をそろえる（高さ・文字色・下線） */
+  a.btn {
+    display: inline-block;
+    text-decoration: none;
+  }
 
   .results {
     margin-top: var(--space-4);
@@ -438,6 +482,14 @@ import { PLANTS, QUESTIONS } from '../lib/plants.ts';
     border: 1px solid var(--border);
     background: var(--surface);
     color: var(--muted);
+  }
+
+  /* 結果カードとの関連が強いので余白は狭め、下の注意書きとは離す */
+  .result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-top: var(--space-2);
   }
 
   .disclaimer {

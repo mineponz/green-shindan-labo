@@ -20,6 +20,10 @@
   一覧や本文を`innerHTML`で描くとクローラーには空ページに見える
   （vault: `3-resources/knowledge/20260811-client-render-kills-seo.md`）。
   **`innerHTML`は使わない**（`textContent`と`hidden`属性だけを使う）。
+- **診断結果のシェア文面は `src/lib/share.ts` が唯一の出所。** Xの投稿画面（intent）のURLを
+  組み立てるだけで、回答を外部へ送るわけではない（押した人が自分でXへ行く）。文面を変えたら
+  `src/lib/share.test.ts` も直す。`text`/`url` は必ず `encodeURIComponent` で包む
+  （改行・絵文字・「？」が入るため、素で繋ぐとパラメータが壊れる）。
 - **診断の回答はサーバーへ送らない。** 保存するとしても localStorage（利用者の端末）まで。
   localStorage の値も外部入力として扱い、`parseAnswers`で検査してから使う。
 - **記事には必ずPR表記を入れる。** 「本記事はプロモーションを含みます」を各記事冒頭に置く
