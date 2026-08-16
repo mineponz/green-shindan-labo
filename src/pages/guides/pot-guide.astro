@@ -1,0 +1,300 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('pot-guide')!;
+
+/**
+ * 「鉢との相性」の一覧。並び順も数値も src/lib/plants.ts の attributes.ease から作る
+ * （診断の点数に使っているのと同じ値。記事に数字を手書きすると診断結果とずれる / AGENTS.md）。
+ * ひとことコメントだけこの記事で持つ。
+ *
+ * 注意: plants.ts は「どの素材の鉢が合うか」というデータを持っていない。ここで使っている
+ * ease は「ズボラ耐性＝水やりを忘れても枯れにくいか」なので、
+ * 「乾かし気味の管理を好む種は通気性の高い素焼きと相性がいい」という一般論の範囲に留めている。
+ * 素材の適性そのものを断定しないこと（表の下にも同じ注意書きを出している）。
+ */
+const POT_NOTES: Record<string, string> = {
+  sansevieria:
+    '過湿がいちばんの弱点なので、私なら迷わず素焼きにします。土が乾くのが早い鉢のほうが、この子の性格に合っています',
+  peperomia:
+    '厚い葉に自分で水をためられるタイプ。小さい鉢は乾きが早いので、素焼きの小鉢でも水切れの心配はそこまでありません',
+  pachira:
+    '乾いてからの水やりで育つので素焼きがよく合います。見出しの写真もテラコッタの鉢ですが、幹の茶色と土の色がつながって落ち着いて見えます',
+  monstera:
+    '葉が大きく重心が高くなるので、素材より先に「倒れないか」で選びたい一鉢。重さのある陶器が安心です',
+  pothos:
+    'つるを垂らして高い位置に置くことが多いので、鉢は軽いほうが扱いやすいです。プラ鉢に植えて、好きな鉢カバーへ入れるのがいちばん楽',
+  gajumaru:
+    '幹の形が主役なので、鉢は主張しない色と形に。日ざしの強い窓ぎわで乾きやすいぶん、素焼きだと水やりの回数がやや増えます',
+  'areca-palm':
+    '背が高くなる大型なので、鉢の重さがそのまま安定感になります。陶器の重い鉢か、軽い鉢なら鉢底石で重さを足してください',
+};
+
+/**
+ * チランジアは土も鉢も使わないので、この表からは外して本文で別に触れる
+ * （鉢の記事に「鉢のいらない植物」を混ぜると表の意味が壊れるため）。
+ */
+const POTLESS_SLUGS = ['tillandsia'];
+const pottedPlants = PLANTS.filter((plant) => !POTLESS_SLUGS.includes(plant.slug));
+const potlessPlants = PLANTS.filter((plant) => POTLESS_SLUGS.includes(plant.slug));
+
+/** 乾かし気味の管理を好む側（＝通気性の高い素焼きと相性がいいと言われるグループ） */
+const dryTolerant = pottedPlants.filter((plant) => plant.attributes.ease >= 4);
+/** こまめな水やりで管理する側（＝保湿性の高いプラスチックでも扱いやすいグループ） */
+const moistFriendly = pottedPlants.filter((plant) => plant.attributes.ease <= 3);
+
+const potRanking = [...pottedPlants].sort((a, b) => b.attributes.ease - a.attributes.ease);
+
+const materialFor = (ease: number) => (ease >= 4 ? '素焼き・陶器' : '陶器・プラスチック');
+
+const nameList = (plants: typeof PLANTS) => plants.map((plant) => plant.name).join('・');
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>まず見るのは、おしゃれさより「鉢底の穴」です</h2>
+  <p>
+    いきなり夢のない話で申し訳ないのですが、鉢を選ぶときに最初に確認してほしいのは
+    <strong>底に穴が開いているかどうか</strong>です。デザインの好みは、そのあとで大丈夫です。
+  </p>
+  <p>
+    底穴が無い鉢は、水をやったぶんがそのまま鉢の中に溜まります。
+    土がずっと濡れたままになり、根が呼吸できなくなって傷む——いわゆる<strong>根腐れ</strong>です。
+    私はこれを、雑貨屋さんでひとめぼれした鉢でやりました。
+    買った時点では「かわいい鉢を見つけた」としか思っていなかったので、
+    しばらく原因も分からず、水が足りないのかと思ってさらに水をやっていました。完全に逆効果です。
+  </p>
+
+  <h3>気に入った鉢に穴が無いときは「鉢カバー」として使う</h3>
+  <p>
+    では底穴の無い鉢は諦めるしかないのかというと、そんなことはありません。
+    <strong>その鉢を「鉢カバー」として使えばいい</strong>んです。
+  </p>
+  <p>
+    やり方は単純で、<strong>底穴のあるプラスチック鉢に植えて、それごと気に入った鉢の中へ入れる</strong>。
+    これだけです。二重鉢とか、インナーポット方式などと呼ばれます。
+    外から見えるのは気に入ったほうの鉢なので、見た目は損なわれません。
+  </p>
+  <p>
+    この方式、見た目のためだけでなく普通に管理が楽です。
+    水やりのときは内側の鉢だけを取り出してシンクでたっぷり水をやり、
+    水が切れてから戻せばいい。植え替えも、鉢から抜かずに内鉢ごと交換できます。
+    私はいま、ほとんどの鉢をこのやり方にしています。
+  </p>
+  <p class="note">
+    ひとつだけ注意。<strong>カバーの底に溜まった水は必ず捨ててください。</strong>
+    見えないぶん忘れがちですが、溜めっぱなしにすると結局は同じことになります。
+    コバエの発生源にもなるので、気になる人は
+    <a href="/guides/pest-control/">観葉植物の虫対策ガイド</a>もどうぞ。
+  </p>
+  <AmazonLink keyword="鉢カバー 観葉植物 おしゃれ" label="Amazonで「鉢カバー」を見る" />
+
+  <h2>素材で、育てやすさも見た目も変わります</h2>
+  <p>
+    鉢の素材は、見た目の好みの話であると同時に<strong>水の乾き方の話</strong>でもあります。
+    ここを知っておくと、「なぜかこの鉢だけ調子が悪い」が減ります。
+    よく使われる3つを見ていきます。
+  </p>
+
+  <h3>素焼き（テラコッタ） — 通気性がよく、根腐れさせにくい</h3>
+  <p>
+    土を焼いただけの鉢で、器そのものに細かい空気の通り道があります。
+    <strong>鉢の側面からも水分が抜けていく</strong>ので、土が乾きやすく、
+    通気性・排水性は3つの中でいちばん優秀です。
+    水をやりすぎる自覚がある人には、いちばん心強い素材だと思います。
+  </p>
+  <p>
+    弱点は、重いことと割れやすいこと。落とすと普通に割れますし、
+    高温多湿の時期には表面に白い粉（土の成分）やカビが出ることもあります。
+    見た目が気になるならブラシで落とせますが、
+    「使い込むと風合いが出る」と思えるかどうかで評価が分かれるところです。
+  </p>
+  <AmazonLink keyword="素焼き鉢 テラコッタ 観葉植物" label="Amazonで「素焼き鉢・テラコッタ」を見る" />
+
+  <h3>陶器 — 丈夫で長く使える。重さが安定感になる</h3>
+  <p>
+    釉薬をかけて焼いた鉢です。素焼きほど側面から水は抜けませんが、
+    底穴があれば水はけは十分ですし、なにより<strong>丈夫で長く使えます</strong>。
+    色や質感の選択肢が多いので、部屋の雰囲気に合わせやすいのもこの素材です。
+  </p>
+  <p>
+    重さは、大きな鉢では欠点というより<strong>利点</strong>になります。
+    背の高い植物ほど倒れやすいので、鉢が重いだけで安心感がまるで違う。
+    ただし模様替えのたびに動かすとなると話は別で、
+    大鉢に土が入った状態はかなりの重量です。置き場所を決めてから買うのが正解です。
+    落とせば割れるのは素焼きと同じ。
+  </p>
+  <AmazonLink keyword="鉢 陶器 植木鉢 おしゃれ 大型" label="Amazonで「陶器の植木鉢」を見る" />
+
+  <h3>プラスチック — 軽くて水もちがよく、動かしやすい</h3>
+  <p>
+    軽い、安い、割れない。そして<strong>水分が抜けにくいので土が乾きにくい</strong>。
+    この「乾きにくさ」は、水切れさせがちな人や、湿り気を好む植物にとってはむしろ長所です。
+  </p>
+  <p>
+    模様替えが好きな人、季節ごとに置き場所を変える人にも向いています。
+    見た目が安っぽくなりがちなのが唯一にして最大の弱点ですが、
+    そこは前の章の<strong>鉢カバーと組み合わせれば解決</strong>します。
+    実用は内側のプラ鉢、見た目は外側のカバー。役割を分けてしまうのが結局いちばん楽です。
+  </p>
+
+  <h2>サイズは「一回り大きい」まで。大きすぎる鉢は逆効果です</h2>
+  <p>
+    鉢を買い替えるとき、つい大きめを選びたくなります。
+    「どうせ育つんだから、先に大きい鉢にしておけば手間が省ける」と考えてしまうんですよね。私もそう思っていました。
+    でもこれ、<strong>植物にとってはあまりいいことがありません</strong>。
+  </p>
+  <p>
+    株に対して鉢が大きすぎると、根の届いていない土がたくさん残ります。
+    根が吸ってくれないぶん、その部分の土はいつまでも湿ったまま。
+    結局、根腐れのリスクが上がります。鉢底穴の話と同じで、
+    <strong>「土が乾かない状態が続く」ことがいちばんまずい</strong>わけです。
+  </p>
+  <p>
+    目安は<strong>いまの株より一回り大きいところまで</strong>。
+    鉢のサイズは「号」で表記されていることが多く、1号＝約3cmです。
+    植え替えなら、いまの鉢より1〜2号（直径で3〜6cmほど）上を選べば十分です。
+    もの足りなく感じるくらいでちょうどいい、と覚えておいてください。
+  </p>
+  <p>
+    鉢が決まったら、底穴から土が流れ出ないように<strong>鉢底ネット</strong>を敷きます。
+    深さのある鉢や、底穴が大きい鉢では<strong>鉢底石</strong>を軽く入れておくと水はけが安定します
+    （浅い鉢では土の量が減ってしまうので、無理に入れる必要はありません）。
+    大きな鉢では、底に重さが加わって倒れにくくなる効果もあります。
+  </p>
+  <AmazonLink keyword="鉢底石 軽石 鉢底ネット" label="Amazonで「鉢底石・鉢底ネット」を見る" />
+
+  <h2>安っぽく見えない鉢の選び方</h2>
+  <p>
+    ここからは完全に見た目の話です。
+    私が「なんだか安っぽいな」と感じるときは、だいたい鉢そのものより<strong>組み合わせ</strong>に原因がありました。
+    高い鉢を買わなくても、次の3つでかなり印象が変わります。
+  </p>
+  <ul>
+    <li>
+      <strong>色数を絞る。</strong> 部屋に複数の鉢があるなら、白・グレー・テラコッタのように
+      色を2色くらいまでに揃える。鉢がばらばらの色だと、それだけで雑然として見えます
+    </li>
+    <li>
+      <strong>受け皿まで含めて考える。</strong> 鉢はこだわったのに受け皿が透明プラスチック、
+      というのが私の失敗でした。足元は意外と目に入ります。同じ素材で揃えるのが手っ取り早いです
+    </li>
+    <li>
+      <strong>装飾より素材感で選ぶ。</strong> 模様や飾りの多い鉢より、無地で質感のある鉢のほうが
+      植物が主役になります。迷ったら、まっすぐな筒形の無地を選んでおけば外しません
+    </li>
+  </ul>
+  <p>
+    それと、<strong>鉢と株のサイズ比</strong>。小さすぎる鉢は貧相に、大きすぎる鉢は間延びして見えます。
+    「一回り大きいまで」という前の章の目安は、じつは見た目の面でも理にかなっています。
+  </p>
+
+  <h2>{PLANTS.length}種でみる、鉢との相性</h2>
+  <p>
+    このサイトで紹介している{PLANTS.length}種は、水やりの性格がそれぞれ違うので、
+    合う鉢も変わってきます。下の<strong>ズボラ耐性</strong>は診断の点数に使っているのと同じ値で、
+    大きいほど水やりを忘れても枯れにくい＝<strong>乾かし気味の管理を好む</strong>タイプです。
+  </p>
+  <p>
+    ざっくり言うと、{nameList(dryTolerant)}のように乾燥に強い種は、
+    土が乾きやすい<strong>素焼き（テラコッタ）と好相性</strong>。
+    反対に{nameList(moistFriendly)}のように、こまめな水やりが前提の種は、
+    <strong>保湿性の高いプラスチック鉢でも管理しやすい</strong>グループです。
+    水やりが苦にならないならプラ鉢、忘れがちなら素焼き。そのくらいの感覚で選んで大丈夫です。
+  </p>
+  <table class="pot-table">
+    <thead>
+      <tr>
+        <th scope="col">植物</th>
+        <th scope="col">ズボラ耐性</th>
+        <th scope="col">相性のいい素材</th>
+        <th scope="col">鉢選びのひとこと</th>
+      </tr>
+    </thead>
+    <tbody>
+      {potRanking.map((plant) => (
+        <tr>
+          <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+          <td class="score">{plant.attributes.ease} / 5</td>
+          <td class="score">{materialFor(plant.attributes.ease)}</td>
+          <td>{POT_NOTES[plant.slug]}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p class="note">
+    この表は水やりの性格（ズボラ耐性）から素材の相性を見たもので、
+    「この鉢でないと育たない」という意味ではありません。どの素材でも、
+    水やりの間隔を鉢に合わせてあげれば問題なく育ちます。
+  </p>
+  <p>
+    ちなみに{nameList(potlessPlants)}は、そもそも土も鉢も使いません。
+    お皿やワイヤーに乗せて、雑貨のように飾れる植物です。
+    「鉢のサイズも土も考えたくない」という人は、こういう選択肢もあります。
+  </p>
+
+  <h2>鉢の前に、まず植物を決めたいなら</h2>
+  <p>
+    鉢は、植える植物が決まってからのほうが選びやすいです。
+    大きく育つのか、垂れ下がるのか、乾かし気味なのか。それによって「重い鉢がいい」
+    「軽くて動かせるほうがいい」が変わってくるからです。
+  </p>
+  <p>
+    <a href="/#diagnosis">4つの質問の診断</a>では、日当たりとお世話にかけられる手間から
+    向いている種類を出します。一鉢めが決まったら、この記事に戻ってきて鉢を選んでみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 鉢との相性の表。虫対策・季節ケアの比較表と見た目をそろえている
+   * （横罫だけ・囲みの重さを出さない / design.md）。
+   */
+  .pot-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .pot-table th,
+  .pot-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .pot-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .pot-table tbody th {
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .score {
+    white-space: nowrap;
+  }
+
+  /* 補足は本文より一段弱く（色を足さずミュートで後退させる / design.md） */
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>
