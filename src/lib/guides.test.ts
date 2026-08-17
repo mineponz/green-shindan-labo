@@ -22,7 +22,7 @@ test('GUIDES に形式エラーがない（relatedPlants が実在する植物�
   assert.deepEqual(validateGuides(GUIDES, PLANT_SLUGS), []);
 });
 
-test('GUIDES は決定した6本を過不足なく持つ', () => {
+test('GUIDES は決定した7本を過不足なく持つ', () => {
   assert.deepEqual(
     GUIDES.map((g) => g.slug).sort(),
     [
@@ -31,6 +31,7 @@ test('GUIDES は決定した6本を過不足なく持つ', () => {
       'pest-control',
       'pet-safe-plants',
       'pot-guide',
+      'repotting',
       'seasonal-care',
     ]
   );
