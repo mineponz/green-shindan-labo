@@ -102,10 +102,12 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  * 新規素材は増やさず既存写真を流用している（虫対策＝特定の植物に紐づかないのでヒーロー写真、
  * 日当たり＝いちばん耐陰性の高いポトス、ペット＝非毒性種の筆頭であるパキラ、
  * 季節のお手入れ＝置き場所の話が中心なので窓辺の様子が写っているヒーロー写真、
- * 鉢の選び方＝8種のうち唯一テラコッタ鉢が写り込んでいるパキラ）。
+ * 鉢の選び方＝8種のうち唯一テラコッタ鉢が写り込んでいるパキラ、
+ * 初心者のNG行動＝特定の種の話ではなく「部屋に植物を置く」全体の話なのでヒーロー写真）。
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
+  'beginner-mistakes': HERO_PHOTO,
   'pest-control': HERO_PHOTO,
   'low-light-plants': PLANT_PHOTOS.pothos,
   'pet-safe-plants': PLANT_PHOTOS.pachira,
