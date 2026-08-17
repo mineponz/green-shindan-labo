@@ -102,13 +102,14 @@ Node は fnm 管理。シェルによっては先に
 
 ## 未対応・要本人作業
 
-- `src/consts.ts` の `AMAZON_ASSOCIATE_TAG` はプレースホルダ。Amazonアソシエイトに
-  登録して発行された実タグに差し替える。差し替えると、プライバシーポリシーの文言が
-  「参加を予定」→「参加している」に、フッターの開示文が自動で出るようになる。
-  あわせて `PRIVACY_POLICY_UPDATED` も更新すること。
-- `src/consts.ts` の `CONTACT_EMAIL` もプレースホルダ。差し替えるまで
+- `src/consts.ts` の `CONTACT_EMAIL` はプレースホルダのまま。差し替えるまで
   `/contact/` は mailto を出さず「準備中」と表示する。
-- Cloudflareダッシュボードでのリポジトリ接続（新規プロジェクト作成）は本人のブラウザ操作が必要。
-  Deploy command は `npx wrangler deploy`。ビルドは `wrangler.jsonc` の `build.command` が
-  実行するので、ダッシュボードのBuild command欄への設定は不要。
+- （解消済み・参考）`AMAZON_ASSOCIATE_TAG` は2026-08-12に実タグ`greenlabo-22`へ差し替え済み。
+  プライバシーポリシー・フッターの開示文言も「参加している」表記に切り替わっている。
+  `AMAZON_ASSOCIATE_TAG_PLACEHOLDER`という別定数と紛らわしいので、変更前に必ず
+  `src/consts.ts`を直接確認すること（このAGENTS.mdの古い記述を信じて「まだプレースホルダ」と
+  誤報告した例があった。姉妹サイトmedaka-laboのAGENTS.mdでも同種の誤りが3回起きている）。
+- （解消済み）Cloudflareダッシュボードでのリポジトリ接続は完了済み、本番URLは
+  `https://green-shindan-labo.mineponz.workers.dev/`。Deploy command は
+  `npx wrangler deploy`（ビルドは`wrangler.jsonc`の`build.command`が実行）。
 - 独自ドメインを設定したら `src/consts.ts` の `SITE_URL` と `public/robots.txt` を両方直す。
