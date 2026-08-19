@@ -26,8 +26,8 @@ export const CONTACT_EMAIL_PLACEHOLDER = 'CONTACT_EMAIL_TODO';
 export const CONTACT_EMAIL: string = CONTACT_EMAIL_PLACEHOLDER;
 
 /** プライバシーポリシーの最終更新日（ページ末尾の表示に使う）。内容を変えたら必ず更新する。 */
-export const PRIVACY_POLICY_UPDATED = '2026-08-13';
-// 2026-08-13、Google Analytics導入の開示を追加した際に更新
+export const PRIVACY_POLICY_UPDATED = '2026-08-19';
+// 2026-08-19、忍者AdMax導入の開示を追加した際に更新
 
 /**
  * Amazonアソシエイトのトラッキングタグ。
@@ -44,3 +44,6 @@ export const AMAZON_ASSOCIATE_TAG: string = 'greenlabo-22';
 
 /** Google Analytics(GA4)の測定ID。2026-08-13、本人が発行したプロパティのIDを設定。 */
 export const GA_MEASUREMENT_ID = 'G-BK3NZZ8ZEE';
+
+/** 忍者AdMax（第三者ディスプレイ広告）の広告枠ID。2026-08-19、本人の指示で全ページに導入。 */
+export const ADMAX_ID = '51c868bbffa298b897659e4c030ce6d1';

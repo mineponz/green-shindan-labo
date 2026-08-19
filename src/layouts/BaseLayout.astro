@@ -7,6 +7,7 @@ import {
   AMAZON_ASSOCIATE_TAG,
   AMAZON_ASSOCIATE_TAG_PLACEHOLDER,
   GA_MEASUREMENT_ID,
+  ADMAX_ID,
 } from '../consts';
 import LeafMark from '../components/LeafMark.astro';
 
@@ -99,6 +100,14 @@ const breadcrumbJsonLd = {
       gtag('js', new Date());
       gtag('config', GA_MEASUREMENT_ID);
     </script>
+
+    <!-- 忍者AdMax（第三者ディスプレイ広告）。開示は/privacy/の「4. 広告の配信について」等 -->
+    <script
+      async
+      is:inline
+      src="https://adm.shinobi.jp/st/auto.js"
+      data-admax-id={ADMAX_ID}
+    ></script>
   </head>
 
   <body>
