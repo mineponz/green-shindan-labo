@@ -26,8 +26,8 @@ export const CONTACT_EMAIL_PLACEHOLDER = 'CONTACT_EMAIL_TODO';
 export const CONTACT_EMAIL: string = CONTACT_EMAIL_PLACEHOLDER;
 
 /** プライバシーポリシーの最終更新日（ページ末尾の表示に使う）。内容を変えたら必ず更新する。 */
-export const PRIVACY_POLICY_UPDATED = '2026-08-13';
-// 2026-08-13、Google Analytics導入の開示を追加した際に更新
+export const PRIVACY_POLICY_UPDATED = '2026-08-19';
+// 2026-08-19、忍者AdMax再導入の開示を追加した際に更新
 
 /**
  * Amazonアソシエイトのトラッキングタグ。
@@ -44,3 +44,12 @@ export const AMAZON_ASSOCIATE_TAG: string = 'greenlabo-22';
 
 /** Google Analytics(GA4)の測定ID。2026-08-13、本人が発行したプロパティのIDを設定。 */
 export const GA_MEASUREMENT_ID = 'G-BK3NZZ8ZEE';
+
+/**
+ * 忍者AdMax（第三者ディスプレイ広告）の広告枠スクリプトURL。
+ * 2026-08-19、本人の指示で導入→アダルト広告が多く一旦撤回→本人が広告枠を設定し直して再導入。
+ * 全ページ自動挿入型（`/st/auto.js`）ではなく、**この場所に描画される**個別枠タイプなので、
+ * `<head>`ではなく本文中の指定位置（`BaseLayout`のmain内、コンテンツの後・footerの前）に
+ * script要素として直接置くこと。
+ */
+export const ADMAX_SCRIPT_SRC = 'https://adm.shinobi.jp/s/618664a7434322ad26b4c7fb88101832';
