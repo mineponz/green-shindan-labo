@@ -12,6 +12,7 @@ const plant = findPlant('pachira')!;
   title={`${plant.name}の育て方と選び方`}
   description={plant.summary}
   breadcrumb={[{ label: '植物図鑑', href: '/plants/' }]}
+  ogImagePath={`/og/pachira.jpg`}
 >
   <PlantArticleHeader plant={plant} />
 

@@ -16,9 +16,20 @@ interface Props {
   description?: string;
   /** パンくずの中間項目（トップとページ自身は自動で付く） */
   breadcrumb?: { label: string; href: string }[];
+  /**
+   * SNSシェア用の画像パス（`public/`基準、例: `/og/pachira.jpg`）。省略時はトップと同じ
+   * `/og-image.jpg`（1200x630）を使う。植物記事・ガイド記事はそれぞれ専用画像を渡している
+   * （`public/og/`、Playwrightで生成。生成手順は`public/og/README.md`参照）。
+   */
+  ogImagePath?: string;
 }
 
-const { title, description = SITE_DESCRIPTION, breadcrumb = [] } = Astro.props;
+const {
+  title,
+  description = SITE_DESCRIPTION,
+  breadcrumb = [],
+  ogImagePath = '/og-image.jpg',
+} = Astro.props;
 
 // Amazonアソシエイトの開示文言は、審査通過前（＝タグがプレースホルダのまま）は
 // 事実と異なる（まだ収入を得ていない）ため出さない。タグ差し替え後に自動で表示される。
@@ -26,9 +37,7 @@ const isAssociateTagPlaceholder = AMAZON_ASSOCIATE_TAG === AMAZON_ASSOCIATE_TAG_
 
 const fullTitle = title ? `${title} | ${SITE_TITLE}` : `${SITE_TITLE} — ${SITE_TAGLINE}`;
 const canonical = new URL(Astro.url.pathname, SITE_URL).href;
-// SNSシェア用の画像。全ページ共通（1200x630、public/og-image.jpg）。
-// 記事ごとに変える場合はPropsに追加してここで出し分ける。
-const ogImage = new URL('/og-image.jpg', SITE_URL).href;
+const ogImage = new URL(ogImagePath, SITE_URL).href;
 
 // パンくずの構造化データ。トップ → 中間 → 現在ページ
 const crumbs = [
