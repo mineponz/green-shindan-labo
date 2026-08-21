@@ -104,7 +104,8 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  * 季節のお手入れ＝置き場所の話が中心なので窓辺の様子が写っているヒーロー写真、
  * 鉢の選び方＝8種のうち唯一テラコッタ鉢が写り込んでいるパキラ、
  * 初心者のNG行動＝特定の種の話ではなく「部屋に植物を置く」全体の話なのでヒーロー写真、
- * 植え替え＝鉢に植わった株がはっきり写っていて、大きく育つぶん根詰まりの話が想像しやすいモンステラ）。
+ * 植え替え＝鉢に植わった株がはっきり写っていて、大きく育つぶん根詰まりの話が想像しやすいモンステラ、
+ * 肥料＝生長が早く、肥料の効きも与えすぎの影響も葉に出やすいモンステラ）。
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -115,6 +116,7 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'seasonal-care': HERO_PHOTO,
   'pot-guide': PLANT_PHOTOS.pachira,
   repotting: PLANT_PHOTOS.monstera,
+  fertilizer: PLANT_PHOTOS.monstera,
 };
 
 export function findGuidePhoto(slug: string): Photo | undefined {
