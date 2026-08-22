@@ -2,17 +2,20 @@
 import { otherGuides } from '../lib/guides.ts';
 
 /**
- * 記事末尾に出す「ほかのガイド記事」。本数が少ないうちは全部（自分以外）を出す。
- * 増えてきたら件数を絞るか、関連の近い順に並べ替えることを検討する。
+ * 記事末尾に出す「ほかのガイド記事」。
+ * 2026-08-22、9本目追加を機に先頭4件（GUIDESの並び＝読んでほしい順）に絞った
+ * （本数が少ないうちは全件表示していたが、全部出すと縦に長くなりすぎるため）。
  * リンクは三次アクション扱い（リンクのみ・塗りつぶさない / design.md の視覚的階層）。
  */
+const RELATED_GUIDES_LIMIT = 4;
+
 interface Props {
   /** 今読んでいる記事のslug。これ自身は一覧から外す */
   currentSlug: string;
 }
 
 const { currentSlug } = Astro.props;
-const guides = otherGuides(currentSlug);
+const guides = otherGuides(currentSlug, RELATED_GUIDES_LIMIT);
 ---
 
 {guides.length > 0 && (

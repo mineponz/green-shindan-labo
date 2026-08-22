@@ -177,6 +177,23 @@ export const GUIDES: Guide[] = [
     relatedPlants: ['pachira', 'monstera'],
     publishedDate: '2026-08-21',
   },
+  {
+    slug: 'propagation',
+    title: '観葉植物の増やし方ガイド｜挿し木・水挿しのやり方とふやしやすい種類',
+    navLabel: '観葉植物の増やし方ガイド',
+    description:
+      '観葉植物を挿し木・水挿しでふやす方法をまとめました。ふやしやすい種類の選び方、切る場所と時期、水挿しから土へ植え替えるタイミング、根腐れさせない水の管理まで。',
+    summary:
+      '気に入った1鉢をもう1鉢に。挿し木・水挿しのやり方と、初心者でも失敗しにくいふやし方の選び方をまとめました。',
+    lead:
+      '切ったつるをコップの水に挿しておいたら、気づけば根がにょきにょき伸びていた——' +
+      '観葉植物を育てていて、私が地味に一番テンションが上がる瞬間はこれかもしれません。' +
+      '「ふやす」と聞くと特別な技術が要りそうですが、実際は道具もほとんどいらず、' +
+      '気に入った株をそのまま何鉢にも分けられる、コスパのいい楽しみ方です。' +
+      'ここでは挿し木・水挿しのやり方と、ふやしやすい植物の選び方をまとめました。',
+    relatedPlants: ['pothos', 'monstera'],
+    publishedDate: '2026-08-22',
+  },
 ];
 
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
@@ -236,7 +253,22 @@ export function findGuide(slug: string): Guide | undefined {
   return GUIDES.find((g) => g.slug === slug);
 }
 
-/** 記事末尾の「関連記事」に出す、自分以外のガイド */
-export function otherGuides(slug: string): Guide[] {
-  return GUIDES.filter((g) => g.slug !== slug);
+/**
+ * 記事末尾の「関連記事」に出す、自分以外のガイド。
+ * `limit`を渡すと件数を絞る。2026-08-22、9本目追加で全件表示だと縦に長くなりすぎるため
+ * RelatedGuidesから件数を絞って呼ぶようにした（2026-08-18の記事追加時から指摘済みだった問題）。
+ *
+ * 単純にGUIDES先頭から`limit`件を取ると、後ろのほうにある記事（fertilizer・propagation等）が
+ * どのページの関連記事にも出てこなくなり内部リンクから孤立してしまう。それを避けるため、
+ * **自分の次の記事から順番に、GUIDESを一周する形で**`limit`件を選ぶ（末尾まで来たら先頭に戻る）。
+ * これで全記事が「直前の記事」からは必ずリンクされる状態になる。
+ */
+export function otherGuides(slug: string, limit?: number): Guide[] {
+  if (typeof limit !== 'number') {
+    return GUIDES.filter((g) => g.slug !== slug);
+  }
+  const currentIndex = GUIDES.findIndex((g) => g.slug === slug);
+  const start = currentIndex === -1 ? 0 : currentIndex + 1;
+  const rotated = [...GUIDES.slice(start), ...GUIDES.slice(0, start)];
+  return rotated.filter((g) => g.slug !== slug).slice(0, limit);
 }

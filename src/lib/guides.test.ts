@@ -22,7 +22,7 @@ test('GUIDES に形式エラーがない（relatedPlants が実在する植物�
   assert.deepEqual(validateGuides(GUIDES, PLANT_SLUGS), []);
 });
 
-test('GUIDES は決定した8本を過不足なく持つ', () => {
+test('GUIDES は決定した9本を過不足なく持つ', () => {
   assert.deepEqual(
     GUIDES.map((g) => g.slug).sort(),
     [
@@ -32,6 +32,7 @@ test('GUIDES は決定した8本を過不足なく持つ', () => {
       'pest-control',
       'pet-safe-plants',
       'pot-guide',
+      'propagation',
       'repotting',
       'seasonal-care',
     ]
@@ -84,4 +85,10 @@ test('otherGuides: 自分以外のガイドを返す', () => {
   const others = otherGuides('pest-control');
   assert.equal(others.length, GUIDES.length - 1);
   assert.ok(!others.some((g) => g.slug === 'pest-control'));
+});
+
+test('otherGuides: limitを渡すと先頭から件数を絞る', () => {
+  const limited = otherGuides('pest-control', 4);
+  assert.equal(limited.length, 4);
+  assert.ok(!limited.some((g) => g.slug === 'pest-control'));
 });

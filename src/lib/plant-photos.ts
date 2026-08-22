@@ -113,8 +113,10 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  * - 鉢の選び方＝8種のうち唯一テラコッタ鉢が写り込んでいるパキラ
  * - 植え替え＝鉢に植わった株がはっきり写っていて、大きく育つぶん根詰まりの話が想像しやすいモンステラ
  * - 肥料＝葉の斑（色の変化）が出やすく、肥料の効き・与えすぎの影響が視覚的に伝わりやすいペペロミア
+ * - 増やし方（2026-08-22追加）＝挿し木で増やせるガジュマル。相性は良いがrelatedPlantsは
+ *   水挿しの定番であるポトス・モンステラにしている（記事本文の主役と写真の主役をあえて分け、
+ *   8本+本記事で9本とも重複のない写真になるようにした）
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
- * ガジュマルはどのガイドとも結び付けず、植物記事専用のまま残している。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
   'beginner-mistakes': HERO_PHOTO,
@@ -125,6 +127,7 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'pot-guide': PLANT_PHOTOS.pachira,
   repotting: PLANT_PHOTOS.monstera,
   fertilizer: PLANT_PHOTOS.peperomia,
+  propagation: PLANT_PHOTOS.gajumaru,
 };
 
 export function findGuidePhoto(slug: string): Photo | undefined {

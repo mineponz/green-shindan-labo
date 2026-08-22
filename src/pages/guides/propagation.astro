@@ -1,0 +1,178 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { findPlant } from '../../lib/plants.ts';
+
+const guide = findGuide('propagation')!;
+
+/**
+ * 記事中で名前を出す植物は plants.ts から描く（記事に手書きすると種の入れ替えで食い違う / AGENTS.md）。
+ * この記事の relatedPlants と揃えている＝つる性・水挿しで根が出やすい代表2種。
+ * ガジュマルも挿し木でふやせるが、太い幹を切ることになるため難易度が上がる旨を補足で触れる。
+ */
+const easyCutters = [findPlant('pothos')!, findPlant('monstera')!];
+const woodyPlant = findPlant('gajumaru')!;
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-propagation.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>ふやし方には2通りある。まずは水挿しから</h2>
+  <p>
+    観葉植物のふやし方は、大きく分けると<strong>挿し木（土に直接挿す）</strong>と
+    <strong>水挿し（水につけて発根させてから土に植える）</strong>の2つです。
+    どちらも茎の一部を切って新しい株にする点は同じで、違うのは根を出させる場所だけ。
+  </p>
+  <p>
+    初めてなら、私は<strong>水挿し</strong>をおすすめします。
+    根が伸びていく様子がガラス越しに見えるので、うまくいっているかどうかが一目でわかるからです。
+    土に挿した挿し木は掘り返して確認するわけにいかず、
+    「今どうなっているんだろう」とやきもきする時間が長くなります。
+    水挿しならその不安がありません。
+  </p>
+
+  <h2>ふやしやすい植物の選び方</h2>
+  <p>
+    どの植物でも同じようにふやせるわけではありません。
+    ふやしやすさの目安は、<strong>茎の途中から根を出す性質（節から発根しやすいかどうか）</strong>です。
+  </p>
+  <ul>
+    <li>
+      <strong>{easyCutters[0].name}・{easyCutters[1].name}は特にふやしやすい代表格。</strong>
+      つる状に伸びる茎の節から気根（空気中に伸びる根）が出ていることが多く、
+      その節を含めて切るだけで高確率で発根します
+    </li>
+    <li>
+      <strong>{woodyPlant.name}のような太い幹を持つ木立ち性の種類は、少し難易度が上がります。</strong>
+      挿し木自体は可能ですが、切り口が大きく乾きにくいぶん腐りやすいので、
+      慣れないうちは無理に手を出さなくても大丈夫です
+    </li>
+  </ul>
+  <p class="note">
+    紹介している8種それぞれの特徴は<a href="/plants/">植物図鑑</a>にまとめています。
+    ふやす前に、その植物がどれくらい丈夫か（耐陰性・水やり頻度）も確認しておくと、
+    ふやしたあとの置き場所に困りません。
+  </p>
+
+  <h2>水挿しのやり方</h2>
+  <ol>
+    <li>
+      <strong>節を1〜2個含めて、茎を斜めに切る。</strong>
+      葉と葉の間ではなく、<strong>必ず節（葉の付け根）を含める</strong>のがポイントです。
+      根は節から出るので、節が無い部分だけを切っても発根しません
+    </li>
+    <li>
+      <strong>水に浸かる部分の葉は取り除く。</strong>
+      葉が水につかっていると腐って水が濁る原因になります。
+      上のほうの葉だけ2〜3枚残せば十分です
+    </li>
+    <li>
+      <strong>清潔な容器に水を入れて挿す。</strong>
+      節が水に浸かるように、直射日光の当たらない明るい場所に置きます
+    </li>
+    <li>
+      <strong>水は2〜3日に1回、コップごと総入れ替え。</strong>
+      継ぎ足しではなく総入れ替えです。水が古くなるとぬめりが出て、
+      根が呼吸しにくくなり腐敗の原因になります
+    </li>
+    <li>
+      <strong>根が3〜5cmほど伸びたら土に植える。</strong>
+      水に長く置きすぎると「水の中専用の根」になってしまい、
+      土に植えたあとの水分吸収がかえって下手になることがあります。
+      伸びすぎる前に植え替えるのがコツです
+    </li>
+  </ol>
+  <AmazonLink keyword="園芸バサミ 清潔 ステンレス" label="Amazonで「園芸用の清潔なハサミ」を見る" />
+
+  <h2>挿し木（直接土に挿す）のやり方</h2>
+  <p>
+    水挿しに慣れたら、土に直接挿す方法も試せます。
+    根が見えないぶん不安はありますが、<strong>水から土への植え替えの手間が省ける</strong>のと、
+    <strong>そのまま育てる土に根が馴染むので生育がとまりにくい</strong>という利点があります。
+  </p>
+  <ol>
+    <li>節を含めて茎を切る（水挿しと同じ）</li>
+    <li>
+      切り口を<strong>半日ほど乾かしてから</strong>、湿らせた挿し木用の土（または赤玉土など水はけのいい土）に挿す
+    </li>
+    <li>
+      土が乾かない程度に水をやりながら、<strong>直射日光を避けた明るい日陰</strong>で管理する
+    </li>
+    <li>
+      新しい葉が動き出したら発根のサイン。それまでは触って引っ張って確認しない
+      （根が切れてやり直しになります）
+    </li>
+  </ol>
+  <p class="note">
+    発根を早めたい場合は、切り口に発根促進剤（ルートン等）をつけてから挿す方法もあります。
+    必須ではありませんが、太めの茎を挿すときは差が出やすいです。
+  </p>
+  <AmazonLink keyword="発根促進剤 挿し木" label="Amazonで「発根促進剤」を見る" />
+
+  <h2>いつやるのがいい？ — 春から夏の生長期</h2>
+  <p>
+    ふやすタイミングも、植え替えと同じく<strong>生長期（おおよそ5〜9月）</strong>が向いています。
+    気温が高く植物自体の勢いがある時期なので、発根のスピードも成功率もぐっと上がります。
+  </p>
+  <p>
+    逆に<strong>冬は避けたほうが無難</strong>です。
+    植物が休んでいる時期に切った茎は発根する体力が無く、
+    水も土も傷むだけで終わってしまうことが多いからです。
+    「今すぐふやしたい」気持ちはわかりますが、冬に切るくらいなら、
+    暖かくなるまで親株のまま待つほうが結果的に近道です。
+  </p>
+  <p class="note">
+    季節ごとの植物の状態の見分け方は
+    <a href="/guides/seasonal-care/">観葉植物の夏越し・冬越しガイド</a>にまとめています。
+    植え替え自体の時期・頻度・手順は
+    <a href="/guides/repotting/">観葉植物の植え替え、タイミングとやり方</a>もあわせてどうぞ。
+  </p>
+
+  <h2>ふやした後にやりがちな失敗</h2>
+  <ul>
+    <li>
+      <strong>植え替えたばかりの新しい株に肥料を与えてしまう。</strong>
+      根が十分に育っていない状態で肥料を与えると逆効果です。
+      新芽が動き出して根が落ち着くまでは、肥料なしで管理してください
+      （詳しくは<a href="/guides/fertilizer/">観葉植物の肥料ガイド</a>）
+    </li>
+    <li>
+      <strong>水挿しの水を替えずに放置する。</strong>
+      「まだ根が出てないから」と数週間放置すると、たいてい茎の切り口から腐ります。
+      根が出るまでのほうが、こまめな水替えが必要です
+    </li>
+    <li>
+      <strong>いきなり日なたに置く。</strong>
+      発根したばかりの根はまだ弱く、強い日差しに耐えられません。
+      しばらくは明るい日陰で管理し、新しい葉が数枚出てから通常の置き場所に戻します
+    </li>
+  </ul>
+
+  <h2>ふやす前に、まずは今の1鉢を見直したいなら</h2>
+  <p>
+    ふやすのは、今ある株が元気に育っていてこそ楽しい作業です。
+    「そもそも今の置き場所が合っているのかな」と気になったら、
+    <a href="/#diagnosis">4つの質問の診断</a>で部屋の環境に合う植物を見直してみるのもおすすめです。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /* 補足は本文より一段弱く（色を足さずミュートで後退させる / design.md） */
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>
