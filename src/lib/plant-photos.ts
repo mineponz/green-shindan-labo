@@ -99,24 +99,32 @@ export function findPlantPhoto(slug: string): Photo | undefined {
 /**
  * 横断ガイド記事（/guides/<slug>/）の見出し写真。キーは src/lib/guides.ts の slug と一致させる。
  *
- * 新規素材は増やさず既存写真を流用している（虫対策＝特定の植物に紐づかないのでヒーロー写真、
- * 日当たり＝いちばん耐陰性の高いポトス、ペット＝非毒性種の筆頭であるパキラ、
- * 季節のお手入れ＝置き場所の話が中心なので窓辺の様子が写っているヒーロー写真、
- * 鉢の選び方＝8種のうち唯一テラコッタ鉢が写り込んでいるパキラ、
- * 初心者のNG行動＝特定の種の話ではなく「部屋に植物を置く」全体の話なのでヒーロー写真、
- * 植え替え＝鉢に植わった株がはっきり写っていて、大きく育つぶん根詰まりの話が想像しやすいモンステラ、
- * 肥料＝生長が早く、肥料の効きも与えすぎの影響も葉に出やすいモンステラ）。
+ * 2026-08-22、SNSシェア時のリンクカード画像（public/og/guide-<slug>.jpg、
+ * BaseLayoutのogImagePath）を記事ごとに個別化した際、当初はhero-plants/pachira/monsteraを
+ * 複数ガイドで使い回していて「タイムラインで画像を見ても記事の見分けがつかない」と本人指摘。
+ * OGP画像とこの見出し写真がずれるとクリック後の見た目が変わって違和感が出るため、
+ * 両方まとめて8ガイド全てに重複のない写真を割り当て直した（新規素材は増やさず、
+ * 既存の8種＋ヒーロー写真の中からrelatedPlantsを優先しつつ全て別カットになるよう選定）。
+ * - 初心者のNG行動＝特定の種の話ではなく「部屋に植物を置く」全体の話なのでヒーロー写真
+ * - 虫対策＝丈夫で虫がつきにくいと言われる代表種のサンスベリア
+ * - 日当たり＝いちばん耐陰性の高いポトス
+ * - ペット＝ASPCA基準で非毒性とされるアレカヤシ（4種中もっとも「観葉植物らしい」見た目）
+ * - 季節のお手入れ＝土を使わない分、季節による水やり頻度の調整が特に必要なチランジア
+ * - 鉢の選び方＝8種のうち唯一テラコッタ鉢が写り込んでいるパキラ
+ * - 植え替え＝鉢に植わった株がはっきり写っていて、大きく育つぶん根詰まりの話が想像しやすいモンステラ
+ * - 肥料＝葉の斑（色の変化）が出やすく、肥料の効き・与えすぎの影響が視覚的に伝わりやすいペペロミア
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
+ * ガジュマルはどのガイドとも結び付けず、植物記事専用のまま残している。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
   'beginner-mistakes': HERO_PHOTO,
-  'pest-control': HERO_PHOTO,
+  'pest-control': PLANT_PHOTOS.sansevieria,
   'low-light-plants': PLANT_PHOTOS.pothos,
-  'pet-safe-plants': PLANT_PHOTOS.pachira,
-  'seasonal-care': HERO_PHOTO,
+  'pet-safe-plants': PLANT_PHOTOS['areca-palm'],
+  'seasonal-care': PLANT_PHOTOS.tillandsia,
   'pot-guide': PLANT_PHOTOS.pachira,
   repotting: PLANT_PHOTOS.monstera,
-  fertilizer: PLANT_PHOTOS.monstera,
+  fertilizer: PLANT_PHOTOS.peperomia,
 };
 
 export function findGuidePhoto(slug: string): Photo | undefined {
