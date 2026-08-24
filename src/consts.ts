@@ -5,7 +5,7 @@
  * Googleに存在しないURLを申告することになるため、変更時は public/robots.txt も併せて直す。
  * 独自ドメインを設定したらここを差し替える。
  */
-export const SITE_URL = 'https://green-shindan-labo.mineponz.workers.dev';
+export const SITE_URL = 'https://green-lab.mineponz.com';
 export const SITE_TITLE = 'グリーン診断ラボ';
 /** ヘッダーに出す短い説明。トップページのh1と丸かぶりしない文言にしている */
 export const SITE_TAGLINE = '観葉植物の選び方・育て方・虫対策';

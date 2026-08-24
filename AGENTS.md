@@ -118,6 +118,10 @@ Node は fnm 管理。シェルによっては先に
   `src/consts.ts`を直接確認すること（このAGENTS.mdの古い記述を信じて「まだプレースホルダ」と
   誤報告した例があった。姉妹サイトmedaka-laboのAGENTS.mdでも同種の誤りが3回起きている）。
 - （解消済み）Cloudflareダッシュボードでのリポジトリ接続は完了済み、本番URLは
-  `https://green-shindan-labo.mineponz.workers.dev/`。Deploy command は
+  `https://green-lab.mineponz.com/`（独自ドメイン。旧`green-shindan-labo.mineponz.workers.dev`は
+  `worker/index.ts`が301リダイレクトする）。Deploy command は
   `npx wrangler deploy`（ビルドは`wrangler.jsonc`の`build.command`が実行）。
-- 独自ドメインを設定したら `src/consts.ts` の `SITE_URL` と `public/robots.txt` を両方直す。
+- （解消済み）独自ドメイン移行時、`worker/index.ts`のリダイレクト追加だけでは不十分。
+  `src/consts.ts`の`SITE_URL`と`public/robots.txt`のSitemap行も両方直さないと、
+  canonical・OGP・sitemap.xmlが旧ドメインのまま出力され続ける（2026-08-25、実際にこの手順が
+  抜けて数日間旧ドメイン出力のままになっていた）。
