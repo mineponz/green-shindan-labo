@@ -5,6 +5,8 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "green-shindan-labo",
   "compatibility_date": "2026-08-12",
+  // 独自ドメイン移行での旧URL→新URL 301リダイレクト用（worker/index.ts）
+  "main": "./worker/index.ts",
   // CI の "Deploy command" は `npx wrangler deploy` のみで build command を実行しないため、
   // ここで deploy 前に astro build を自動実行させる（dist/ は .gitignore 対象でリポジトリに無い）。
   // 参照: vault `3-resources/knowledge/20260811-wrangler-deploy-needs-build-command.md`
@@ -14,9 +16,15 @@
   "assets": {
     // Astro のビルド出力先（astro.config.mjs の既定値）
     "directory": "./dist",
+    // Worker から静的アセットを返すためのバインディング名。worker/index.ts の Env と揃える
+    "binding": "ASSETS",
     // マッチしないURLでは 404.html を返す。SPAではないので
     // "single-page-application" にしてはいけない（全URLが200になり重複コンテンツ扱いになる）
-    "not_found_handling": "404-page"
+    "not_found_handling": "404-page",
+    // trueにしないと「静的アセットに一致するURL」がWorkerを経由せず直接配信され、
+    // worker/index.ts の旧ドメイン→新ドメイン301リダイレクトが素通りしてしまう
+    // （carrot-clubの移行で判明した落とし穴。参照: vault
+    // `1-projects/carrot-club/tasks/20260823-mineponz-domain-migration-and-adsense.md`）
+    "run_worker_first": true
   }
-  // Worker のコードは不要なため "main" は指定しない（静的配信のみ）
 }
