@@ -19,6 +19,7 @@
 | `tillandsia.jpg` | チランジア記事の見出し | Chandra Lynch | https://images.pexels.com/photos/971214/pexels-photo-971214.jpeg を`sips -c 1200 1600 --cropOffset 1030 0`で切り出し（下記） |
 | `areca-palm-thumb.jpg` | アレカヤシの一覧・診断結果カードのサムネイル専用 | Tuğba Dönmez（`areca-palm.jpg`と同じ原本） | 同上を`sips -c 1250 1250 --cropOffset 470 95`で葉と鉢の口が入る構図に切り出し |
 | `tillandsia-thumb.jpg` | チランジアの一覧・診断結果カードのサムネイル専用 | Chandra Lynch（`tillandsia.jpg`と同じ原本） | ダウンロードした原本を`sips -c 1250 1250 --cropOffset 1000 50`で株が中央に来るよう切り出し |
+| `pruning.jpg` | 剪定・切り戻しガイド記事の見出し（`GUIDE_PHOTOS.pruning`） | Kaboompics.com（Pexels: @karola-g） | https://images.pexels.com/photos/6640505/pexels-photo-6640505.jpeg |
 
 - 2026-08-13: 管理者の指示（「もっときれいめに」、参考: livingorchid.comの商品写真のような
   明るい・背景がすっきりした雰囲気）で全6枚を差し替え。旧版（暗め・生活感のある写真）から、
@@ -38,6 +39,12 @@
 - 2026-08-14: 管理者から「ペペロミアはもう少し明るい色のものを」と指摘。スイカペペロミア
   （濃い緑×白の縞、25408843）から、斑入り種（クリーム色×緑、22610809、撮影者Kenneth Surillo）へ
   差し替え。altも中身に合わせて更新済み。
+- 2026-08-25: ガイド記事10本目「剪定・切り戻し」用に`pruning.jpg`を1枚追加。
+  **このフォルダで唯一「植物の種の紹介写真ではない」素材**（作業風景）。
+  `GUIDE_PHOTOS`はヒーロー写真＋植物8種の計9枚を9記事で1枚ずつ使い切っていて、
+  10本目で使い回すと「記事の見分けがつかない」（2026-08-22の指摘）が再発するため新規調達した。
+  取得日は2026-08-25、同じく`?auto=compress&cs=tinysrgb&w=1600`付きで取得（1600×1067）。
+  既存写真と同じ「明るい・背景がすっきり」の基準で選定している。
 - 取得日: 2026-08-13（`?auto=compress&cs=tinysrgb&w=1600` を付けて長辺1600pxで取得）
 - 表示は `<Image>`（astro:assets）経由。リサイズとWebP変換はビルド時に走るので、
   ここに置く原本は加工せずそのまま残しておく。

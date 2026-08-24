@@ -28,6 +28,7 @@ import arecaPalmThumbPhoto from '../assets/photos/areca-palm-thumb.jpg';
 import peperomiaPhoto from '../assets/photos/peperomia.jpg';
 import tillandsiaPhoto from '../assets/photos/tillandsia.jpg';
 import tillandsiaThumbPhoto from '../assets/photos/tillandsia-thumb.jpg';
+import pruningPhoto from '../assets/photos/pruning.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -116,6 +117,10 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  * - 増やし方（2026-08-22追加）＝挿し木で増やせるガジュマル。相性は良いがrelatedPlantsは
  *   水挿しの定番であるポトス・モンステラにしている（記事本文の主役と写真の主役をあえて分け、
  *   8本+本記事で9本とも重複のない写真になるようにした）
+ * - 剪定・切り戻し（2026-08-25追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/pruning.jpg`）。上の9本でヒーロー写真＋植物8種を1枚ずつ使い切っており、
+ *   10本目で既存を再利用すると「記事の見分けがつかない」問題が再発するため。
+ *   植物の記事ではないので PLANT_PHOTOS には入れず、ここだけで持っている
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -128,6 +133,10 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   repotting: PLANT_PHOTOS.monstera,
   fertilizer: PLANT_PHOTOS.peperomia,
   propagation: PLANT_PHOTOS.gajumaru,
+  pruning: {
+    src: pruningPhoto,
+    alt: '明るい白い背景の中で、素焼き鉢に植えられた丸い葉の観葉植物の茎を、手にしたはさみで切っているところ',
+  },
 };
 
 export function findGuidePhoto(slug: string): Photo | undefined {
