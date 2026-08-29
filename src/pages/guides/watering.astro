@@ -1,0 +1,338 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS, findPlant } from '../../lib/plants.ts';
+
+const guide = findGuide('watering')!;
+
+/**
+ * 水やりの性格は、診断の点数に使っている ease（ズボラ耐性＝水やりを忘れても枯れにくいか）から描く
+ * （記事に数字を手書きすると診断結果とずれる / AGENTS.md）。ひとことコメントだけこの記事で持つ。
+ *
+ * 注意: plants.ts は「何日に1回」というデータを持っていない（そもそも部屋の環境で変わるので
+ * 持たせるべきでもない）。ここでは ease から「乾かし気味でよいか、乾いたら早めに与えるか」という
+ * 管理の向きだけを言い、日数は断定しない。表の下にも同じ注意書きを出している。
+ */
+const WATER_NOTES: Record<string, string> = {
+  sansevieria:
+    '水をやりすぎて枯らす人がいちばん多い種。土がしっかり乾いて、さらに数日待ってからで大丈夫です',
+  peperomia:
+    '厚い葉に自分で水をためています。表面が乾いたくらいで慌てなくていい、気楽な相手です',
+  pachira:
+    '乾いてからたっぷり、の教科書どおりが合います。幹にも水をためるので、多少の忘れは許してくれます',
+  monstera:
+    '葉が大きいぶん水を使います。乾いたら早めに。ただし土が湿ったままの状態が続くのはやはり苦手です',
+  pothos:
+    'つるの先まで水を回すので乾きが早め。葉が少し垂れてきたら「そろそろ」の合図として読めます',
+  gajumaru:
+    '日ざしの強い窓ぎわに置くことが多く、そのぶん土も早く乾きます。夏は間隔が詰まると思ってください',
+  'areca-palm':
+    '株が大きく葉数も多いので水をよく吸います。乾かしすぎると葉先から茶色くなるタイプです',
+};
+
+/**
+ * チランジアは土も鉢も使わないので、土の乾きで測るこの表からは外して本文で別に触れる
+ * （鉢の記事と同じ扱い / pot-guide.astro）。
+ */
+const SOILLESS_SLUGS = ['tillandsia'];
+const pottedPlants = PLANTS.filter((plant) => !SOILLESS_SLUGS.includes(plant.slug));
+const soillessPlants = PLANTS.filter((plant) => SOILLESS_SLUGS.includes(plant.slug));
+
+/** 乾かし気味の管理でよいグループ（＝水やりを忘れても枯れにくい側） */
+const dryTolerant = pottedPlants.filter((plant) => plant.attributes.ease >= 4);
+/** 乾いたら早めに与えたいグループ */
+const thirsty = pottedPlants.filter((plant) => plant.attributes.ease <= 3);
+
+const waterRanking = [...pottedPlants].sort((a, b) => b.attributes.ease - a.attributes.ease);
+
+/** 両極端の代表2種。数値も名前も plants.ts から出す */
+const toughest = waterRanking[0];
+const thirstiest = waterRanking[waterRanking.length - 1];
+/** 垂れて合図をくれる例として本文で名指しする種 */
+const droopyPlant = findPlant('pothos')!;
+
+const pace = (ease: number) => (ease >= 4 ? '乾いてから、さらに数日待って' : '乾いたら早めに');
+const nameList = (plants: typeof PLANTS) => plants.map((plant) => plant.name).join('・');
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-watering.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>「何日に1回」で覚えるのを、まずやめてください</h2>
+  <p>
+    水やりの正解が知りたくて調べると、たいてい「週に1回」「10日に1回」という数字が出てきます。
+    私もそれを信じて、日曜日の朝にじょうろを持つ習慣をつくりました。
+    でもよく考えると、同じ植物でも<strong>置き場所・季節・鉢の素材・部屋の湿度</strong>が違えば、
+    土が乾くまでの日数はまるで変わります。
+    日当たりのいい窓ぎわの素焼き鉢なら3日で乾きますし、
+    北向きの部屋のプラスチック鉢なら2週間湿ったままということもあります。
+  </p>
+  <p>
+    つまり日数は結果であって、判断の材料ではないんです。
+    見るべきは<strong>土が乾いているかどうか、その一点だけ</strong>。
+    ここを切り替えてから、私は鉢を枯らさなくなりました。
+    「今週まだあげてないから」という理由で水をやるのを、いったん手放してみてください。
+  </p>
+
+  <h2>乾いたかどうかを確かめる3つの方法</h2>
+  <p>
+    土の乾きは、見た目だけだと判断を誤ります。
+    表面が白っぽく乾いていても、鉢の中はまだたっぷり湿っていることが本当によくあるからです。
+    確かめ方は次の3つ。どれかひとつを習慣にすれば十分です。
+  </p>
+  <ol>
+    <li>
+      <strong>指を第二関節まで土に入れる。</strong>
+      いちばん確実で、道具もいりません。
+      入れてみて<strong>ひんやり湿っていたら、まだ待つ</strong>。
+      さらさらと乾いていたら水やりのタイミングです。
+      土で爪が汚れるのが気になるなら、割り箸を挿して抜き、湿り具合を見るのでも同じことができます
+    </li>
+    <li>
+      <strong>鉢を持ち上げて重さを比べる。</strong>
+      水をやった直後の重さと、乾いたときの重さは驚くほど違います。
+      私はこれがいちばん好きな方法で、いまはほとんど手の感覚だけで判断しています。
+      持ち上げて「軽っ」と思ったら、それが合図です
+    </li>
+    <li>
+      <strong>水分計（水やりチェッカー）を挿しておく。</strong>
+      鉢に挿しておくと、乾いたときに色が変わって教えてくれる道具があります。
+      感覚がまだつかめないうち、あるいは大きすぎて持ち上げられない鉢には、これがいちばん楽です
+    </li>
+  </ol>
+  <AmazonLink keyword="観葉植物 水分計 水やりチェッカー" label="Amazonで「水やりチェッカー」を見る" />
+  <p class="note">
+    どの方法でも共通しているのは「土の中を見にいく」という一点です。
+    表面の色だけで判断しない。これだけで、水のやりすぎはかなり減らせます。
+  </p>
+
+  <h2>やるときは「鉢底から流れ出るまで」。ちょろっとがいちばん危ない</h2>
+  <p>
+    間隔と同じくらい大事なのが量です。結論から言うと、
+    <strong>やると決めたら鉢底の穴から水が流れ出るまでたっぷり</strong>与えてください。
+    コップ1杯をちょろっと、を繰り返すのがいちばんよくないやり方です。
+  </p>
+  <p>
+    理由は2つあります。ひとつは、少量だと水が鉢の上のほうにしか届かず、
+    <strong>鉢の底にいる根はずっと乾いたまま</strong>になること。
+    もうひとつは、たっぷり流すことで土の中の古い空気と老廃物が押し出され、
+    かわりに新しい空気が入ること。根は水だけでなく空気も必要としています。
+  </p>
+  <p>
+    「乾かすときはしっかり乾かす、やるときはしっかりやる」。
+    このメリハリが、根が健康に育つ環境そのものだと私は思っています。
+    毎日ちょっとずつ、は愛情のようでいて、実は根にとってはいちばん息苦しい状態なんです。
+  </p>
+  <p class="note">
+    そもそも鉢底に穴が無いと、この「流し出す」ができません。
+    穴の無い鉢に直接植えるのを避ける話は
+    <a href="/guides/pot-guide/">おしゃれな鉢・プランターの選び方</a>にまとめています。
+  </p>
+
+  <h2>受け皿の水は、必ず捨ててください</h2>
+  <p>
+    たっぷりやったあと、受け皿にたまった水をそのままにしていませんか。
+    私は「あとで乾くだろう」と放置して、根腐れとコバエを両方まねいたことがあります。
+  </p>
+  <p>
+    受け皿に水が残っていると、鉢の底だけが常に湿った状態になります。
+    根は水につかりっぱなしになると呼吸ができず、腐りはじめます。
+    <strong>水やりから15分ほどして、流れ出た水は捨てる。</strong>
+    これは手間というより、水やり作業の後半だと思ってください。
+  </p>
+  <p class="note">
+    受け皿の水は、土のまわりを飛ぶコバエ（キノコバエ）の発生源にもなります。
+    虫が出てしまったときの対処は
+    <a href="/guides/pest-control/">観葉植物の虫対策ガイド</a>をどうぞ。
+  </p>
+
+  <h2>季節で間隔は変わります。とくに冬</h2>
+  <p>
+    土の乾きで判断していれば、季節の調整は自然とついてきます。
+    それでも意識しておいたほうがいいのが冬です。
+    多くの観葉植物は<strong>春から秋が生長期、冬は生長がほぼ止まって休んでいる状態</strong>になります。
+    休んでいる株は水をあまり吸わないので、夏と同じペースで与えると土が乾かず、根が傷みます。
+  </p>
+  <ul>
+    <li>
+      <strong>春〜夏（生長期）</strong> — よく吸うので乾くのも早い。乾いたらためらわずたっぷりと。
+      朝か夕方、気温が上がりきっていない時間帯に
+    </li>
+    <li>
+      <strong>秋</strong> — 気温が下がるにつれて、少しずつ間隔が空いていきます。
+      「最近乾きが遅いな」と感じたら、そのぶん待つ
+    </li>
+    <li>
+      <strong>冬</strong> — 乾いてからさらに数日待つくらいでちょうどいいです。
+      与えるなら、冷たい水を避けて<strong>暖かい時間帯（午前中）</strong>に。
+      夜の水やりは、冷え込む窓ぎわだと根を冷やします
+    </li>
+  </ul>
+  <p>
+    冬の水やりを減らすかわりに増やしたいのが、霧吹き（葉水）です。
+    暖房の効いた部屋は驚くほど乾燥していて、そちらのケアのほうが効きます。
+  </p>
+  <p class="note">
+    夏と冬それぞれの置き場所・温度の話は
+    <a href="/guides/seasonal-care/">観葉植物の夏越し・冬越しのお手入れガイド</a>にまとめています。
+    「冬は休ませる」という考え方は<a href="/guides/fertilizer/">肥料ガイド</a>とも共通です。
+  </p>
+
+  <h2>{PLANTS.length}種でみる、水やりの性格</h2>
+  <p>
+    同じ「乾いたらあげる」でも、乾きを待てる長さは種類によって違います。
+    下の数字は診断の点数に使っているものと同じ<strong>ズボラ耐性</strong>
+    （大きいほど水やりを忘れても枯れにくい）です。
+  </p>
+  <p>
+    大きいほうの{nameList(dryTolerant)}は、
+    <strong>乾いてからさらに数日待てる</strong>タイプ。水やりを忘れがちな人の味方です。
+    とくに{toughest.name}は{toughest.attributes.ease} / 5で、
+    このサイトで紹介している中でいちばん乾燥に強い部類。
+    反対に{nameList(thirsty)}は<strong>乾いたら早めに</strong>与えたい側で、
+    水やりそのものを楽しめる人に向いています。
+    なかでも{thirstiest.name}は{thirstiest.attributes.ease} / 5と、いちばん様子を見てあげたい一鉢です。
+  </p>
+  <table class="water-table">
+    <thead>
+      <tr>
+        <th scope="col">植物</th>
+        <th scope="col">ズボラ耐性</th>
+        <th scope="col">水やりの向き</th>
+        <th scope="col">ひとこと</th>
+      </tr>
+    </thead>
+    <tbody>
+      {waterRanking.map((plant) => (
+        <tr>
+          <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+          <td class="score">{plant.attributes.ease} / 5</td>
+          <td>{pace(plant.attributes.ease)}</td>
+          <td>{WATER_NOTES[plant.slug]}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p class="note">
+    表に日数を書いていないのはわざとです。
+    同じ種類でも部屋と鉢で乾く速さが変わるので、日数を覚えるより「乾いたか」を見るほうが確実です。
+  </p>
+  {soillessPlants.map((plant) => (
+    <p>
+      なお{plant.name}は土も鉢も使わないので、この表からは外しています。
+      こちらは土の乾きではなく<strong>株そのものを濡らして、そのあと乾かす</strong>のが基本。
+      週に2〜3回ほど全体に霧吹きし、乾燥する季節はときどき水に数時間つけて（ソーキング）、
+      <strong>そのあと必ず風通しのいい場所で乾かします</strong>。
+      濡れたまま置きっぱなしにすると、株の中心から腐ってしまうので、そこだけ気をつけてください。
+    </p>
+  ))}
+
+  <h2>「やりすぎ」と「水切れ」は、症状がよく似ています</h2>
+  <p>
+    ここがいちばんの落とし穴です。
+    葉がしおれて元気がないとき、多くの人（私も含めて）はまず「水が足りない」と考えます。
+    でも<strong>水のやりすぎで根が傷んでいるときも、葉は同じようにしおれます</strong>。
+    根が傷んで水を吸えなくなっているので、株から見れば結果は水切れと同じなんです。
+  </p>
+  <p>
+    見分け方はかんたんで、<strong>土を触ってから決める</strong>こと。
+  </p>
+  <ul>
+    <li><strong>土が乾いていてしおれている</strong> — 水切れです。たっぷり与えれば数時間で戻ります</li>
+    <li>
+      <strong>土が湿っているのにしおれている</strong> — 根腐れを疑ってください。
+      ここで水を足すのは、いちばんやってはいけない手です。
+      風通しのいい明るい日陰に移して、土が乾くまで待ちます
+    </li>
+  </ul>
+  <p>
+    {droopyPlant.name}のように、水が足りなくなると葉やつるが素直に垂れて教えてくれる種もあります。
+    そういう相手は、垂れはじめを合図にすればいいので付き合いがとても楽です。
+  </p>
+  <p class="note">
+    葉が黄色い・茶色い・落ちるといった症状ごとの原因は
+    <a href="/guides/leaf-problems/">葉の症状から原因を見分けるガイド</a>にまとめました。
+    水が原因なのか、光や虫が原因なのかを切り分けたいときはそちらもどうぞ。
+  </p>
+
+  <h2>葉水は、水やりの代わりにはなりません</h2>
+  <p>
+    霧吹きで葉を濡らす葉水は、やっていると世話をした気持ちになります。実際いいことも多いです。
+    空気の乾燥をやわらげ、葉のほこりを落とし、
+    <strong>乾燥を好むハダニの予防</strong>にもなります。私は冬は毎日やっています。
+  </p>
+  <p>
+    ただし、葉水で根に水は届きません。
+    <strong>葉水は「湿度のケア」、水やりは「根への給水」</strong>で、まったく別の作業です。
+    ここを混同して「毎日霧吹きしているのに元気がない」となるのは、とてももったいない。
+    どちらもやってあげてください。
+  </p>
+  <p class="note">
+    ハダニの見つけ方と対処は<a href="/guides/pest-control/">観葉植物の虫対策ガイド</a>に書いています。
+    葉裏が白っぽくかすれてきたら、まず疑うのはこの虫です。
+  </p>
+
+  <h2>水やりが不安なら、まず一鉢の選び方から</h2>
+  <p>
+    ここまで書きましたが、いちばん確実なのは
+    <strong>自分の生活のペースに合った植物を選ぶこと</strong>だと思っています。
+    出張が多い人がこまめな水やり前提の種を選べば、どうしても無理が出ます。
+  </p>
+  <p>
+    <a href="/#diagnosis">4つの質問の診断</a>のQ2で「ズボラでも平気なのがいい」を選ぶと、
+    乾燥に強い種が上位に出ます。水やりを楽しみたい人は「こまめに見れる」を選んでください。
+    どちらが偉いということはなくて、続けられるほうが正解です。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 水やりの性格の表。季節ガイド・虫対策ガイドの比較表と見た目をそろえている
+   * （横罫だけ・囲みの重さを出さない / design.md）。
+   */
+  .water-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .water-table th,
+  .water-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .water-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .water-table tbody th {
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .score {
+    white-space: nowrap;
+  }
+
+  /* 補足は本文より一段弱く（色を足さずミュートで後退させる / design.md） */
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>

@@ -29,6 +29,8 @@ import peperomiaPhoto from '../assets/photos/peperomia.jpg';
 import tillandsiaPhoto from '../assets/photos/tillandsia.jpg';
 import tillandsiaThumbPhoto from '../assets/photos/tillandsia-thumb.jpg';
 import pruningPhoto from '../assets/photos/pruning.jpg';
+import wateringPhoto from '../assets/photos/watering.jpg';
+import leafProblemsPhoto from '../assets/photos/leaf-problems.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -121,6 +123,11 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  *   （`src/assets/photos/pruning.jpg`）。上の9本でヒーロー写真＋植物8種を1枚ずつ使い切っており、
  *   10本目で既存を再利用すると「記事の見分けがつかない」問題が再発するため。
  *   植物の記事ではないので PLANT_PHOTOS には入れず、ここだけで持っている
+ * - 水やり（2026-08-30追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/watering.jpg`）。じょうろから鉢へ水を注いでいる手元のクローズアップ
+ * - 葉のトラブル（2026-08-30追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/leaf-problems.jpg`）。葉が黄色〜茶色に傷んだモンステラ。
+ *   PLANT_PHOTOS.monstera（健康な株）とは別の写真で、症状そのものが写っている方をこちらに使う
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -136,6 +143,14 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   pruning: {
     src: pruningPhoto,
     alt: '明るい白い背景の中で、素焼き鉢に植えられた丸い葉の観葉植物の茎を、手にしたはさみで切っているところ',
+  },
+  watering: {
+    src: wateringPhoto,
+    alt: '明るい部屋の木のテーブルの上で、白い鉢に植えられた植物へ、細口のじょうろから水を注いでいる手元',
+  },
+  'leaf-problems': {
+    src: leafProblemsPhoto,
+    alt: '白い壁を背景に、葉のふちから内側へ黄色〜茶色に変色して傷んだモンステラの大きな葉のクローズアップ',
   },
 };
 

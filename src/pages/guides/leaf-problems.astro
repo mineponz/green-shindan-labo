@@ -1,0 +1,400 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS, findPlant } from '../../lib/plants.ts';
+
+const guide = findGuide('leaf-problems')!;
+
+/**
+ * 症状の早見表。ここは植物データではなく「症状 → 疑う原因 → 記事内の見出し」の対応なので
+ * この記事が持つ（plants.ts に持たせる性質のものではない）。
+ * リンク先は下の h2 の id とそろえること（増やすときは両方直す）。
+ */
+const SYMPTOMS = [
+  {
+    id: 'yellow',
+    symptom: '葉が黄色くなる',
+    suspect: '水のやりすぎ（下葉から順なら寿命のことも）',
+    label: '葉が黄色くなる',
+  },
+  {
+    id: 'brown-tip',
+    symptom: '葉先だけ茶色くカリカリ',
+    suspect: '空気の乾燥・水切れ・肥料の与えすぎ',
+    label: '葉先が茶色くなる',
+  },
+  {
+    id: 'droop',
+    symptom: '葉が垂れる・しおれる',
+    suspect: '水切れ、または根腐れ（土を触って切り分ける）',
+    label: '葉が垂れる',
+  },
+  {
+    id: 'fall',
+    symptom: '葉がぱらぱら落ちる',
+    suspect: '置き場所の急な変化・冬の冷気',
+    label: '葉が落ちる',
+  },
+  {
+    id: 'pale',
+    symptom: '新しい葉が小さい・色が薄い',
+    suspect: '光不足・根詰まり・肥料切れ',
+    label: '新しい葉が育たない',
+  },
+  {
+    id: 'pest',
+    symptom: '白いかすれ・べたつき・白い綿',
+    suspect: '虫（ハダニ・カイガラムシ）',
+    label: '虫のサイン',
+  },
+];
+
+/**
+ * 「この種はこのサインが先に出る」という説明は、診断の点数に使っている属性から根拠を出す
+ * （shade＝耐陰性、ease＝ズボラ耐性。記事に数値を手書きしない / AGENTS.md）。
+ * ひとことコメントだけこの記事で持つ。
+ */
+const SIGN_NOTES: Record<string, string> = {
+  monstera: '葉が大きいぶん変化が目立ちます。下葉の黄変と、切れ込みの入らない小さい新葉は光不足のサイン',
+  gajumaru: '環境が変わると葉を落として抵抗します。買ってきた直後・置き場所を移した直後の落葉が定番',
+  pothos: 'つるが間のびして葉が小さくなったら暗すぎ。斑入りのものは斑が消えて緑一色になります',
+  pachira: '幹はしっかりしていても、下葉から黄色くなるときは水のやりすぎを先に疑う相手です',
+  sansevieria: '根腐れのサインが地上に出るのが遅い種。根元がぶよっと柔らかくなったら手遅れ寸前です',
+  'areca-palm': '葉先から茶色くなりやすいタイプ。乾燥と水切れ、どちらでも同じ出方をします',
+  peperomia: '厚い葉がしなびたら水切れ、透けるように柔らかくなったら水のやりすぎ。分かりやすい相手です',
+  tillandsia: '葉先が枯れ込むのは水不足、株の中心が茶色く崩れるのは濡れたまま蒸れたサインです',
+};
+
+/** 暗さに弱い側＝光不足のサインが先に出やすい（耐陰性が低いグループ） */
+const shadeWeak = PLANTS.filter((plant) => plant.attributes.shade <= 2);
+/** 水のやりすぎに弱い側＝乾かし気味の管理を好むグループ */
+const overwaterProne = PLANTS.filter((plant) => plant.attributes.ease >= 4);
+
+const signList = [...PLANTS].sort((a, b) => a.attributes.shade - b.attributes.shade);
+
+/** 本文で名指しする代表。名前は plants.ts から出す */
+const dropper = findPlant('gajumaru')!;
+const bigLeaf = findPlant('monstera')!;
+
+const nameList = (plants: typeof PLANTS) => plants.map((plant) => plant.name).join('・');
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-leaf-problems.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>見るのは「どの葉が」「どんなふうに」の2点だけ</h2>
+  <p>
+    症状の話に入る前に、ひとつだけ。原因を絞るコツは、葉そのものより
+    <strong>どの位置の葉に出ているか</strong>を見ることです。
+  </p>
+  <ul>
+    <li>
+      <strong>下のほうの古い葉だけ</strong>に出ている — 自然な世代交代のことが多く、
+      あわてなくて大丈夫なパターン
+    </li>
+    <li>
+      <strong>新しい葉・株全体</strong>に出ている — 根や置き場所に原因があるサイン。
+      ここは早めに手を打ちたいところです
+    </li>
+  </ul>
+  <p>
+    そのうえで、色が変わったのか、形が変わったのか、触った感じはどうか。
+    このあたりを合わせて見ると、だいたい犯人が見えてきます。
+    下の表から、近いものを選んで読んでみてください。
+  </p>
+  <table class="symptom-table">
+    <thead>
+      <tr>
+        <th scope="col">症状</th>
+        <th scope="col">まず疑うもの</th>
+      </tr>
+    </thead>
+    <tbody>
+      {SYMPTOMS.map((row) => (
+        <tr>
+          <th scope="row"><a href={`#${row.id}`}>{row.symptom}</a></th>
+          <td>{row.suspect}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <h2 id="yellow">葉が黄色くなる — 下から順なら自然、全体に広がるなら水を疑う</h2>
+  <p>
+    いちばん多い相談で、私もいちばんよく経験する症状です。
+    ただ、黄色くなること自体は必ずしも異常ではありません。
+    植物は古い葉を落として新しい葉に切り替えていくので、
+    <strong>いちばん下の葉が1〜2枚ずつ、ゆっくり黄色くなる</strong>ぶんには世代交代です。
+    黄色くなった葉はもう緑には戻らないので、根元から取り除いてかまいません。
+  </p>
+  <p>
+    問題なのは<strong>あちこちの葉が同時に黄色くなる</strong>ときで、
+    このときまず疑うのは水のやりすぎです。
+    根が常に湿った状態に置かれて傷み、水も養分も吸い上げられなくなっています。
+    土を触ってみて、湿っているのに黄色い葉が増えているなら、
+    ここで水を足すのは逆効果。風通しのいい明るい日陰へ移して、しっかり乾かしてください。
+  </p>
+  <p>
+    {nameList(overwaterProne)}のように、
+    もともと乾かし気味の管理を好む種は、この失敗が起きやすい相手です。
+    「元気がないから水を」と思ったときほど、先に土を触る癖をつけると助かります。
+  </p>
+  <p class="note">
+    土の乾きの確かめ方、与える量、季節ごとの間隔は
+    <a href="/guides/watering/">観葉植物の水やりの頻度と量</a>にまとめました。
+    黄変の原因のかなりの部分は、ここを直すだけで消えます。
+  </p>
+
+  <h2 id="brown-tip">葉先だけが茶色くカリカリになる</h2>
+  <p>
+    葉の縁や先端だけが茶色く枯れ込んで、真ん中は緑のまま。この出方をするときは、
+    根まわりの問題ではなく<strong>空気の乾燥</strong>が主な原因です。
+    とくにエアコンや暖房の風が当たる場所、冬の締め切った部屋でよく起きます。
+  </p>
+  <p>
+    私は冬に加湿器のない部屋で育てていて、葉先がぱりぱりになった年がありました。
+    霧吹きを毎日やるようにしたら、翌年からはほとんど出なくなりました。
+    <strong>エアコンの風の直撃を避ける・葉水をこまめにする</strong>、この2つでかなり違います。
+  </p>
+  <AmazonLink keyword="霧吹き スプレー 観葉植物 葉水" label="Amazonで「葉水用の霧吹き」を見る" />
+  <p>
+    ほかに、次のふたつも葉先を茶色くします。
+  </p>
+  <ul>
+    <li>
+      <strong>水切れの繰り返し。</strong> 与えるときにちょろっとしか与えていないと、
+      鉢の底の根に水が届かず、いちばん遠い葉先から枯れ込みます
+    </li>
+    <li>
+      <strong>肥料の与えすぎ。</strong> 濃すぎる肥料は根を傷めます（肥料焼け）。
+      葉先の枯れ込みと同時に、土の表面に白い粉のようなものが出ていたら疑ってください
+    </li>
+  </ul>
+  <p class="note">
+    肥料の量と時期は<a href="/guides/fertilizer/">観葉植物の肥料、選び方と与え方</a>に、
+    冬の乾燥対策は<a href="/guides/seasonal-care/">夏越し・冬越しのお手入れガイド</a>にまとめています。
+    なお、茶色くなった葉先は元に戻りません。気になるならその部分だけはさみで切ってしまって大丈夫です。
+  </p>
+
+  <h2 id="droop">葉が垂れる・しおれる — 水切れと根腐れ、どちらでも起きます</h2>
+  <p>
+    ここが観葉植物のいちばんの落とし穴だと思います。
+    <strong>水が足りないときも、水が多すぎるときも、葉は同じようにしおれます。</strong>
+    多すぎる場合は根が傷んで水を吸えなくなっているので、株から見れば水切れと同じ状態になるからです。
+  </p>
+  <p>
+    だから、しおれている株を見つけたら反射で水をやらないでください。
+    <strong>まず土を触る。</strong>切り分けはそれだけで済みます。
+  </p>
+  <ul>
+    <li>
+      <strong>土がさらさらに乾いている</strong> — 水切れです。
+      鉢底から流れ出るまでたっぷり与えれば、早ければ数時間でしゃんと戻ります
+    </li>
+    <li>
+      <strong>土が湿っている</strong> — 根腐れを疑います。
+      追加の水は与えず、風通しのいい明るい日陰へ。
+      土の表面がすっぱいような匂いがしたり、株元がぶよぶよ柔らかくなっていたら、
+      鉢から抜いて黒く傷んだ根を切り、新しい土に植え替えるところまでやったほうが助かります
+    </li>
+  </ul>
+  <p class="note">
+    植え替えの手順と、根を切るときの加減は
+    <a href="/guides/repotting/">観葉植物の植え替え、タイミングとやり方</a>にまとめています。
+  </p>
+
+  <h2 id="fall">葉がぱらぱら落ちる — たいていは「環境が変わった」せい</h2>
+  <p>
+    買ってきた翌週にばさばさ葉が落ちて、これは失敗したと落ち込んだことがあります。
+    でもこれは植物なりの適応で、<strong>置かれた場所の明るさや湿度が急に変わると、
+    植物は葉を減らして体を合わせにいきます</strong>。
+    店の明るいディスプレイから自宅の棚へ、というだけでも十分な変化です。
+  </p>
+  <p>
+    {dropper.name}はこの反応が分かりやすい種で、
+    日ざしを好むわりに耐陰性が5段階で{dropper.attributes.shade}なので、
+    暗い場所へ動かすと正直に葉を落とします。
+    でも根が無事なら、環境に慣れたころに新しい芽を出してくれます。
+    ここで<strong>気の毒になって場所を何度も変えるのがいちばんよくない</strong>。
+    落ち着ける場所をひとつ決めて、しばらく動かさずに見守ってください。
+  </p>
+  <p>
+    冬にまとめて落ちる場合は、窓ぎわの冷気を疑います。
+    日中は明るくて良い場所でも、夜間の窓ぎわは屋外に近い温度まで下がります。
+    夜だけ部屋の内側へ寄せる、カーテンと窓のあいだに置かない、それだけで違います。
+  </p>
+  <p class="note">
+    暗い部屋でも葉を落としにくい種類は
+    <a href="/guides/low-light-plants/">日当たりが悪い部屋でも育つ観葉植物まとめ</a>に、
+    冬の置き場所は<a href="/guides/seasonal-care/">夏越し・冬越しのお手入れガイド</a>にまとめています。
+  </p>
+
+  <h2 id="pale">新しい葉が小さい・色が薄い・茎だけ伸びる</h2>
+  <p>
+    枯れてはいないけれど、なんだか元気がない。
+    新しく出てくる葉が前より小さく、色も薄く、茎ばかりひょろひょろ伸びる。
+    この状態でまず疑うのは<strong>光不足</strong>です。
+    植物は光が足りないと、少しでも明るいほうへ届こうとして茎だけを伸ばします（徒長）。
+  </p>
+  <p>
+    {bigLeaf.name}のような大きな葉を出す種は変化が分かりやすくて、
+    光が足りないと葉に切れ込みが入らないまま小さく出てきます。
+    耐陰性が低い{nameList(shadeWeak)}は、とくに光不足のサインが先に出る顔ぶれです。
+  </p>
+  <p>
+    光を足しても改善しないときは、鉢の中を疑ってください。
+    根が鉢いっぱいに回っていると（根詰まり）、新しい葉を育てる余力そのものが出ません。
+    鉢底の穴から根が出ている、水をやっても土に染み込まない、といったサインが出ていたら植え替えです。
+    生長期なのにずっと肥料を与えていない場合は、肥料切れのこともあります。
+  </p>
+  <p class="note">
+    それぞれの対処は
+    <a href="/guides/low-light-plants/">日当たりのガイド</a>、
+    <a href="/guides/repotting/">植え替えガイド</a>、
+    <a href="/guides/fertilizer/">肥料ガイド</a>に。
+    間のびしてしまった姿を整えるには
+    <a href="/guides/pruning/">剪定・切り戻し</a>が効きますが、
+    <strong>切っても置き場所が同じなら、また同じように伸びます</strong>。原因のほうを先に直してください。
+  </p>
+
+  <h2 id="pest">白いかすれ・べたつき・白い綿 — これは虫です</h2>
+  <p>
+    ここまでの症状と違って、次の3つが出ていたら原因は環境ではなく虫です。
+  </p>
+  <ul>
+    <li><strong>葉が白っぽくかすれ、葉裏に細かい点や薄い糸がある</strong> — ハダニ</li>
+    <li><strong>葉や床がべたべたする、茎に貝殻のような固いものがついている</strong> — カイガラムシ</li>
+    <li><strong>土のまわりを小さな黒い虫がふわふわ飛ぶ</strong> — コバエ（キノコバエ）</li>
+  </ul>
+  <p>
+    べたつきは、虫の排せつ物です。放っておくとそこにカビが生えて葉が黒くすすけてくるので、
+    早めに拭き取ってしまうのがいいです。
+    最初に見つけたときは本当にぞっとしましたが、正体さえ分かれば対処はそこまで難しくありません。
+  </p>
+  <p class="note">
+    3種類それぞれの落とし方・予防は
+    <a href="/guides/pest-control/">観葉植物の虫対策ガイド</a>にまとめています。
+    ハダニは乾燥した環境で増えるので、葉水は予防にもなります。
+  </p>
+
+  <h2>症状が出たときに、やってはいけない3つ</h2>
+  <p>
+    最後に、私が実際にやらかして株を弱らせたものを挙げておきます。
+    どれも「よかれと思って」やることばかりです。
+  </p>
+  <ol>
+    <li>
+      <strong>とりあえず水をやる。</strong> 症状の半分近くは水のやりすぎが原因なので、
+      これは半分の確率でとどめを刺しにいく行為です。まず土を触ってから決めてください
+    </li>
+    <li>
+      <strong>弱っているから肥料をあげる。</strong> 肥料は元気を出す薬ではありません。
+      弱った根に濃い肥料は追い打ちになります。回復して新芽が動いてから与えます
+    </li>
+    <li>
+      <strong>いきなり直射日光に出す。</strong> 室内に慣れた葉を急に強い光へ出すと葉焼けします。
+      焼けて茶色くなった葉はもう戻りません。明るい日陰から少しずつ慣らしてください
+    </li>
+  </ol>
+  <p class="note">
+    このあたりの「よかれと思って」の失敗はまとめて
+    <a href="/guides/beginner-mistakes/">初心者がやりがちなNG行動6つ</a>に書いています。
+  </p>
+
+  <h2>{PLANTS.length}種でみる、先に出やすいサイン</h2>
+  <p>
+    同じ環境でも、どのサインが先に出るかは種類によって違います。
+    下の数字は診断の点数に使っているものと同じで、
+    <strong>耐陰性</strong>（大きいほど暗さに強い）と
+    <strong>ズボラ耐性</strong>（大きいほど水やりを忘れても枯れにくい）です。
+    耐陰性が低い種ほど光不足のサインが早く、ズボラ耐性が高い種ほど水のやりすぎでつまずきます。
+  </p>
+  <table class="symptom-table">
+    <thead>
+      <tr>
+        <th scope="col">植物</th>
+        <th scope="col">耐陰性</th>
+        <th scope="col">ズボラ耐性</th>
+        <th scope="col">出やすいサイン</th>
+      </tr>
+    </thead>
+    <tbody>
+      {signList.map((plant) => (
+        <tr>
+          <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+          <td class="score">{plant.attributes.shade} / 5</td>
+          <td class="score">{plant.attributes.ease} / 5</td>
+          <td>{SIGN_NOTES[plant.slug]}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p class="note">
+    数値は「その性質の強さ」を表したもので、症状の出やすさそのものではありません。
+    どの種類でも、置き場所と水やりが合っていれば葉はきれいなままです。
+  </p>
+
+  <h2>症状が出にくいのは、部屋に合っている一鉢です</h2>
+  <p>
+    ここまで対処法を書いてきましたが、いちばん効くのは
+    <strong>そもそも部屋の環境に合った植物を選ぶこと</strong>でした。
+    暗い部屋に日ざし好きの種を置けば、どれだけ手をかけても葉は落ちます。
+    合っている一鉢は、驚くほど何も起きません。
+  </p>
+  <p>
+    <a href="/#diagnosis">4つの質問の診断</a>では、日当たりとお世話にかけられる手間から
+    向いている種類を出します。今の一鉢で苦戦しているなら、
+    次の置き場所を決めるときの参考にしてみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 症状の早見表と、種ごとのサインの表。ほかのガイドの比較表と見た目をそろえている
+   * （横罫だけ・囲みの重さを出さない / design.md）。
+   */
+  .symptom-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .symptom-table th,
+  .symptom-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .symptom-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .symptom-table tbody th {
+    font-weight: 600;
+  }
+  .score {
+    white-space: nowrap;
+  }
+
+  /* 補足は本文より一段弱く（色を足さずミュートで後退させる / design.md） */
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>

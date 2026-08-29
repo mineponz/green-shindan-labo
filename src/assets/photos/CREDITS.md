@@ -20,6 +20,8 @@
 | `areca-palm-thumb.jpg` | アレカヤシの一覧・診断結果カードのサムネイル専用 | Tuğba Dönmez（`areca-palm.jpg`と同じ原本） | 同上を`sips -c 1250 1250 --cropOffset 470 95`で葉と鉢の口が入る構図に切り出し |
 | `tillandsia-thumb.jpg` | チランジアの一覧・診断結果カードのサムネイル専用 | Chandra Lynch（`tillandsia.jpg`と同じ原本） | ダウンロードした原本を`sips -c 1250 1250 --cropOffset 1000 50`で株が中央に来るよう切り出し |
 | `pruning.jpg` | 剪定・切り戻しガイド記事の見出し（`GUIDE_PHOTOS.pruning`） | Kaboompics.com（Pexels: @karola-g） | https://images.pexels.com/photos/6640505/pexels-photo-6640505.jpeg |
+| `watering.jpg` | 水やりガイド記事の見出し（`GUIDE_PHOTOS.watering`） | ROCKETMANN TEAM（Pexels: @rocketmann-prod） | https://images.pexels.com/photos/9507264/pexels-photo-9507264.jpeg |
+| `leaf-problems.jpg` | 葉のトラブルガイド記事の見出し（`GUIDE_PHOTOS['leaf-problems']`） | Inga Seliverstova（Pexels: @inga-sv） | https://images.pexels.com/photos/3371463/pexels-photo-3371463.jpeg を`sips -c 1200 1600 --cropOffset 250 0`で切り出し（下記） |
 
 - 2026-08-13: 管理者の指示（「もっときれいめに」、参考: livingorchid.comの商品写真のような
   明るい・背景がすっきりした雰囲気）で全6枚を差し替え。旧版（暗め・生活感のある写真）から、
@@ -45,6 +47,16 @@
   10本目で使い回すと「記事の見分けがつかない」（2026-08-22の指摘）が再発するため新規調達した。
   取得日は2026-08-25、同じく`?auto=compress&cs=tinysrgb&w=1600`付きで取得（1600×1067）。
   既存写真と同じ「明るい・背景がすっきり」の基準で選定している。
+- 2026-08-30: ガイド記事11・12本目（水やり／葉のトラブル）用に`watering.jpg`・
+  `leaf-problems.jpg`を2枚追加。`pruning.jpg`と同じ理由（記事ごとに写真を重複させない）で
+  新規調達している。取得日は2026-08-30、同じく`?auto=compress&cs=tinysrgb&w=1600`付きで取得。
+  - `watering.jpg` は原本のまま（1600×1068）。木のテーブルの上の白い鉢へ、細口のじょうろから
+    水を注いでいる手元のクローズアップ。
+  - `leaf-problems.jpg` は**構図を切り出している**（原本は1600×2133の縦長で、下部に暖房の配管が
+    写り込んでいるうえ、見出し写真の4:3切り抜き（`GuideArticleHeader.astro`）に掛けると
+    葉の上半分が画面外へ出てしまうため）。切り出しコマンドは表に記載。原本はPexelsのURLから
+    再取得できる。**モンステラの葉だが、`PLANT_PHOTOS.monstera`（健康な株の紹介写真）とは
+    別物**なので差し替えるときに取り違えないこと。
 - 取得日: 2026-08-13（`?auto=compress&cs=tinysrgb&w=1600` を付けて長辺1600pxで取得）
 - 表示は `<Image>`（astro:assets）経由。リサイズとWebP変換はビルド時に走るので、
   ここに置く原本は加工せずそのまま残しておく。
