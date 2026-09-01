@@ -31,6 +31,7 @@ import tillandsiaThumbPhoto from '../assets/photos/tillandsia-thumb.jpg';
 import pruningPhoto from '../assets/photos/pruning.jpg';
 import wateringPhoto from '../assets/photos/watering.jpg';
 import leafProblemsPhoto from '../assets/photos/leaf-problems.jpg';
+import travelWateringPhoto from '../assets/photos/travel-watering.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -128,6 +129,10 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  * - 葉のトラブル（2026-08-30追加）＝**この記事のためだけに新規調達した写真**
  *   （`src/assets/photos/leaf-problems.jpg`）。葉が黄色〜茶色に傷んだモンステラ。
  *   PLANT_PHOTOS.monstera（健康な株）とは別の写真で、症状そのものが写っている方をこちらに使う
+ * - 留守中・旅行中の水やり（2026-09-01追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/travel-watering.jpg`）。出かける支度をしたスーツケースと、
+ *   家に残る鉢植えが同じ画面に入っている構図。記事のテーマ（留守にするあいだの水やり）が
+ *   写真だけで伝わるものを選んだ
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -151,6 +156,10 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'leaf-problems': {
     src: leafProblemsPhoto,
     alt: '白い壁を背景に、葉のふちから内側へ黄色〜茶色に変色して傷んだモンステラの大きな葉のクローズアップ',
+  },
+  'travel-watering': {
+    src: travelWateringPhoto,
+    alt: '明るいリビングのソファの前に置かれた大小2つの白いスーツケースと、その奥の床に置かれた鉢植えの観葉植物',
   },
 };
 

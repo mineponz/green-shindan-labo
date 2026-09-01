@@ -22,6 +22,7 @@
 | `pruning.jpg` | 剪定・切り戻しガイド記事の見出し（`GUIDE_PHOTOS.pruning`） | Kaboompics.com（Pexels: @karola-g） | https://images.pexels.com/photos/6640505/pexels-photo-6640505.jpeg |
 | `watering.jpg` | 水やりガイド記事の見出し（`GUIDE_PHOTOS.watering`） | ROCKETMANN TEAM（Pexels: @rocketmann-prod） | https://images.pexels.com/photos/9507264/pexels-photo-9507264.jpeg |
 | `leaf-problems.jpg` | 葉のトラブルガイド記事の見出し（`GUIDE_PHOTOS['leaf-problems']`） | Inga Seliverstova（Pexels: @inga-sv） | https://images.pexels.com/photos/3371463/pexels-photo-3371463.jpeg を`sips -c 1200 1600 --cropOffset 250 0`で切り出し（下記） |
+| `travel-watering.jpg` | 留守中・旅行中の水やりガイド記事の見出し（`GUIDE_PHOTOS['travel-watering']`） | Vlada Karpovich（Pexels: @vlada-karpovich） | https://images.pexels.com/photos/7368306/pexels-photo-7368306.jpeg を`sips -c 1200 1600 --cropOffset 1050 0`で切り出し（下記） |
 
 - 2026-08-13: 管理者の指示（「もっときれいめに」、参考: livingorchid.comの商品写真のような
   明るい・背景がすっきりした雰囲気）で全6枚を差し替え。旧版（暗め・生活感のある写真）から、
@@ -57,6 +58,15 @@
     葉の上半分が画面外へ出てしまうため）。切り出しコマンドは表に記載。原本はPexelsのURLから
     再取得できる。**モンステラの葉だが、`PLANT_PHOTOS.monstera`（健康な株の紹介写真）とは
     別物**なので差し替えるときに取り違えないこと。
+- 2026-09-01: ガイド記事13本目（留守中・旅行中の水やり対策）用に`travel-watering.jpg`を1枚追加。
+  `pruning.jpg`・`watering.jpg`・`leaf-problems.jpg`と同じ理由（記事ごとに写真を重複させない）で
+  新規調達している。取得日は2026-09-01、同じく`?auto=compress&cs=tinysrgb&w=1600`付きで取得。
+  - **構図を切り出している**（原本は1600×2400の縦長。見出し写真の4:3切り抜き
+    （`GuideArticleHeader.astro`）に素で掛けると、スーツケースの下半分か鉢植えのどちらかが
+    画面外へ出てしまうため、両方が収まる範囲を選んだ）。切り出しコマンドは表に記載。
+    原本はPexelsのURLから再取得できる。
+  - 写っているのは「出発前のスーツケース＋家に残る鉢植え」で、これも**植物の種の紹介写真ではない**
+    （`pruning.jpg`と同じ性格の素材）。PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
 - 取得日: 2026-08-13（`?auto=compress&cs=tinysrgb&w=1600` を付けて長辺1600pxで取得）
 - 表示は `<Image>`（astro:assets）経由。リサイズとWebP変換はビルド時に走るので、
   ここに置く原本は加工せずそのまま残しておく。

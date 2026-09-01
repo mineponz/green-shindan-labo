@@ -1,0 +1,171 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('travel-watering')!;
+
+/**
+ * 「どれくらい留守にできるか」の目安は、診断の点数に使っている ease（ズボラ耐性）から描く
+ * （記事に日数を手書きすると診断結果・水やりガイドとずれる / AGENTS.md）。
+ * 日数そのものは環境依存なので断定せず、easeの大小で「持つほう／こまめなほう」を言うに留める。
+ */
+const SOILLESS_SLUGS = ['tillandsia'];
+const pottedPlants = PLANTS.filter((plant) => !SOILLESS_SLUGS.includes(plant.slug));
+
+const toughRanking = [...pottedPlants].sort((a, b) => b.attributes.ease - a.attributes.ease);
+const toughest = toughRanking[0];
+const thirstiest = toughRanking[toughRanking.length - 1];
+
+/** 留守中に向く側（乾かし気味でよいグループ）と、向かない側 */
+const travelFriendly = pottedPlants.filter((plant) => plant.attributes.ease >= 4);
+const needsSitter = pottedPlants.filter((plant) => plant.attributes.ease <= 3);
+
+const nameList = (plants: typeof PLANTS) => plants.map((plant) => plant.name).join('・');
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-travel-watering.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>1〜2泊なら、たいてい何もしなくて大丈夫です</h2>
+  <p>
+    いちばん伝えたいのはここです。<strong>1泊や2泊程度の外出なら、出発前にいつもどおり
+    水をやっておけば、たいていの植物はそのまま平気に過ごしています。</strong>
+    私も最初の旅行では気が気じゃなくて何か対策をと焦りましたが、帰ってきたら鉢はいつもと
+    変わらない顔をしていました。それ以来、短い外出のために特別なことはしていません。
+  </p>
+  <p>
+    ただし、次の2つに当てはまるときだけ少し注意してください。
+  </p>
+  <ul>
+    <li>
+      <strong>出発が、ちょうど水やりのタイミングと重なるとき。</strong>
+      土がすでに乾いている状態で家を空けるのは避けたいので、出発前日に確認して、
+      必要なら軽く前倒しで与えておきます
+    </li>
+    <li>
+      <strong>夏の日中、締め切った部屋に直射日光が当たる窓ぎわに置いているとき。</strong>
+      室温が想定以上に上がることがあるので、心配なら出発前だけレースカーテン越しの位置へ
+      少し動かしておくと安心です
+    </li>
+  </ul>
+
+  <h2>3日〜1週間は、給水グッズに頼るのがいちばん確実</h2>
+  <p>
+    3日を超えると、さすがに土が乾ききる可能性が出てきます。
+    ここで私が実際に使っているのが、留守中の給水を代わりにやってくれる道具です。
+    どれも手順は「出発前にセットするだけ」なので、身構えるほどのことではありません。
+  </p>
+  <ul>
+    <li>
+      <strong>給水ボトル・給水スパイク。</strong>
+      水を入れたペットボトルや専用のガラス玉を土に挿しておくと、乾き具合に応じて少しずつ
+      水がしみ出します。仕組みが単純で失敗しにくく、私はこれをいちばんよく使っています
+    </li>
+    <li>
+      <strong>腰水（鉢ごと水を張ったトレーに置く簡易版）。</strong>
+      鉢を洗面器やトレーに置き、鉢の高さの3分の1くらいまで水を張っておくと、
+      底の穴から少しずつ水を吸い上げてくれます。道具を買わずにできるのが利点です
+    </li>
+  </ul>
+  <AmazonLink keyword="観葉植物 留守 水やり 給水グッズ" label="Amazonで「留守中の給水グッズ」を見る" />
+  <p class="note">
+    どちらの方法も、<strong>普段の水やりと同じで「たっぷり与えてから出発する」のが前提</strong>です。
+    土が乾いた状態でセットしても、間に合わないことがあります。
+  </p>
+
+  <h2>1週間を超えるなら、置き場所ごと変えてしまう</h2>
+  <p>
+    1週間以上になると、給水グッズだけに頼るより<strong>蒸散そのものを減らす</strong>工夫を
+    足したほうが安心です。私が長めの帰省のときにやっているのはこの2つです。
+  </p>
+  <ul>
+    <li>
+      <strong>明るい日陰へ一時的に移動させる。</strong>
+      直射日光が当たる場所は乾きが早いので、留守のあいだだけ室内の少し奥まった、
+      それでいて明るさが保てる場所へ動かします。光合成のペースが落ちて水の消費も落ち着きます
+    </li>
+    <li>
+      <strong>数鉢まとめて置き、鉢と鉢のあいだをつめる。</strong>
+      葉から蒸発した水分がお互いの周りにとどまりやすくなり、乾きが多少ゆっくりになります。
+      腰水と組み合わせるとさらに効果的です
+    </li>
+  </ul>
+  <p>
+    それでも不安が残るなら、頼れる人に「3日おきに土を触って、乾いていたら与えて」とだけ
+    伝えておくのがいちばん確実です。難しい説明はいらず、これだけで十分です。
+  </p>
+  <p class="note">
+    土の乾き具合の確かめ方・与えるときの量は
+    <a href="/guides/watering/">観葉植物の水やりの頻度と量</a>にまとめています。
+    頼む相手にもこのページを見せれば、やり方の説明が省けます。
+  </p>
+
+  <h2>{PLANTS.length}種でみる、留守にできる長さの違い</h2>
+  <p>
+    同じ対策でも、そもそもどれくらい乾燥に強いかは種類によって違います。
+    下の数字は診断の点数に使っている<strong>ズボラ耐性</strong>
+    （大きいほど水やりを忘れても枯れにくい）です。
+  </p>
+  <p>
+    数値が大きい{nameList(travelFriendly)}は、
+    特別な対策をしなくても長めの留守に耐えてくれる側。
+    なかでも{toughest.name}は{toughest.attributes.ease} / 5で、1週間程度なら
+    給水グッズなしでも乗り切れることが多い相手です。
+    反対に{nameList(needsSitter)}は<strong>留守中の対策を用意しておきたい</strong>側で、
+    {thirstiest.name}は{thirstiest.attributes.ease} / 5と、3日を超える外出なら
+    給水グッズか腰水を準備しておくと安心です。
+  </p>
+  <p class="note">
+    チランジア（エアプランツ）は土を使わないので、留守中は葉水の代わりに出発前にたっぷり
+    ソーキング（水に数時間つける）してから、必ず乾かしてから出かけてください。
+    濡れたまま長期間放置すると株の中心が傷みます。
+  </p>
+
+  <h2>帰ってきたら、まず土を触ってから判断する</h2>
+  <p>
+    帰宅していちばんやりがちな失敗が、<strong>心配のあまりすぐにたっぷり水をやってしまうこと</strong>
+    です。給水グッズや腰水がまだ効いていて土が湿ったままのこともあるので、
+    ここでも判断基準は同じ、まず土を触ってください。
+  </p>
+  <p>
+    葉が少し垂れていても、土が乾いていれば水を与えればすぐに戻ります。
+    土が湿っているのに垂れているなら、水のやりすぎ側の心配をしたほうがいい場合もあります。
+  </p>
+  <p class="note">
+    水切れと根腐れ、どちらの垂れなのかの見分け方は
+    <a href="/guides/leaf-problems/">葉の症状から原因を見分けるガイド</a>にまとめています。
+  </p>
+
+  <h2>そもそも留守が多いなら、乾燥に強い一鉢を選ぶ手も</h2>
+  <p>
+    出張や旅行が多い生活なら、対策を毎回用意するより、
+    <strong>そもそも乾燥に強い植物を選んでおく</strong>ほうが気楽です。
+  </p>
+  <p>
+    <a href="/#diagnosis">4つの質問の診断</a>のQ2で「ズボラでも平気なのがいい」を選ぶと、
+    留守がちな生活でも扱いやすい種が上位に出ます。
+    次の一鉢を選ぶときの参考にしてみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /* 補足は本文より一段弱く（色を足さずミュートで後退させる / design.md） */
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>

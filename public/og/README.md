@@ -5,7 +5,7 @@
 
 - `pachira.jpg` 〜 `tillandsia.jpg`: 植物8種それぞれの記事用。各種の見出し写真
   （`src/assets/photos/`）に、種名・学名を焼き込んだもの
-- `guide-<slug>.jpg`: ガイド記事12本、それぞれ専用の1枚（`src/lib/guides.ts`のslugと対応）。
+- `guide-<slug>.jpg`: ガイド記事13本、それぞれ専用の1枚（`src/lib/guides.ts`のslugと対応）。
   2026-08-19時点では「数パターンでいい」という本人指示で`guide.jpg`1枚を共有していたが、
   2026-08-22に「文言を変えても画像が同じで記事の見分けがつかない」と本人指摘があり、
   8本それぞれに専用画像を作って`guide.jpg`は削除した。使う写真は`src/lib/plant-photos.ts`の
@@ -57,3 +57,11 @@ PNGで撮ってからJPEG（quality 88）へ変換する。
   `background-position: center 60%`（既定の中央だと鉢の底が切れるので少し下寄せ）
 - `guide-leaf-problems.jpg`: 元写真1600×1200（4:3）で、葉が枠の縦いっぱいを占める。
   単層coverだと葉の上下どちらかが必ず切れるため上記の2層構成にした
+
+2026-09-01の`guide-travel-watering.jpg`は、記事見出し写真と同じ`travel-watering.jpg`
+（元写真1600×2400の縦長を`sips -c 1200 1600 --cropOffset 1050 0`で4:3=1600×1200に
+切り出し済みのもの）を使ったが、4:3でも**単層cover＋`background-position: center`（既定）で
+問題なかった**。スーツケース2つは画面の上下いっぱいには迫っておらず（上に天井寄りの余白、
+下に床・ラグの余白がある構図）、coverでできる横840px相当の窓に収めても被写体が切れないため。
+`guide-leaf-problems.jpg`（葉が枠の縦いっぱいを占める構図）とは違い、同じ4:3でも
+2層構成が必須とは限らない——**まず単層coverを試してから**必要に応じて2層に切り替える判断でよい。
