@@ -32,6 +32,7 @@ import pruningPhoto from '../assets/photos/pruning.jpg';
 import wateringPhoto from '../assets/photos/watering.jpg';
 import leafProblemsPhoto from '../assets/photos/leaf-problems.jpg';
 import travelWateringPhoto from '../assets/photos/travel-watering.jpg';
+import soilPhoto from '../assets/photos/soil.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -133,6 +134,10 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  *   （`src/assets/photos/travel-watering.jpg`）。出かける支度をしたスーツケースと、
  *   家に残る鉢植えが同じ画面に入っている構図。記事のテーマ（留守にするあいだの水やり）が
  *   写真だけで伝わるものを選んだ
+ * - 土・用土選び（2026-09-05追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/soil.jpg`）。白い背景の中、鉢に土を入れて植えている手元と、
+ *   すでに土から抜かれた根も写り込んでいる構図。植物の種の紹介写真ではないので
+ *   PLANT_PHOTOSには入れず、ここだけで持っている
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -160,6 +165,10 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'travel-watering': {
     src: travelWateringPhoto,
     alt: '明るいリビングのソファの前に置かれた大小2つの白いスーツケースと、その奥の床に置かれた鉢植えの観葉植物',
+  },
+  soil: {
+    src: soilPhoto,
+    alt: '白い机の上で、根がむき出しになった観葉植物を持ち上げ、こんもりと盛られた黒い土を鉢へ入れようとしている手元',
   },
 };
 

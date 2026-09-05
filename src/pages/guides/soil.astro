@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('soil')!;
+
+/**
+ * 「水はけを厚めにしたい種・標準でいい種」の分け方は、診断の点数に使っている
+ * ease（ズボラ耐性）から描く（記事に手書きすると診断結果・水やりガイドとずれる / AGENTS.md）。
+ * チランジアは土そのものを使わないので、この記事の対象からは除外する
+ * （travel-watering.astro と同じ流儀）。
+ */
+const SOILLESS_SLUGS = ['tillandsia'];
+const pottedPlants = PLANTS.filter((plant) => !SOILLESS_SLUGS.includes(plant.slug));
+
+const drainageFocused = pottedPlants.filter((plant) => plant.attributes.ease >= 4);
+const standardIsFine = pottedPlants.filter((plant) => plant.attributes.ease <= 3);
+
+const rankedByEase = [...pottedPlants].sort((a, b) => b.attributes.ease - a.attributes.ease);
+const driestPreferring = rankedByEase[0];
+
+const nameList = (plants: typeof PLANTS) => plants.map((plant) => plant.name).join('・');
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-soil.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>迷ったら「観葉植物用培養土」で大丈夫です</h2>
+  <p>
+    結論から言うと、<strong>土選びで一番失敗しにくいのは、園芸店やホームセンターで
+    「観葉植物用培養土」として売られているものを選ぶことです。</strong>
+    赤玉土・腐葉土・パーライトといった材料をあらかじめブレンドしてあり、
+    水はけ・保水・pH・肥料分まで観葉植物向けに調整済みです。私が根腐れさせたときは、
+    値段だけで選んだ土がそもそも水はけの悪い配合で、サンスベリアには合っていませんでした。
+  </p>
+  <p>
+    「観葉植物用」と書かれた袋なら、種類を選ばずどれでもだいたい大丈夫です。
+    まずはここから始めて、慣れてきたら次の章の配合をいじってみる、くらいの気持ちでいてください。
+  </p>
+  <AmazonLink keyword="観葉植物 培養土" label="Amazonで「観葉植物用培養土」を見る" />
+
+  <h2>土に求められている2つの役割：水はけと保水</h2>
+  <p>
+    市販の培養土が何を調整しているのかを知っておくと、あとの章の配合の話が理解しやすくなります。
+    土に求められているのは、相反する<strong>2つの役割</strong>です。
+  </p>
+  <ul>
+    <li>
+      <strong>水はけ。</strong>
+      与えた水が鉢の中に長く留まりすぎず、ほどよく抜けていくこと。
+      これが悪いと土がずっと湿ったままになり、根が酸欠になって根腐れします
+    </li>
+    <li>
+      <strong>保水。</strong>
+      水がすべて抜けきってしまわず、ある程度は土の粒のあいだに留まること。
+      これが無さすぎると、水やりの直後からすぐに乾いてしまい、水切れを起こしやすくなります
+    </li>
+  </ul>
+  <p>この2つを両立させるために、性格の違う材料を組み合わせているわけです。</p>
+  <ul>
+    <li>
+      <strong>赤玉土。</strong>
+      粒状の土で、観葉植物用培養土のベースになることが多い材料です。
+      粒と粒のあいだに適度な隙間ができるので、水はけと保水のバランスが元から取れています
+    </li>
+    <li>
+      <strong>腐葉土・ピートモス。</strong>
+      落ち葉などが分解されてできた有機質の土で、保水力と栄養分を補います。
+      赤玉土だけだと痩せてしまう土に、養分とふかふかさを足す役目です
+    </li>
+    <li>
+      <strong>パーライト・軽石。</strong>
+      軽石を発泡させた白い粒で、こちらは純粋に<strong>水はけ専用</strong>の材料です。
+      栄養はほとんど無く、土全体を軽くする効果もあります
+    </li>
+  </ul>
+
+  <h2>自分でブレンドするなら、赤玉土多めが基本</h2>
+  <p>
+    市販の培養土に慣れてきて、土からこだわってみたくなったら、自分で配合してみるのもありです。
+    目安は<strong>赤玉土（小粒）7：腐葉土3</strong>くらい。これが観葉植物全般に通用する基本の比率です。
+  </p>
+  <p>
+    乾き気味を好む種（次の章で紹介します）を植えるときは、ここへ<strong>パーライトを1〜2割</strong>
+    足してあげると、水はけがさらに良くなります。逆に保水を重視したい種なら、腐葉土をやや多めに
+    振っても構いません。
+  </p>
+  <p class="note">
+    pHはそこまで神経質にならなくて大丈夫です。観葉植物の多くは弱酸性〜中性の幅広い範囲で
+    問題なく育ちます。市販の用土用測定器を持ち出すほどのことは、家庭で育てる分にはまずありません。
+  </p>
+
+  <h2>{pottedPlants.length}種でみる、水はけを厚めにしたい種・標準でいい種</h2>
+  <p>
+    土を使う{pottedPlants.length}種のあいだでも、どれくらい水はけを意識すべきかは
+    診断の点数に使っている<strong>ズボラ耐性</strong>（大きいほど乾燥・水切れに強い）で
+    ある程度見分けがつきます。
+  </p>
+  <p>
+    数値が大きい{nameList(drainageFocused)}は、そもそも乾いた環境を好む側。
+    なかでも{driestPreferring.name}は{driestPreferring.attributes.ease} / 5で、
+    パーライトを多めに混ぜて水はけを厚くした配合のほうが、根腐れの心配なく育てやすくなります。
+    反対に{nameList(standardIsFine)}は、市販の観葉植物用培養土をそのまま使う<strong>標準の配合で
+    問題ありません</strong>。無理に水はけを強めると、今度は水切れしやすくなってしまいます。
+  </p>
+  <p class="note">
+    チランジア（エアプランツ）は土を使わずに育てる種類なので、この章の対象からは外しています。
+  </p>
+
+  <h2>土を替えるタイミングは、植え替えのとき</h2>
+  <p>
+    「土だけ定期的に交換したほうがいいのでは」と思うかもしれませんが、そこまでする必要はありません。
+    <strong>土を新しくするのは、植え替えのタイミングでまとめて</strong>で十分です。
+  </p>
+  <p>
+    古い土を使い回したくなる気持ちはわかりますが、鉢の中の土は年月とともに養分が抜けて、
+    粒が崩れて固くなっていきます。水はけも悪くなっているので、そのまま使い続けると
+    せっかくの植え替えの効果が半減してしまいます。
+  </p>
+  <p class="note">
+    根詰まりのサインの見分け方・植え替えに向いた時期と頻度・実際の手順は
+    <a href="/guides/repotting/">観葉植物の植え替え、タイミングとやり方</a>にまとめています。
+    「そろそろ土を替えたいな」と思ったら、まずはこちらで植え替え自体が必要かを確認してみてください。
+  </p>
+
+  <h2>これは避けたい：庭の土・観葉植物用ではない土の使い回し</h2>
+  <p>
+    最後に、やってしまいがちな注意点です。<strong>庭の土をそのまま鉢に入れるのは避けてください。</strong>
+    庭土は屋外での使用を前提にしていて水はけが悪く重いことが多いうえ、虫や病原菌を室内に
+    持ち込んでしまうリスクもあります。
+  </p>
+  <p>
+    同じように、<strong>野菜用・草花用の培養土をそのまま使うのもおすすめしません。</strong>
+    見た目は似ていても、肥料の設計が野菜や草花向けになっていて、観葉植物には濃すぎることが
+    あります。安く済ませたくなる気持ちはわかるのですが、ここは素直に「観葉植物用」と書かれた
+    ものを選んでおくのが結局いちばん近道です。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /* 補足は本文より一段弱く（色を足さずミュートで後退させる / design.md） */
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>

@@ -23,6 +23,7 @@
 | `watering.jpg` | 水やりガイド記事の見出し（`GUIDE_PHOTOS.watering`） | ROCKETMANN TEAM（Pexels: @rocketmann-prod） | https://images.pexels.com/photos/9507264/pexels-photo-9507264.jpeg |
 | `leaf-problems.jpg` | 葉のトラブルガイド記事の見出し（`GUIDE_PHOTOS['leaf-problems']`） | Inga Seliverstova（Pexels: @inga-sv） | https://images.pexels.com/photos/3371463/pexels-photo-3371463.jpeg を`sips -c 1200 1600 --cropOffset 250 0`で切り出し（下記） |
 | `travel-watering.jpg` | 留守中・旅行中の水やりガイド記事の見出し（`GUIDE_PHOTOS['travel-watering']`） | Vlada Karpovich（Pexels: @vlada-karpovich） | https://images.pexels.com/photos/7368306/pexels-photo-7368306.jpeg を`sips -c 1200 1600 --cropOffset 1050 0`で切り出し（下記） |
+| `soil.jpg` | 土・用土選びガイド記事の見出し（`GUIDE_PHOTOS.soil`） | Prathyusha Mettupalle（Pexels: @prathsnap） | https://images.pexels.com/photos/18864982/pexels-photo-18864982.jpeg |
 
 - 2026-08-13: 管理者の指示（「もっときれいめに」、参考: livingorchid.comの商品写真のような
   明るい・背景がすっきりした雰囲気）で全6枚を差し替え。旧版（暗め・生活感のある写真）から、
@@ -67,6 +68,16 @@
     原本はPexelsのURLから再取得できる。
   - 写っているのは「出発前のスーツケース＋家に残る鉢植え」で、これも**植物の種の紹介写真ではない**
     （`pruning.jpg`と同じ性格の素材）。PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
+- 2026-09-05: ガイド記事14本目（土・用土選び）用に`soil.jpg`を1枚追加。上と同じ理由（記事ごとに
+  写真を重複させない）で新規調達している。取得日は2026-09-05、同じく
+  `?auto=compress&cs=tinysrgb&w=1600`付きで取得（1600×1067、原本のまま加工なし）。
+  白い机の上で、根がむき出しの株を鉢へ植えようとしている手元のクローズアップ。写真検索は
+  `pexels.com/search/`への直curlがCloudflareに弾かれたため、`r.jina.ai`経由の読み取りプロキシで
+  検索結果ページを取得して選定した（vault:
+  3-resources/knowledge/20260830-pexels-search-cloudflare-workaround.md のBing画像検索と並ぶ
+  もう一方の回避策。今回はこちらが通った）。写っているのは「植え替え中の手元」で
+  `pruning.jpg`等と同じく植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず
+  `GUIDE_PHOTOS`だけで持っている。
 - 取得日: 2026-08-13（`?auto=compress&cs=tinysrgb&w=1600` を付けて長辺1600pxで取得）
 - 表示は `<Image>`（astro:assets）経由。リサイズとWebP変換はビルド時に走るので、
   ここに置く原本は加工せずそのまま残しておく。
