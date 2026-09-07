@@ -24,6 +24,7 @@
 | `leaf-problems.jpg` | 葉のトラブルガイド記事の見出し（`GUIDE_PHOTOS['leaf-problems']`） | Inga Seliverstova（Pexels: @inga-sv） | https://images.pexels.com/photos/3371463/pexels-photo-3371463.jpeg を`sips -c 1200 1600 --cropOffset 250 0`で切り出し（下記） |
 | `travel-watering.jpg` | 留守中・旅行中の水やりガイド記事の見出し（`GUIDE_PHOTOS['travel-watering']`） | Vlada Karpovich（Pexels: @vlada-karpovich） | https://images.pexels.com/photos/7368306/pexels-photo-7368306.jpeg を`sips -c 1200 1600 --cropOffset 1050 0`で切り出し（下記） |
 | `soil.jpg` | 土・用土選びガイド記事の見出し（`GUIDE_PHOTOS.soil`） | Prathyusha Mettupalle（Pexels: @prathsnap） | https://images.pexels.com/photos/18864982/pexels-photo-18864982.jpeg |
+| `after-purchase.jpg` | 買ってきたら最初にやることガイド記事の見出し（`GUIDE_PHOTOS['after-purchase']`） | Blue Bird（Pexels: @blue-bird） | https://images.pexels.com/photos/7217900/pexels-photo-7217900.jpeg |
 
 - 2026-08-13: 管理者の指示（「もっときれいめに」、参考: livingorchid.comの商品写真のような
   明るい・背景がすっきりした雰囲気）で全6枚を差し替え。旧版（暗め・生活感のある写真）から、
@@ -78,6 +79,15 @@
   もう一方の回避策。今回はこちらが通った）。写っているのは「植え替え中の手元」で
   `pruning.jpg`等と同じく植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず
   `GUIDE_PHOTOS`だけで持っている。
+- 2026-09-07: ガイド記事15本目（買ってきたら最初にやること）用に`after-purchase.jpg`を1枚追加。
+  上と同じ理由（記事ごとに写真を重複させない）で新規調達している。取得日は2026-09-07、同じく
+  `?auto=compress&cs=tinysrgb&w=1600`付きで取得（1600×1067、原本のまま加工なし）。
+  白い壁を背景に、コートを着た人が木箱に入れたサンスベリアと観葉植物を小脇に抱えて歩いている構図
+  （タイトル「Plants in a Crate」）。「お店から持ち帰った直後」のテーマがひと目で伝わる写真を選んだ。
+  写真検索は`pexels.com/search/`への直curlが弾かれたため`r.jina.ai`経由の読み取りプロキシで検索結果
+  ページを取得して選定した（`soil.jpg`と同じ回避策。vault:
+  3-resources/knowledge/20260830-pexels-search-cloudflare-workaround.md）。植物の種の紹介写真ではない
+  ため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
 - 取得日: 2026-08-13（`?auto=compress&cs=tinysrgb&w=1600` を付けて長辺1600pxで取得）
 - 表示は `<Image>`（astro:assets）経由。リサイズとWebP変換はビルド時に走るので、
   ここに置く原本は加工せずそのまま残しておく。

@@ -33,6 +33,7 @@ import wateringPhoto from '../assets/photos/watering.jpg';
 import leafProblemsPhoto from '../assets/photos/leaf-problems.jpg';
 import travelWateringPhoto from '../assets/photos/travel-watering.jpg';
 import soilPhoto from '../assets/photos/soil.jpg';
+import afterPurchasePhoto from '../assets/photos/after-purchase.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -138,6 +139,11 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  *   （`src/assets/photos/soil.jpg`）。白い背景の中、鉢に土を入れて植えている手元と、
  *   すでに土から抜かれた根も写り込んでいる構図。植物の種の紹介写真ではないので
  *   PLANT_PHOTOSには入れず、ここだけで持っている
+ * - 買ってきたら最初にやること（2026-09-07追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/after-purchase.jpg`）。木箱に入れたサンスベリアと観葉植物を小脇に抱えて
+ *   持ち帰っているところ。「お店から持ち帰った直後」がひと目で伝わる構図で、既存の記事写真
+ *   （植物単体・作業中の手元）とは見分けがつく。植物の種の紹介写真ではないので
+ *   PLANT_PHOTOSには入れず、ここだけで持っている
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -169,6 +175,10 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   soil: {
     src: soilPhoto,
     alt: '白い机の上で、根がむき出しになった観葉植物を持ち上げ、こんもりと盛られた黒い土を鉢へ入れようとしている手元',
+  },
+  'after-purchase': {
+    src: afterPurchasePhoto,
+    alt: '白い壁を背景に、コートを着た人が木箱に入ったサンスベリアと観葉植物を小脇に抱えて歩いている様子',
   },
 };
 

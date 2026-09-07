@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('after-purchase')!;
+
+/**
+ * お迎え直後の置き場所の決めやすさは、診断の点数に使っている shade（耐陰性）から描く
+ * （記事に手書きすると、種の入れ替えで診断結果と食い違う / AGENTS.md）。
+ * soil.astro・beginner-mistakes.astro と同じ流儀で、境界（shade4/5 か 2/3 か）も数値そのままにする。
+ */
+const easyToPlace = PLANTS.filter((plant) => plant.attributes.shade >= 4);
+const needsLight = PLANTS.filter((plant) => plant.attributes.shade <= 3);
+const nameList = (plants: typeof PLANTS) => plants.map((plant) => plant.name).join('・');
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-after-purchase.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>お店で見ているのは、葉より「株元と土」</h2>
+  <p>
+    お店で株を選ぶとき、私はどうしても葉の色つやばかり見てしまいがちなのですが、
+    <strong>本当にチェックすべきは株元と土</strong>です。葉が多少寂しくても持ち直しますが、
+    根が弱っている株はあとから挽回しにくいからです。
+  </p>
+  <ul>
+    <li>
+      <strong>株元を軽く持ってぐらつかないか。</strong>
+      ぐらつく場合、根がまだ十分に張っていない（挿し木したばかりのサインのことがあります）
+    </li>
+    <li>
+      <strong>土の表面に白いカビや、コバエが飛んでいないか。</strong>
+      すでに過湿ぎみで管理されていたサインで、持ち帰ってからもトラブルを引きずりやすいです
+    </li>
+    <li>
+      <strong>葉裏に白い点や、べたつく粘りが無いか。</strong>
+      ハダニやカイガラムシがすでについている可能性があります。虫の見分け方は
+      <a href="/guides/pest-control/">観葉植物の虫対策ガイド</a>に詳しくまとめました
+    </li>
+  </ul>
+  <p>
+    分かりやすい元気さの指標として、<strong>新芽が動いているか</strong>もあわせて見ています。
+    小さくてもつやのある新芽が出ている株は、その環境にちゃんと適応できているということなので、
+    お迎えしたあとも育てやすい傾向があります。
+  </p>
+
+  <h2>持ち帰ったら、まずラッピングと装飾を外す</h2>
+  <p>
+    無事にお迎えできたら、家に着いてまずやることがあります。<strong>鉢を包んでいるフィルムや
+    化粧砂、鉢カバーの中にたまった水受けを外す</strong>ことです。
+    見た目をよくするための装飾なのですが、そのままにしておくと通気と排水を止めてしまい、
+    根腐れの原因になります。
+  </p>
+  <p>
+    確認したいのは、<strong>鉢底からちゃんと水が抜ける状態になっているか</strong>。
+    フィルムで底穴がふさがれていたり、鉢カバーに水が溜まったままだったりすると、
+    見た目は変わらないのに中では根が水浸しになっていることがあります。
+    鉢の穴や鉢カバーとの組み合わせ方は
+    <a href="/guides/pot-guide/">おしゃれな鉢・プランターの選び方</a>にまとめているので、
+    気になる人はあわせてどうぞ。
+  </p>
+  <AmazonLink keyword="観葉植物 鉢カバー 受け皿" label="Amazonで「鉢カバー・受け皿」を見る" />
+
+  <h2>その日のうちに植え替えない</h2>
+  <p>
+    冒頭にも書きましたが、これがいちばん伝えたいことです。
+    <strong>お迎え直後の株は、移動と光量の変化だけですでに消耗しています。</strong>
+    そこへ植え替えという追加のストレスを重ねると、回復が追いつかなくなることがあります。
+  </p>
+  <p>
+    植え替えは、<strong>環境に慣れてから</strong>にしてください。目安は2週間ほど。
+    そのあと生長期（春〜秋）であれば、そのまま植え替えてしまって大丈夫です。
+    ただし鉢底からすでに根がはみ出しているなど、緊急性が高い場合はこの限りではありません。
+    手順や時期の詳しい判断は
+    <a href="/guides/repotting/">観葉植物の植え替え、タイミングとやり方</a>にまとめました。
+  </p>
+  <p class="note">
+    同じ理由で、<strong>肥料もこの時期は足さないでください</strong>。
+    弱った根に肥料が触れると、かえって水を吸えなくなります。
+    与えていい時期の目安は<a href="/guides/fertilizer/">観葉植物の肥料、選び方と与え方</a>で
+    確認できます。
+  </p>
+
+  <h2>置き場所は、いきなり特等席に置かない</h2>
+  <p>
+    お店の店頭は、明るいけれど直射日光ではない環境に調整されていることがほとんどです。
+    そこから急に<strong>南向きの窓辺の直射日光や、逆に日の入らない暗い廊下</strong>へ移すと、
+    株がその変化についていけず、葉焼けや落葉につながります。
+  </p>
+  <p>
+    <strong>数日〜1週間ほどかけて、明るい日陰から少しずつ慣らしてあげる</strong>のが安全です。
+    「早くお気に入りの場所に飾りたい」という気持ちはよく分かるのですが、
+    ここを急ぐと結局長引くことになるので、私はいつも我慢するようにしています。
+  </p>
+
+  <h2>{PLANTS.length}種でみる、お迎え直後の置き場所の決めやすさ</h2>
+  <p>
+    置き場所をどれくらい慎重に決めるべきかは、診断の点数に使っている<strong>耐陰性</strong>
+    （大きいほど暗い場所でも育つ）で見分けがつきます。
+  </p>
+  <p>
+    数値が大きい{nameList(easyToPlace)}は、明るい日陰からのスタートで問題なく、
+    置き場所を決める自由度が高い側です。反対に{nameList(needsLight)}は明るさを欲しがるタイプなので、
+    窓から離れた場所に慣らしのつもりで置いたまま忘れてしまうと、数週間で葉を落としたり、
+    葉先が枯れ込んだりと調子を崩しやすくなります。早めに、日の入る場所へ少しずつ
+    近づけてあげてください。
+  </p>
+
+  <h2>最初の水やりは「買った日」ではなく「土が乾いてから」</h2>
+  <p>
+    お店では出荷前に水をもらっていることが多く、着いたその日はまだ土が湿っているケースが
+    ほとんどです。ここで「お迎え祝い」のつもりでたっぷり水をやると、過湿になってしまいます。
+  </p>
+  <p>
+    指を土に入れて乾き具合を確かめてから判断するのが基本です。詳しいやり方は
+    <a href="/guides/watering/">観葉植物の水やりの頻度と量</a>にまとめているので、
+    最初の1回に迷ったらこちらを見てもらえれば大丈夫です。
+  </p>
+
+  <h2>1〜2週間で葉が数枚落ちても、たいてい失敗ではありません</h2>
+  <p>
+    お迎えしてすぐに葉が落ちると、「もう枯れてしまうのでは」と焦りますよね。
+    私も最初の頃はそうでした。でもこれは多くの場合、<strong>環境の変化に適応している途中</strong>
+    のサインで、あなたの育て方のせいではありません。
+  </p>
+  <p>
+    見分け方の目安は、<strong>下のほうの葉が数枚だけ落ちる</strong>のか、
+    <strong>上の新しい葉から一気に落ちていく</strong>のか。詳しい症状の見分け方は
+    <a href="/guides/leaf-problems/">葉の症状から原因を見分けるガイド</a>にまとめました。
+  </p>
+  <p class="note">
+    ここで慌てて水や肥料を増やしてしまうのが、いちばんよくある二次被害です。
+    数枚の落葉くらいなら、まずは何も足さずに1〜2週間、様子を見てあげてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /* 補足は本文より一段弱く（色を足さずミュートで後退させる / design.md） */
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>
