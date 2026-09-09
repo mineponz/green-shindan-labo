@@ -1,0 +1,202 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS, findPlant } from '../../lib/plants.ts';
+
+const guide = findGuide('hydroculture')!;
+
+/**
+ * 「土をやめる恩恵が大きい種」の分け方は、診断の点数に使っている pest（虫のつきにくさ。
+ * 大きいほど虫がつきにくい）から描く（記事に手書きすると診断結果とずれる / AGENTS.md）。
+ * チランジアはそもそも土を使わないのでこの比較の対象外にし、本文で別途触れる
+ * （soil.astro・travel-watering.astro と同じ流儀）。
+ */
+const SOILLESS_SLUGS = ['tillandsia'];
+const pottedPlants = PLANTS.filter((plant) => !SOILLESS_SLUGS.includes(plant.slug));
+
+const benefitsMost = pottedPlants.filter((plant) => plant.attributes.pest <= 3);
+const alreadyPestFree = pottedPlants.filter((plant) => plant.attributes.pest >= 4);
+const potlessPlant = findPlant('tillandsia')!;
+
+const nameList = (plants: typeof PLANTS) => plants.map((plant) => plant.name).join('・');
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-hydroculture.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>土を使わない育て方、という選択肢があります</h2>
+  <p>
+    ハイドロカルチャーは、土のかわりに<strong>ハイドロボール（粘土を高温で焼いて発泡させた
+    人工の石）</strong>を使い、容器の底にためた水で育てる方法です。「水耕栽培」と呼ばれることも
+    あります。園芸店の片隅で、ガラス容器に入った小さな観葉植物を見たことがあるかもしれません。
+    あれです。
+  </p>
+  <p>
+    土をやめると、いいことが3つあります。
+  </p>
+  <ul>
+    <li>
+      <strong>コバエが湧かない。</strong>
+      キノコバエは湿った土の有機質に卵を産むので、土そのものが無ければ発生源がありません
+    </li>
+    <li>
+      <strong>水の量が目で見える。</strong>
+      「土の中がどうなっているか分からない」という、水やりでいちばん難しい部分が可視化されます
+    </li>
+    <li>
+      <strong>清潔で、こぼれても掃除が楽。</strong>
+      土がこぼれない・においが出にくいので、寝室やデスクの上にも置きやすいです
+    </li>
+  </ul>
+  <p class="note">
+    虫の種類ごとの見分け方と、土で育てたまま対策する方法は
+    <a href="/guides/pest-control/">観葉植物の虫対策ガイド</a>にまとめています。
+    土をやめるのは、あくまで選択肢のひとつです。
+  </p>
+
+  <h2>仕組みは「石が水を吸い上げて、根に渡す」だけ</h2>
+  <p>
+    ハイドロボールには細かい穴がたくさん空いていて、底にたまった水を吸い上げます。
+    根はその湿りけから水を受け取るので、<strong>根が水にどっぷり浸かっているわけではありません</strong>。
+    ここが、あとで触れる「ガラス瓶で水だけ」の方法との大きな違いです。
+  </p>
+  <p>
+    使うのは<strong>底に穴の開いていない容器</strong>です。土の鉢は「余分な水を抜く」設計ですが、
+    ハイドロカルチャーは逆に「少量の水をためておく」設計だからです。
+    そのかわり水が動かず古くなるので、<strong>根腐れ防止剤（ゼオライトなど）</strong>を
+    底に少し敷いて、水の傷みと雑菌を抑えます。この2つはセットだと思ってください。
+  </p>
+  <AmazonLink keyword="ハイドロボール 根腐れ防止剤 ゼオライト" label="Amazonで「ハイドロボール・根腐れ防止剤」を見る" />
+
+  <h2>始め方：土を落として、石に植え替えるだけ</h2>
+  <ol>
+    <li>鉢から株を抜き、根についた土を落とします。<strong>最後は水を張ったバケツで洗って、
+      土をしっかり落としきる</strong>のがコツです。土が残っていると、そこからコバエが出ます</li>
+    <li>傷んだ根（黒い・ぶよぶよしている）があれば、清潔なはさみで切ります</li>
+    <li>容器の底に根腐れ防止剤を1〜2cm敷きます</li>
+    <li>株を入れ、まわりにハイドロボールを詰めて固定します</li>
+    <li>水を<strong>容器の高さの5分の1くらい</strong>まで入れます。根が全部浸かるのは入れすぎです</li>
+  </ol>
+  <p>
+    やる時期は、生長期の<strong>春から秋</strong>がおすすめです。冬は株の回復が遅いので、
+    どうしても今すぐでなければ待ったほうが安全です。
+    土を落とす作業は根に負担がかかるので、
+    <a href="/guides/repotting/">植え替えのタイミングとやり方</a>と同じ感覚で、
+    株が元気なときにやってあげてください。
+  </p>
+  <p class="note">
+    お迎えしたばかりの株をいきなり移すのはおすすめしません。理由は
+    <a href="/guides/after-purchase/">観葉植物を買ってきたら最初にやること</a>と同じで、
+    環境の変化そのものがすでに負担になっているからです。
+  </p>
+
+  <h2>水やりは「なくなってから、少し待って足す」</h2>
+  <p>
+    ここがハイドロカルチャーのいちばん気持ちいいところです。
+    <strong>容器の水が完全に無くなってから、さらに2〜3日待って、また5分の1まで足す。</strong>
+    やることはこれだけです。
+  </p>
+  <p>
+    水が切れている数日をあえて作るのは、根に空気を吸わせるためです。
+    ずっと水を満たしておくと、土の鉢で水をやりすぎたときと同じ状態になり、根が呼吸できません。
+    <strong>「常に水がある状態」ではなく「乾く時間がある状態」</strong>を目指してください。
+  </p>
+  <p>
+    土の鉢での水やりの考え方は
+    <a href="/guides/watering/">観葉植物の水やりの頻度と量</a>にまとめていますが、
+    ハイドロカルチャーはその判断が目で見えるぶん、ずっと簡単です。
+    私が最初の1鉢をハイドロにしたのも、水やりの自信が無かったからでした。
+  </p>
+
+  <h2>{PLANTS.length}種でみる、土をやめると恩恵が大きい種</h2>
+  <p>
+    どの株から試すか迷ったら、診断の点数に使っている<strong>虫のつきにくさ</strong>
+    （大きいほど虫がつきにくい）を目安にすると分かりやすいです。
+  </p>
+  <p>
+    点数が低めの{nameList(benefitsMost)}は、土のままだとコバエやハダニに悩まされやすい側です。
+    このあたりを土から出してあげると、<strong>効果を実感しやすい</strong>と思います。
+    反対に{nameList(alreadyPestFree)}はもともと虫が寄りにくいので、
+    ハイドロにする理由は「虫」より「見た目」や「水やりのしやすさ」になります。
+  </p>
+  <p class="note">
+    ちなみに{potlessPlant.name}は、もともと土も鉢も使わずに育つ植物です。
+    土のことで悩みたくないなら、そもそもこの選択肢がいちばん手っ取り早いかもしれません。
+  </p>
+
+  <h2>正直に書きます、向いていない場面もあります</h2>
+  <p>
+    いいことばかり書いてきましたが、<strong>すべての鉢をハイドロにするのはおすすめしません。</strong>
+    私も結局、土のままの鉢と半々くらいで落ち着いています。
+  </p>
+  <ul>
+    <li>
+      <strong>生長は緩やかになります。</strong>
+      土に比べて栄養が少ないので、大きく育てたい株には向きません。
+      逆に「これ以上大きくしたくない」なら利点にもなります
+    </li>
+    <li>
+      <strong>肥料は専用のものが必要です。</strong>
+      土用の固形肥料は使えません。ハイドロカルチャー用の液体肥料を、
+      規定より薄めて生長期だけ与えます（<a href="/guides/fertilizer/">肥料の選び方と与え方</a>の
+      「薄く・少なく」の考え方はそのまま当てはまります）
+    </li>
+    <li>
+      <strong>大きな株は安定しません。</strong>
+      ハイドロボールは土より軽いので、背の高い株は倒れやすくなります。
+      移すなら小〜中サイズの株からが安全です
+    </li>
+    <li>
+      <strong>移行そのものが株にストレスです。</strong>
+      土で伸びた根と、水中で伸びる根は作りが違います。移したあとしばらく元気が無いのは
+      よくあることなので、慌てずに（<a href="/guides/leaf-problems/">葉の症状から原因を見分けるガイド</a>）
+    </li>
+  </ul>
+
+  <h2>ガラス瓶で水だけ、という育て方もあります</h2>
+  <p>
+    石を使わず、<strong>ガラス瓶や花瓶に水を入れて株をそのまま挿しておく</strong>方法もあります。
+    この記事の見出しに載せている写真がまさにそれで、根が水の中に伸びていくのが見えるので、
+    インテリアとしても人気があります。
+  </p>
+  <p>
+    ハイドロボールを使う方法との違いは、<strong>根が常に水に浸かっている</strong>ことです。
+    そのぶん水が傷みやすいので、<strong>3〜5日に一度は水を全部替える</strong>のが必須になります。
+    ここをサボると濁ってにおいが出て、根が溶けます。私はこれで一度だめにしました。
+    ポトスやペペロミアのように水に強い種なら、この方法でも長く育てられます。
+  </p>
+  <p>
+    枝を切って根を出させる<strong>水挿し</strong>は、もともと株を増やすための方法ですが、
+    そのまま瓶で育て続けてもいいですし、根が出たところでハイドロボールに移してもかまいません。
+    まず試すなら、切った枝1本から始めるのがいちばん失敗しても痛くありません。やり方は
+    <a href="/guides/propagation/">観葉植物の増やし方ガイド</a>にまとめました。
+  </p>
+
+  <h2>全部を移さなくていい。まず1鉢だけ</h2>
+  <p>
+    私がおすすめしたいのは、<strong>いま持っている中でいちばん小さい鉢を1つだけ</strong>
+    ハイドロにしてみることです。うまくいけば虫の悩みが1つ減りますし、合わなければ土に戻せます。
+    植物の育て方に正解は1つではないので、家の中で両方試してみるくらいがちょうどいいと思っています。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /* 補足は本文より一段弱く（色を足さずミュートで後退させる / design.md） */
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>

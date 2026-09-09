@@ -34,6 +34,8 @@ import leafProblemsPhoto from '../assets/photos/leaf-problems.jpg';
 import travelWateringPhoto from '../assets/photos/travel-watering.jpg';
 import soilPhoto from '../assets/photos/soil.jpg';
 import afterPurchasePhoto from '../assets/photos/after-purchase.jpg';
+import hydroculturePhoto from '../assets/photos/hydroculture.jpg';
+import displayIdeasPhoto from '../assets/photos/display-ideas.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -144,6 +146,15 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  *   持ち帰っているところ。「お店から持ち帰った直後」がひと目で伝わる構図で、既存の記事写真
  *   （植物単体・作業中の手元）とは見分けがつく。植物の種の紹介写真ではないので
  *   PLANT_PHOTOSには入れず、ここだけで持っている
+ * - ハイドロカルチャー（2026-09-10追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/hydroculture.jpg`）。透明なガラス瓶に挿したオリヅルラン（スパイダー
+ *   プラント）が、水に浸かった白い根ごとはっきり見える構図。植物の種の紹介写真ではないので
+ *   PLANT_PHOTOSには入れず、ここだけで持っている
+ * - 部屋の飾り方アイデア（2026-09-10追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/display-ideas.jpg`）。明るい白壁の部屋で、木製チェストの上に
+ *   テラコッタ鉢の観葉植物を何鉢も並べ、床にも大きめの鉢を置いている構図。「棚」と「床」
+ *   両方の飾り方が1枚に収まっている。植物の種の紹介写真ではないので
+ *   PLANT_PHOTOSには入れず、ここだけで持っている
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -179,6 +190,14 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'after-purchase': {
     src: afterPurchasePhoto,
     alt: '白い壁を背景に、コートを着た人が木箱に入ったサンスベリアと観葉植物を小脇に抱えて歩いている様子',
+  },
+  hydroculture: {
+    src: hydroculturePhoto,
+    alt: '白い背景の中、透明なガラス瓶に挿されたオリヅルランの葉が水面から伸び、水中には白い根がまっすぐ垂れている',
+  },
+  'display-ideas': {
+    src: displayIdeasPhoto,
+    alt: '明るい白壁の部屋で、木製チェストの上にスパティフィラムやサンスベリアなど何鉢ものテラコッタ鉢が並び、床にも大きめの観葉植物が2鉢置かれている',
   },
 };
 

@@ -1,0 +1,154 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('display-ideas')!;
+
+/**
+ * 「目を引く種・組み合わせやすい種」の分け方は、診断の点数に使っている interior（インテリア映え）
+ * から描く（記事に手書きすると診断結果とずれる / AGENTS.md）。
+ * 述語は全種に当てはまる言い方にする（大きさの属性は持っていないので「大鉢／小鉢」とは書かない）。
+ */
+const eyeCatching = PLANTS.filter((plant) => plant.attributes.interior >= 4);
+const easyToCombine = PLANTS.filter((plant) => plant.attributes.interior <= 3);
+
+/** 暗い場所に置いても粘れる種（耐陰性の高い順）。飾りたい場所ありきで選ぶときの逃げ道に使う */
+const shadeTolerant = [...PLANTS]
+  .sort((a, b) => b.attributes.shade - a.attributes.shade)
+  .slice(0, 3);
+
+const nameList = (plants: typeof PLANTS) => plants.map((plant) => plant.name).join('・');
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-display-ideas.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>散らかって見える原因は、たいてい「全部同じ高さ」</h2>
+  <p>
+    植物が増えてきたのに部屋がおしゃれに見えない。その原因の多くは、鉢の数でも種類でもなく、
+    <strong>ぜんぶ床に置かれていること</strong>だと思っています。
+    私の部屋がまさにそうで、買うたびに空いている床へ足していたら、目線の高さに何もなくて
+    足元だけがごちゃついた状態になっていました。
+  </p>
+  <p>
+    やることはシンプルで、<strong>高さを3段に散らす</strong>だけです。
+  </p>
+  <ul>
+    <li><strong>低い（床）</strong>：背の高い株や大きめの鉢。部屋の角や家具のすきまに1つ</li>
+    <li><strong>中くらい（棚・テーブル・スタンドの上）</strong>：目線より少し下。いちばん目に入る特等席</li>
+    <li><strong>高い（吊るす・棚の上段）</strong>：垂れるタイプの株。空間の上のほうに緑が入ると、
+      部屋全体が締まって見えます</li>
+  </ul>
+  <p>
+    鉢を増やさなくても、いま持っている鉢の<strong>置く高さを変えるだけ</strong>で見え方が変わります。
+    プラントスタンドを1つ買うと、床置きの鉢をそのまま「中くらい」に持ち上げられるので手軽です。
+  </p>
+  <AmazonLink keyword="プラントスタンド 観葉植物 鉢スタンド" label="Amazonで「プラントスタンド」を見る" />
+
+  <h2>鉢の色と素材をそろえると、それだけでまとまります</h2>
+  <p>
+    もう1つ効くのが、<strong>鉢のトーンをそろえる</strong>ことです。
+    植物の種類がばらばらでも、鉢が白なら白、テラコッタならテラコッタで揃っていると、
+    不思議とまとまって見えます。逆に、鉢の色も素材も全部違うと、植物より鉢のほうが主張して
+    しまいます。
+  </p>
+  <p>
+    全部を買い替える必要はありません。<strong>鉢カバーをかぶせるだけでもトーンは揃います</strong>。
+    素材の選び方や、安っぽく見えない鉢の条件は
+    <a href="/guides/pot-guide/">おしゃれな鉢・プランターの選び方</a>にまとめました。
+  </p>
+
+  <h2>{PLANTS.length}種でみる、目を引く種と組み合わせやすい種</h2>
+  <p>
+    どれをどこに置くか迷ったら、診断の点数に使っている<strong>インテリア映え</strong>を
+    目安にすると決めやすいです。
+  </p>
+  <p>
+    点数が高い{nameList(eyeCatching)}は、<strong>1鉢だけでも目を引くタイプ</strong>です。
+    部屋に入って最初に視線が行く場所——ソファの横やテレビの脇、玄関を入った正面などに置くと、
+    その1鉢で空間が決まります。あちこちに散らすより、見せ場を1つ作るほうが効きます。
+  </p>
+  <p>
+    点数が控えめな{nameList(easyToCombine)}は、かたちが素直で<strong>他の鉢と組み合わせやすい</strong>
+    タイプです。棚の上に2〜3鉢まとめたり、大きな株の足元に添えたりする役回りが向いています。
+    「主役を張らない」ことは弱点ではなく、部屋の中では必要な役です。
+  </p>
+
+  <h2>置きたい場所と日当たりが合わない、をどうするか</h2>
+  <p>
+    ここがいちばん悩ましいところです。飾りたい場所ほど、たいてい日当たりが悪い。
+    テレビボードの上、玄関、廊下、トイレ。どれも「あったら素敵だな」と思う場所ですが、
+    多くの植物にとっては暗すぎます。
+  </p>
+  <p>
+    折り合いのつけ方は2つです。
+  </p>
+  <ul>
+    <li>
+      <strong>暗さに強い種を、その場所用に選ぶ。</strong>
+      耐陰性が高いのは{nameList(shadeTolerant)}あたりです。
+      暗い部屋向けの選び方は<a href="/guides/low-light-plants/">日当たりが悪い部屋でも育つ観葉植物</a>に
+      まとめています
+    </li>
+    <li>
+      <strong>「飾る場所」と「育てる場所」を分ける。</strong>
+      ふだんは窓ぎわで育てて、人が来るときや週末だけ見せたい場所に移す、という運用です。
+      数日の移動なら株への負担は小さいので、暗い場所に置きっぱなしにするより現実的です
+    </li>
+  </ul>
+  <p class="note">
+    やってはいけないのは、<strong>置き場所を決めてから無理に合わない種を置くこと</strong>です。
+    見た目で選んだ株を暗い場所に据えて、数週間かけて弱っていくのを見るのはつらいです。
+    どの環境にどの種が合うかは、<a href="/#diagnosis">4つの質問の診断</a>でも確認できます。
+  </p>
+
+  <h2>数を増やすなら「まとめる」。並べない</h2>
+  <p>
+    鉢が増えてきたら、<strong>等間隔に並べるのをやめて、2〜3鉢を寄せて1つのかたまりにする</strong>と
+    見違えます。高さの違う鉢を寄せると、それだけで「飾ってある」感じが出ます。
+    等間隔に並べると、どうしても売り場っぽく見えてしまうんですよね。
+  </p>
+  <p>
+    寄せるときは、<strong>高さ・葉のかたち・鉢の高さのどれかに差をつける</strong>のがコツです。
+    背の高い株の足元に小さい鉢、垂れる株を少し高い位置に。この組み合わせだけで様になります。
+  </p>
+
+  <h2>最後に、見た目より優先してほしいこと</h2>
+  <p>
+    飾り方の話をさんざんしておいてなんですが、<strong>エアコンの風が直接当たる場所だけは
+    避けてください</strong>。ここは見た目とは関係なく、株が確実に弱ります。
+    葉先が茶色くカサついてきたら、たいてい風か乾燥が原因です
+    （<a href="/guides/leaf-problems/">葉の症状から原因を見分けるガイド</a>）。
+  </p>
+  <p>
+    それから、<strong>人がよく通る動線に大きな鉢を置かない</strong>こと。
+    毎日ぶつかる場所にあると、葉が傷むだけでなく、こちらもだんだん邪魔に感じてきます。
+    好きで迎えた植物を邪魔に思いたくないので、私はここだけは先に決めるようにしています。
+  </p>
+  <p class="note">
+    季節によって日の入り方は変わります。夏と冬で置き場所を見直す考え方は
+    <a href="/guides/seasonal-care/">夏越し・冬越しのお手入れガイド</a>にまとめました。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /* 補足は本文より一段弱く（色を足さずミュートで後退させる / design.md） */
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>

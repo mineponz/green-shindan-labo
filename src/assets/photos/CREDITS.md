@@ -25,6 +25,8 @@
 | `travel-watering.jpg` | 留守中・旅行中の水やりガイド記事の見出し（`GUIDE_PHOTOS['travel-watering']`） | Vlada Karpovich（Pexels: @vlada-karpovich） | https://images.pexels.com/photos/7368306/pexels-photo-7368306.jpeg を`sips -c 1200 1600 --cropOffset 1050 0`で切り出し（下記） |
 | `soil.jpg` | 土・用土選びガイド記事の見出し（`GUIDE_PHOTOS.soil`） | Prathyusha Mettupalle（Pexels: @prathsnap） | https://images.pexels.com/photos/18864982/pexels-photo-18864982.jpeg |
 | `after-purchase.jpg` | 買ってきたら最初にやることガイド記事の見出し（`GUIDE_PHOTOS['after-purchase']`） | Blue Bird（Pexels: @blue-bird） | https://images.pexels.com/photos/7217900/pexels-photo-7217900.jpeg |
+| `hydroculture.jpg` | ハイドロカルチャーガイド記事の見出し（`GUIDE_PHOTOS.hydroculture`） | Jon Li | https://images.pexels.com/photos/2421953/pexels-photo-2421953.jpeg を`sips -c 1200 1600 --cropOffset 710 0`で切り出し（下記） |
+| `display-ideas.jpg` | 部屋の飾り方アイデアガイド記事の見出し（`GUIDE_PHOTOS['display-ideas']`） | cottonbro studio（Pexels: @cottonbro） | https://images.pexels.com/photos/9707261/pexels-photo-9707261.jpeg を`sips -c 1200 1600 --cropOffset 700 0`で切り出し（下記） |
 
 - 2026-08-13: 管理者の指示（「もっときれいめに」、参考: livingorchid.comの商品写真のような
   明るい・背景がすっきりした雰囲気）で全6枚を差し替え。旧版（暗め・生活感のある写真）から、
@@ -88,6 +90,24 @@
   ページを取得して選定した（`soil.jpg`と同じ回避策。vault:
   3-resources/knowledge/20260830-pexels-search-cloudflare-workaround.md）。植物の種の紹介写真ではない
   ため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
+- 2026-09-10: ガイド記事16・17本目（ハイドロカルチャー／部屋の飾り方アイデア）用に
+  `hydroculture.jpg`・`display-ideas.jpg`を2枚追加。上と同じ理由（記事ごとに写真を重複させない）
+  で新規調達している。取得日は2026-09-10、同じく`?auto=compress&cs=tinysrgb&w=1600`付きで取得。
+  写真検索は`pexels.com/search/`への直curlが弾かれたため`r.jina.ai`経由の読み取りプロキシで
+  検索結果ページを取得して選定した（`soil.jpg`・`after-purchase.jpg`と同じ回避策。vault:
+  3-resources/knowledge/20260830-pexels-search-cloudflare-workaround.md）。
+  - `hydroculture.jpg` は**構図を切り出している**（原本は1600×2240の縦長で、見出し写真の4:3切り抜き
+    （`GuideArticleHeader.astro`）に素で掛けると葉先か瓶の底のどちらかが画面外へ出てしまうため、
+    両方がなるべく収まる範囲を選んだ。それでも葉先の一部はわずかに欠ける）。切り出しコマンドは
+    表に記載。原本はPexelsのURLから再取得できる。透明なガラス瓶に挿したオリヅルランの、水に浸かった
+    白い根がはっきり見える構図を選んだ。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず
+    `GUIDE_PHOTOS`だけで持っている。
+  - `display-ideas.jpg` も**構図を切り出している**（原本は1600×2400の縦長で、部屋の壁一面から床まで
+    写っており、見出し写真の4:3切り抜きに素で掛けると室内の一部しか見えなくなるため、木製チェストの
+    上に並んだ鉢と床の鉢がどちらも収まる範囲を選んだ）。切り出しコマンドは表に記載。原本はPexelsの
+    URLから再取得できる。明るい白壁の部屋で、チェストの上に何鉢ものテラコッタ鉢、床にも大きめの鉢を
+    2つ置いた構図（「棚」「床」どちらの飾り方も1枚に収まる）。植物の種の紹介写真ではないため、
+    PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
 - 取得日: 2026-08-13（`?auto=compress&cs=tinysrgb&w=1600` を付けて長辺1600pxで取得）
 - 表示は `<Image>`（astro:assets）経由。リサイズとWebP変換はビルド時に走るので、
   ここに置く原本は加工せずそのまま残しておく。
