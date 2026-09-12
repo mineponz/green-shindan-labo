@@ -70,3 +70,13 @@ PNGで撮ってからJPEG（quality 88）へ変換する。
 加工なし）を使い、**単層cover＋`background-position: center`（既定）で問題なかった**。
 主題（土をすくって鉢へ入れている手元・下に広がる根と土の山）が画面の上下中央あたりに収まる構図で、
 `guide-watering.jpg`と同様に位置調整なしでも被写体が切れなかった。
+
+2026-09-12の`guide-root-rot.jpg`・`guide-plant-diseases.jpg`は、テンプレートHTML自体が
+残っていなかったため、この節の実測値（ロゴ44px円・サイト名30px・バッジ22px・見出し46〜52px・
+サブコピー26px・`.scrim`グラデーション）から新規に作り直した。どちらも記事見出し写真と同じ画像を使用。
+- `guide-root-rot.jpg`: 記事見出し写真と同じ`root-rot.jpg`（4:3=1600×1200に切り出し済み）。
+  単層cover＋`background-position: center 42%`（既定の中央だと軍手の指先が中央に寄りすぎるため
+  やや上寄せ）
+- `guide-plant-diseases.jpg`: 記事見出し写真と同じ`plant-diseases.jpg`（元写真1600×1067、
+  加工なし）。単層cover＋`background-position: center 55%`（既定の中央だと右上の濃い斑点が
+  バッジと重なるため、主題の斑点群がやや下に来るよう調整）

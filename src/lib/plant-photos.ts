@@ -36,6 +36,8 @@ import soilPhoto from '../assets/photos/soil.jpg';
 import afterPurchasePhoto from '../assets/photos/after-purchase.jpg';
 import hydroculturePhoto from '../assets/photos/hydroculture.jpg';
 import displayIdeasPhoto from '../assets/photos/display-ideas.jpg';
+import rootRotPhoto from '../assets/photos/root-rot.jpg';
+import plantDiseasesPhoto from '../assets/photos/plant-diseases.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -155,6 +157,18 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  *   テラコッタ鉢の観葉植物を何鉢も並べ、床にも大きめの鉢を置いている構図。「棚」と「床」
  *   両方の飾り方が1枚に収まっている。植物の種の紹介写真ではないので
  *   PLANT_PHOTOSには入れず、ここだけで持っている
+ * - 根腐れ（2026-09-12追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/root-rot.jpg`）。**構図を切り出している**（原本は1600×2400の縦長で、
+ *   見出し写真の4:3切り抜き（`GuideArticleHeader.astro`）に素で掛けると、株元の葉か根の下部の
+ *   どちらかが画面外へ出てしまうため、葉と根鉢の両方がなるべく収まる範囲を選んだ）。
+ *   切り出しコマンドは`CREDITS.md`に記載。原本はPexelsのURLから再取得できる。
+ *   軍手をした手が鉢から抜いた根鉢を持ち上げ、根が土からほぐれて見えている構図。
+ *   植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている
+ * - 病気（2026-09-12追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/plant-diseases.jpg`）。原本のまま加工なし（1600×1067）。
+ *   葉に茶色い斑点が広がったマクロ写真で、症状そのものが写っている。
+ *   `PLANT_PHOTOS.monstera`等の健康な株の紹介写真とは別物なので取り違えないこと。
+ *   植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -198,6 +212,14 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'display-ideas': {
     src: displayIdeasPhoto,
     alt: '明るい白壁の部屋で、木製チェストの上にスパティフィラムやサンスベリアなど何鉢ものテラコッタ鉢が並び、床にも大きめの観葉植物が2鉢置かれている',
+  },
+  'root-rot': {
+    src: rootRotPhoto,
+    alt: '軍手をした手が、鉢から抜いた植物の根鉢を持ち上げ、土からほぐれた根と茎の下部が見えている様子',
+  },
+  'plant-diseases': {
+    src: plantDiseasesPhoto,
+    alt: '茶色く盛り上がった斑点がいくつも広がった、緑の葉のマクロクローズアップ',
   },
 };
 

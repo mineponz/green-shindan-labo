@@ -27,6 +27,8 @@
 | `after-purchase.jpg` | 買ってきたら最初にやることガイド記事の見出し（`GUIDE_PHOTOS['after-purchase']`） | Blue Bird（Pexels: @blue-bird） | https://images.pexels.com/photos/7217900/pexels-photo-7217900.jpeg |
 | `hydroculture.jpg` | ハイドロカルチャーガイド記事の見出し（`GUIDE_PHOTOS.hydroculture`） | Jon Li | https://images.pexels.com/photos/2421953/pexels-photo-2421953.jpeg を`sips -c 1200 1600 --cropOffset 710 0`で切り出し（下記） |
 | `display-ideas.jpg` | 部屋の飾り方アイデアガイド記事の見出し（`GUIDE_PHOTOS['display-ideas']`） | cottonbro studio（Pexels: @cottonbro） | https://images.pexels.com/photos/9707261/pexels-photo-9707261.jpeg を`sips -c 1200 1600 --cropOffset 700 0`で切り出し（下記） |
+| `root-rot.jpg` | 根腐れガイド記事の見出し（`GUIDE_PHOTOS['root-rot']`） | Sasha Kim（Pexels: @sasha-kim） | https://images.pexels.com/photos/9414299/pexels-photo-9414299.jpeg を`sips -c 1200 1600 --cropOffset 250 0`で切り出し（下記） |
+| `plant-diseases.jpg` | 病気ガイド記事の見出し（`GUIDE_PHOTOS['plant-diseases']`） | Kaboompics.com（Pexels: @karola-g） | https://images.pexels.com/photos/5978603/pexels-photo-5978603.jpeg |
 
 - 2026-08-13: 管理者の指示（「もっときれいめに」、参考: livingorchid.comの商品写真のような
   明るい・背景がすっきりした雰囲気）で全6枚を差し替え。旧版（暗め・生活感のある写真）から、
@@ -107,6 +109,20 @@
     上に並んだ鉢と床の鉢がどちらも収まる範囲を選んだ）。切り出しコマンドは表に記載。原本はPexelsの
     URLから再取得できる。明るい白壁の部屋で、チェストの上に何鉢ものテラコッタ鉢、床にも大きめの鉢を
     2つ置いた構図（「棚」「床」どちらの飾り方も1枚に収まる）。植物の種の紹介写真ではないため、
+    PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
+- 2026-09-12: ガイド記事18・19本目（根腐れ／病気）用に`root-rot.jpg`・`plant-diseases.jpg`を
+  2枚追加。上と同じ理由（記事ごとに写真を重複させない）で新規調達している。取得日は2026-09-12、
+  同じく`?auto=compress&cs=tinysrgb&w=1600`付きで取得。写真検索は`pexels.com/search/`への直curlが
+  弾かれたため`r.jina.ai`経由の読み取りプロキシで検索結果ページを取得して選定した
+  （上記と同じ回避策。vault: 3-resources/knowledge/20260830-pexels-search-cloudflare-workaround.md）。
+  - `root-rot.jpg` は**構図を切り出している**（原本は1600×2400の縦長で、見出し写真の4:3切り抜き
+    （`GuideArticleHeader.astro`）に素で掛けると株元の葉か根鉢の下部のどちらかが画面外へ出てしまう
+    ため、葉と根鉢の両方がなるべく収まる範囲を選んだ）。切り出しコマンドは表に記載。原本はPexelsの
+    URLから再取得できる。軍手をした手が鉢から抜いた根鉢を持ち上げ、根が土からほぐれて見えている
+    構図。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
+  - `plant-diseases.jpg` は原本のまま加工なし（1600×1067）。単層cover・位置調整なしで問題なかった
+    （`soil.jpg`・`watering.jpg`と同様、主題が画面の上下中央あたりに収まる構図のため）。葉に茶色い
+    斑点が広がったマクロ写真で、症状そのものが写っている。植物の種の紹介写真ではないため、
     PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
 - 取得日: 2026-08-13（`?auto=compress&cs=tinysrgb&w=1600` を付けて長辺1600pxで取得）
 - 表示は `<Image>`（astro:assets）経由。リサイズとWebP変換はビルド時に走るので、
