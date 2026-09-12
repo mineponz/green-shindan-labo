@@ -14,6 +14,27 @@
  * **画像importを持ち込まない**（見出し写真の対応表は src/lib/plant-photos.ts の GUIDE_PHOTOS）。
  */
 
+/**
+ * ガイド記事のカテゴリキー。トップページ・一覧ページ双方の見出しに使う唯一の出所
+ * （2026-09-12、19本まで増えたトップページを短くするために導入。
+ * vault: 1-projects/green-lab/tasks/20260912-restructure-top-guide-list.md）。
+ */
+export type GuideCategoryKey = 'choose' | 'care' | 'trouble' | 'grow';
+
+export interface GuideCategory {
+  key: GuideCategoryKey;
+  /** 見出しに出す表示名 */
+  label: string;
+}
+
+/** 表示順もここで決める（トップ・一覧ページはこの配列順に見出しを並べる） */
+export const GUIDE_CATEGORIES: GuideCategory[] = [
+  { key: 'choose', label: '選ぶ・迎える' },
+  { key: 'care', label: '日々の世話' },
+  { key: 'trouble', label: '困ったとき' },
+  { key: 'grow', label: '育てる・楽しむ' },
+];
+
 export interface Guide {
   slug: string;
   /** 記事のh1・一覧カードに出す見出し（長め。検索意図をそのまま入れている） */
@@ -35,6 +56,8 @@ export interface Guide {
   relatedPlants: string[];
   /** ISO 8601 (YYYY-MM-DD) */
   publishedDate: string;
+  /** トップ・一覧ページの見出しに使うカテゴリ（GUIDE_CATEGORIESのkeyのいずれか） */
+  category: GuideCategoryKey;
 }
 
 /**
@@ -59,6 +82,7 @@ export const GUIDES: Guide[] = [
       '思い当たるものがあれば、そこから直していけば大丈夫です。',
     relatedPlants: ['sansevieria', 'peperomia'],
     publishedDate: '2026-08-17',
+    category: 'choose',
   },
   {
     slug: 'watering',
@@ -77,6 +101,7 @@ export const GUIDES: Guide[] = [
       '私が遠回りして覚えたことをまとめておきます。',
     relatedPlants: ['sansevieria', 'pothos'],
     publishedDate: '2026-08-30',
+    category: 'care',
   },
   {
     slug: 'leaf-problems',
@@ -95,6 +120,7 @@ export const GUIDES: Guide[] = [
       '思い当たるところから読んでみてください。',
     relatedPlants: ['monstera', 'gajumaru'],
     publishedDate: '2026-08-30',
+    category: 'trouble',
   },
   {
     slug: 'pest-control',
@@ -111,6 +137,7 @@ export const GUIDES: Guide[] = [
       'ここでは観葉植物によくつく3種類の虫と、その対処法をまとめました。',
     relatedPlants: ['sansevieria', 'pachira'],
     publishedDate: '2026-08-14',
+    category: 'trouble',
   },
   {
     slug: 'root-rot',
@@ -128,6 +155,7 @@ export const GUIDES: Guide[] = [
       'そして実際に私が株を戻した手順までをまとめました。',
     relatedPlants: ['sansevieria', 'pothos'],
     publishedDate: '2026-09-12',
+    category: 'trouble',
   },
   {
     slug: 'plant-diseases',
@@ -145,6 +173,7 @@ export const GUIDES: Guide[] = [
       '共通してやるべき対処、逆にやってはいけないことをまとめました。',
     relatedPlants: ['monstera', 'gajumaru'],
     publishedDate: '2026-09-12',
+    category: 'trouble',
   },
   {
     slug: 'low-light-plants',
@@ -161,6 +190,7 @@ export const GUIDES: Guide[] = [
       '育てやすい植物を紹介します。',
     relatedPlants: ['pothos', 'pachira'],
     publishedDate: '2026-08-14',
+    category: 'choose',
   },
   {
     slug: 'pet-safe-plants',
@@ -177,6 +207,7 @@ export const GUIDES: Guide[] = [
       '置く場合の注意点をまとめました。',
     relatedPlants: ['pachira', 'areca-palm', 'peperomia', 'tillandsia'],
     publishedDate: '2026-08-14',
+    category: 'choose',
   },
   {
     slug: 'seasonal-care',
@@ -193,6 +224,7 @@ export const GUIDES: Guide[] = [
       '難しいことはしていません。置き場所と水やりを、少しずらしてあげるだけです。',
     relatedPlants: ['sansevieria', 'pothos'],
     publishedDate: '2026-08-15',
+    category: 'care',
   },
   {
     slug: 'pot-guide',
@@ -210,6 +242,7 @@ export const GUIDES: Guide[] = [
       'ここでは鉢底の穴・素材・サイズの3点にしぼって、鉢の選び方をまとめます。',
     relatedPlants: ['pachira', 'sansevieria'],
     publishedDate: '2026-08-16',
+    category: 'grow',
   },
   {
     slug: 'repotting',
@@ -228,6 +261,7 @@ export const GUIDES: Guide[] = [
       '私が見落としたサインも含めて、時期・頻度・やり方をまとめました。',
     relatedPlants: ['monstera', 'pothos'],
     publishedDate: '2026-08-18',
+    category: 'grow',
   },
   {
     slug: 'fertilizer',
@@ -246,6 +280,7 @@ export const GUIDES: Guide[] = [
       'ここでは私の失敗も含めて、種類の選び方・与える時期・やってはいけない与え方をまとめます。',
     relatedPlants: ['pachira', 'monstera'],
     publishedDate: '2026-08-21',
+    category: 'care',
   },
   {
     slug: 'propagation',
@@ -263,6 +298,7 @@ export const GUIDES: Guide[] = [
       'ここでは挿し木・水挿しのやり方と、ふやしやすい植物の選び方をまとめました。',
     relatedPlants: ['pothos', 'monstera'],
     publishedDate: '2026-08-22',
+    category: 'grow',
   },
   {
     slug: 'pruning',
@@ -281,6 +317,7 @@ export const GUIDES: Guide[] = [
       'ここでは切りどきの見きわめ方と、失敗しにくい切り方をまとめます。',
     relatedPlants: ['pothos', 'gajumaru'],
     publishedDate: '2026-08-25',
+    category: 'grow',
   },
   {
     slug: 'travel-watering',
@@ -298,6 +335,7 @@ export const GUIDES: Guide[] = [
       'ここでは、家を空ける日数別に、私が実際に使っている対策をまとめておきます。',
     relatedPlants: ['sansevieria', 'peperomia'],
     publishedDate: '2026-09-01',
+    category: 'care',
   },
   {
     slug: 'soil',
@@ -316,6 +354,7 @@ export const GUIDES: Guide[] = [
       '赤玉土・腐葉土・パーライトの役割と目安の比率をまとめました。',
     relatedPlants: ['sansevieria', 'peperomia'],
     publishedDate: '2026-09-05',
+    category: 'grow',
   },
   {
     slug: 'after-purchase',
@@ -334,6 +373,7 @@ export const GUIDES: Guide[] = [
       '「やること」「あえてやらないこと」をまとめています。',
     relatedPlants: ['monstera', 'pachira'],
     publishedDate: '2026-09-07',
+    category: 'choose',
   },
   {
     slug: 'hydroculture',
@@ -352,6 +392,7 @@ export const GUIDES: Guide[] = [
       'ここでは始め方と、向いていない場面の両方をまとめています。',
     relatedPlants: ['pothos', 'peperomia'],
     publishedDate: '2026-09-10',
+    category: 'grow',
   },
   {
     slug: 'display-ideas',
@@ -369,11 +410,13 @@ export const GUIDES: Guide[] = [
       'ここでは、高さの散らし方・鉢のそろえ方・置きたい場所と日当たりの折り合いのつけ方をまとめています。',
     relatedPlants: ['monstera', 'areca-palm'],
     publishedDate: '2026-09-10',
+    category: 'grow',
   },
 ];
 
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+const KNOWN_CATEGORY_KEYS = new Set<string>(GUIDE_CATEGORIES.map((c) => c.key));
 
 /**
  * GUIDES の形式が壊れていないかを検証する（テスト用の純粋関数）。
@@ -420,6 +463,12 @@ export function validateGuides(guides: Guide[], plantSlugs: string[] = []): stri
     if (!DATE_PATTERN.test(guide.publishedDate) || Number.isNaN(Date.parse(guide.publishedDate))) {
       errors.push(`invalid publishedDate for slug: "${guide.slug}"`);
     }
+
+    if (!guide.category) {
+      errors.push(`missing category for slug: "${guide.slug}"`);
+    } else if (!KNOWN_CATEGORY_KEYS.has(guide.category)) {
+      errors.push(`unknown category "${guide.category}" for slug: "${guide.slug}"`);
+    }
   }
 
   return errors;
@@ -427,6 +476,24 @@ export function validateGuides(guides: Guide[], plantSlugs: string[] = []): stri
 
 export function findGuide(slug: string): Guide | undefined {
   return GUIDES.find((g) => g.slug === slug);
+}
+
+export interface GuideCategoryGroup {
+  category: GuideCategory;
+  guides: Guide[];
+}
+
+/**
+ * カテゴリ見出しごとにガイドをまとめる（トップページ・一覧ページ共通の出所）。
+ * 各カテゴリ内の順番は`guides`（通常はGUIDES）の並び順をそのまま使う
+ * （読んでほしい順。独自に並べ替えない）。トップページは各グループの`guides`を
+ * 呼び出し側で`slice(0, 3)`して使う。
+ */
+export function guidesByCategory(guides: Guide[] = GUIDES): GuideCategoryGroup[] {
+  return GUIDE_CATEGORIES.map((category) => ({
+    category,
+    guides: guides.filter((g) => g.category === category.key),
+  }));
 }
 
 /**

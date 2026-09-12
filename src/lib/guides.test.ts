@@ -1,6 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { GUIDES, findGuide, otherGuides, validateGuides, type Guide } from './guides.ts';
+import {
+  GUIDES,
+  GUIDE_CATEGORIES,
+  findGuide,
+  otherGuides,
+  validateGuides,
+  guidesByCategory,
+  type Guide,
+} from './guides.ts';
 import { PLANTS } from './plants.ts';
 
 const PLANT_SLUGS = PLANTS.map((p) => p.slug);
@@ -14,6 +22,7 @@ const sampleGuide: Guide = {
   lead: '私がテスト用に書いたリード文です。',
   relatedPlants: ['pachira'],
   publishedDate: '2026-01-01',
+  category: 'care',
 };
 
 // --- データの形式 -------------------------------------------------------
@@ -71,6 +80,44 @@ test('validateGuides: 実在しない植物へのリンクを検出する', () =
 test('validateGuides: 不正な日付を検出する', () => {
   const errors = validateGuides([{ ...sampleGuide, publishedDate: '2026/01/01' }]);
   assert.ok(errors.some((e) => e.includes('invalid publishedDate')));
+});
+
+test('validateGuides: 未知のカテゴリを検出する', () => {
+  const errors = validateGuides([{ ...sampleGuide, category: 'unknown' as Guide['category'] }]);
+  assert.ok(errors.some((e) => e.includes('unknown category')));
+});
+
+test('validateGuides: カテゴリ未設定を検出する', () => {
+  const { category, ...withoutCategory } = sampleGuide;
+  const errors = validateGuides([withoutCategory as Guide]);
+  assert.ok(errors.some((e) => e.includes('missing category')));
+});
+
+// --- カテゴリ ------------------------------------------------------------
+
+test('GUIDES の全記事がGUIDE_CATEGORIESのいずれかのカテゴリを持つ', () => {
+  const knownKeys = new Set(GUIDE_CATEGORIES.map((c) => c.key));
+  for (const guide of GUIDES) {
+    assert.ok(knownKeys.has(guide.category), `${guide.slug} のカテゴリが不正: ${guide.category}`);
+  }
+});
+
+test('guidesByCategory: 全カテゴリを持ち、GUIDESと同じ総数になる', () => {
+  const groups = guidesByCategory(GUIDES);
+  assert.equal(groups.length, GUIDE_CATEGORIES.length);
+  const total = groups.reduce((sum, g) => sum + g.guides.length, 0);
+  assert.equal(total, GUIDES.length);
+});
+
+test('guidesByCategory: 各カテゴリ内はGUIDESの並び順を保つ', () => {
+  const groups = guidesByCategory(GUIDES);
+  for (const group of groups) {
+    const expectedOrder = GUIDES.filter((g) => g.category === group.category.key).map((g) => g.slug);
+    assert.deepEqual(
+      group.guides.map((g) => g.slug),
+      expectedOrder
+    );
+  }
 });
 
 // --- 文章のトーン -------------------------------------------------------

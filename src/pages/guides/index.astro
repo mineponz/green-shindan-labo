@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { GUIDES } from '../../lib/guides.ts';
+import { GUIDES, guidesByCategory } from '../../lib/guides.ts';
 import { findPlant } from '../../lib/plants.ts';
 import { SITE_URL } from '../../consts.ts';
 
@@ -24,6 +24,9 @@ const itemListJsonLd = {
     url: new URL(`/guides/${guide.slug}/`, SITE_URL).href,
   })),
 };
+
+// カテゴリ見出しつきで全19本を表示する（絞り込みはしない。トップと違い1本も削らない）。
+const guideGroups = guidesByCategory(GUIDES);
 ---
 
 <BaseLayout title={title} description={description}>
@@ -33,26 +36,31 @@ const itemListJsonLd = {
     種類をまたいでまとめました。どの一鉢にするか迷ったら、<a href="/#diagnosis">4つの質問の診断</a>からどうぞ。
   </p>
 
-  <ul class="guide-list">
-    {GUIDES.map((guide) => (
-      <li>
-        <article class="guide-card">
-          <h2 class="guide-title">
-            <a href={`/guides/${guide.slug}/`}>{guide.title}</a>
-          </h2>
-          <p class="guide-summary">{guide.summary}</p>
-          <p class="guide-plants">
-            <span class="guide-plants-label">よく出てくる植物</span>
-            {guide.relatedPlants
-              .map((slug) => findPlant(slug))
-              .filter((plant) => plant !== undefined)
-              .map((plant) => plant!.name)
-              .join('・')}
-          </p>
-        </article>
-      </li>
-    ))}
-  </ul>
+  {guideGroups.map((group) => (
+    <section class="guide-category">
+      <h2 class="guide-category-title">{group.category.label}</h2>
+      <ul class="guide-list">
+        {group.guides.map((guide) => (
+          <li>
+            <article class="guide-card">
+              <h3 class="guide-title">
+                <a href={`/guides/${guide.slug}/`}>{guide.title}</a>
+              </h3>
+              <p class="guide-summary">{guide.summary}</p>
+              <p class="guide-plants">
+                <span class="guide-plants-label">よく出てくる植物</span>
+                {guide.relatedPlants
+                  .map((slug) => findPlant(slug))
+                  .filter((plant) => plant !== undefined)
+                  .map((plant) => plant!.name)
+                  .join('・')}
+              </p>
+            </article>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
 
   <script type="application/ld+json" set:html={JSON.stringify(itemListJsonLd)} is:inline />
 </BaseLayout>
@@ -60,6 +68,18 @@ const itemListJsonLd = {
 <style>
   .lead {
     color: var(--muted);
+    margin-top: 0;
+  }
+
+  /*
+   * カテゴリ見出し（.guide-category-title、実体はh2）はBaseLayoutのタイプスケールを
+   * そのまま使う（個別のfont-size指定をしない）。カテゴリ間の余白だけ8pxスケール内で
+   * var(--space-4)に調整している（h2の既定var(--space-6)は縦に伸びすぎるため）。
+   */
+  .guide-category + .guide-category {
+    margin-top: var(--space-4);
+  }
+  .guide-category-title {
     margin-top: 0;
   }
 

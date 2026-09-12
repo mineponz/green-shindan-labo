@@ -5,7 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import DiagnosisTool from '../components/DiagnosisTool.astro';
 import PlantIcon from '../components/PlantIcon.astro';
 import { HERO_PHOTO } from '../lib/plant-photos.ts';
-import { GUIDES } from '../lib/guides.ts';
+import { GUIDES, guidesByCategory } from '../lib/guides.ts';
 import { PLANTS } from '../lib/plants.ts';
 import { SITE_TITLE, SITE_URL } from '../consts.ts';
 
@@ -55,6 +55,19 @@ const itemListJsonLd = {
     url: new URL(`/plants/${plant.slug}/`, SITE_URL).href,
   })),
 };
+
+/**
+ * トップのガイド欄は19本を全部出さず、カテゴリごとに先頭3本だけの「入口」にする
+ * （2026-09-12。全件は/guides/に譲る。vault:
+ * 1-projects/green-lab/tasks/20260912-restructure-top-guide-list.md）。
+ * 各カテゴリの3本は`guidesByCategory`が返す配列（GUIDESの並び順＝読んでほしい順）の
+ * 先頭からそのまま取る。独自に並べ替えない。
+ */
+const TOP_GUIDES_PER_CATEGORY = 3;
+const topGuideGroups = guidesByCategory(GUIDES).map((group) => ({
+  category: group.category,
+  guides: group.guides.slice(0, TOP_GUIDES_PER_CATEGORY),
+}));
 ---
 
 <BaseLayout>
@@ -105,14 +118,22 @@ const itemListJsonLd = {
     「虫が出た」「部屋が暗い」「ペットがいる」「鉢はどれを選ぶ」「植え替えはいつやる」。
     植物選びでつまずきやすいところを、種類をまたいでまとめました。
   </p>
-  <ul class="guide-links">
-    {GUIDES.map((guide) => (
-      <li>
-        <a href={`/guides/${guide.slug}/`}>{guide.title}</a>
-        <span class="guide-summary">{guide.summary}</span>
-      </li>
-    ))}
-  </ul>
+  {topGuideGroups.map((group) => (
+    <div class="guide-category">
+      <h3 class="guide-category-title">{group.category.label}</h3>
+      <ul class="guide-links">
+        {group.guides.map((guide) => (
+          <li>
+            <a href={`/guides/${guide.slug}/`}>{guide.title}</a>
+            <span class="guide-summary">{guide.summary}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+  <p class="guide-all-link">
+    <a href="/guides/">ガイド記事をぜんぶ見る（{GUIDES.length}本）</a>
+  </p>
 
   <h2>よくある質問</h2>
   <dl class="faq">
@@ -213,8 +234,13 @@ const itemListJsonLd = {
       font-weight: 600;
     }
 
-    /* ガイド記事へのリンク。カードにはせず「リンク＋補足」の三次アクション扱いにして、
-       上のカードグリッド（植物一覧）と主張がぶつからないようにする（design.md） */
+    /*
+     * ガイド記事へのリンク。カードにはせず「リンク＋補足」の三次アクション扱いにして、
+     * 上のカードグリッド（植物一覧）と主張がぶつからないようにする（design.md）。
+     * カテゴリ見出し（.guide-category-title、実体はh3）はBaseLayoutのタイプスケールを
+     * そのまま使う（個別のfont-size指定をしない）。上のh2（悩みから選ぶガイド記事）より
+     * 小さく、リンクより大きい既存の比率に乗るだけで、強弱関係は崩れない。
+     */
     .guide-links {
       display: grid;
       gap: var(--space-2);
@@ -232,6 +258,9 @@ const itemListJsonLd = {
     .guide-summary {
       color: var(--muted);
       font-size: var(--text-sm);
+    }
+    .guide-all-link {
+      margin-top: var(--space-3);
     }
 
     .faq {
