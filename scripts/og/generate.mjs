@@ -46,16 +46,43 @@ const REPO_ROOT = path.resolve(__dirname, '..', '..');
 
 const CHROME_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
+/**
+ * 受け付ける引数の全リスト。**未知の引数は黙って無視せずエラーにする**ため、
+ * ここに無いものが来たら止める。
+ * 経緯: `--out-dir`（実際には存在しない引数。正しくは`--out`）を渡したとき、
+ * 黙って無視されて既定の出力先 public/og/ に書かれ、**コミット済みの画像を
+ * 上書きしてしまった**（2026-09-13、検証中のリーダー）。タイプミス1つで
+ * 生成済みの成果物が壊れるのは事故が大きすぎる。
+ */
+const KNOWN_FLAGS = new Set([
+  'slug',
+  'type',
+  'photo',
+  'heading',
+  'subcopy',
+  'subcopy-style',
+  'badge',
+  'site-name',
+  'position',
+  'two-layer',
+  'heading-size',
+  'out',
+  'keep-tmp',
+]);
+
 function parseArgs(argv) {
   const args = {};
   for (const raw of argv) {
     if (!raw.startsWith('--')) continue;
     const eq = raw.indexOf('=');
-    if (eq === -1) {
-      args[raw.slice(2)] = true;
-    } else {
-      args[raw.slice(2, eq)] = raw.slice(eq + 1);
+    const key = eq === -1 ? raw.slice(2) : raw.slice(2, eq);
+    if (!KNOWN_FLAGS.has(key)) {
+      console.error(`知らない引数です: --${key}`);
+      console.error(`受け付けるのは: ${[...KNOWN_FLAGS].map((f) => `--${f}`).join(' ')}`);
+      console.error('出力先を変えたいときは --out=<ファイルパス> です（--out-dir はありません）。');
+      process.exit(1);
     }
+    args[key] = eq === -1 ? true : raw.slice(eq + 1);
   }
   return args;
 }
