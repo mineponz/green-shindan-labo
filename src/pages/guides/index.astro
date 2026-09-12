@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { GUIDES, guidesByCategory } from '../../lib/guides.ts';
+import { GUIDES, guidesByCategory, latestGuides } from '../../lib/guides.ts';
 import { findPlant } from '../../lib/plants.ts';
 import { SITE_URL } from '../../consts.ts';
 
@@ -27,6 +27,11 @@ const itemListJsonLd = {
 
 // カテゴリ見出しつきで全19本を表示する（絞り込みはしない。トップと違い1本も削らない）。
 const guideGroups = guidesByCategory(GUIDES);
+
+// トップの「新着記事」と同じ3本に「NEW」を付ける（件数方式。vault:
+// 1-projects/green-lab/tasks/20260913-add-new-articles-section.md）。
+const NEW_GUIDES_COUNT = 3;
+const newGuideSlugs = new Set(latestGuides(NEW_GUIDES_COUNT, GUIDES).map((g) => g.slug));
 ---
 
 <BaseLayout title={title} description={description}>
@@ -44,6 +49,7 @@ const guideGroups = guidesByCategory(GUIDES);
           <li>
             <article class="guide-card">
               <h3 class="guide-title">
+                {newGuideSlugs.has(guide.slug) && <span class="new-flag">NEW</span>}
                 <a href={`/guides/${guide.slug}/`}>{guide.title}</a>
               </h3>
               <p class="guide-summary">{guide.summary}</p>
@@ -116,6 +122,24 @@ const guideGroups = guidesByCategory(GUIDES);
   }
   .guide-title a:hover {
     text-decoration: underline;
+  }
+
+  /*
+   * 「NEW」ラベル。.plant-flag（トップの「ペットの誤食に注意」バッジ）と同じ作法
+   * （背景色薄・文字色濃・角丸4px・小さめ文字）にとどめ、装飾を足さない
+   * （design.mdの「枠線＋影の二重使いはしない」）。色は警告用のvar(--warn)ではなく
+   * 補助強調用のvar(--highlight)を使う（新着はセマンティックな警告ではないため）。
+   */
+  .new-flag {
+    display: inline-block;
+    margin-right: var(--space-1);
+    padding: 0 var(--space-1);
+    background: var(--highlight-weak);
+    border-radius: 4px;
+    color: var(--highlight);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    vertical-align: middle;
   }
 
   .guide-summary {

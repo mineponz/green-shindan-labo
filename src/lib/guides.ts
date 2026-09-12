@@ -502,6 +502,33 @@ export function guidesByCategory(guides: Guide[] = GUIDES): GuideCategoryGroup[]
 }
 
 /**
+ * 「新着」に出すガイドを公開日の新しい順に`n`件返す（トップページ・vault:
+ * 1-projects/green-lab/tasks/20260913-add-new-articles-section.md）。
+ *
+ * **日数のしきい値（「公開30日以内」等）ではなく件数で決める。** このサイトは静的ビルドなので、
+ * 日数方式だとHTMLが焼かれた時点の日付で判定が止まり、記事を足さない期間が続くと
+ * 古い記事に「新着」が付いたまま残ってしまう（次のビルドが走るまで消えない）。
+ * 件数方式なら、次の記事を足した瞬間に自動で入れ替わる。
+ *
+ * `GUIDES`の配列順は「読んでほしい順」という別の意味を持っている（上のコメント参照）ため、
+ * ここでは使わず`publishedDate`だけを見る。**同じ公開日が複数ある場合は`guides`の配列順で
+ * タイブレークする**（root-rotとplant-diseasesはどちらも2026-09-12。ビルドのたびに順番が
+ * 揺れないようにするため、日付が同じ要素は明示的にインデックスで比較する）。
+ */
+export function latestGuides(n: number, guides: Guide[] = GUIDES): Guide[] {
+  return guides
+    .map((guide, index) => ({ guide, index }))
+    .sort((a, b) => {
+      if (a.guide.publishedDate !== b.guide.publishedDate) {
+        return a.guide.publishedDate > b.guide.publishedDate ? -1 : 1;
+      }
+      return a.index - b.index;
+    })
+    .slice(0, n)
+    .map((entry) => entry.guide);
+}
+
+/**
  * 記事末尾の「関連記事」に出す、自分以外のガイド。
  * `limit`を渡すと件数を絞る。2026-08-22、9本目追加で全件表示だと縦に長くなりすぎるため
  * RelatedGuidesから件数を絞って呼ぶようにした（2026-08-18の記事追加時から指摘済みだった問題）。

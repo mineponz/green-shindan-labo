@@ -7,6 +7,7 @@ import {
   otherGuides,
   validateGuides,
   guidesByCategory,
+  latestGuides,
   type Guide,
 } from './guides.ts';
 import { PLANTS } from './plants.ts';
@@ -148,4 +149,52 @@ test('otherGuides: limitを渡すと先頭から件数を絞る', () => {
   const limited = otherGuides('pest-control', 4);
   assert.equal(limited.length, 4);
   assert.ok(!limited.some((g) => g.slug === 'pest-control'));
+});
+
+// --- 新着 -----------------------------------------------------------------
+
+test('latestGuides: publishedDateの降順で返す', () => {
+  const guides: Guide[] = [
+    { ...sampleGuide, slug: 'a', publishedDate: '2026-01-01' },
+    { ...sampleGuide, slug: 'b', publishedDate: '2026-03-01' },
+    { ...sampleGuide, slug: 'c', publishedDate: '2026-02-01' },
+  ];
+  assert.deepEqual(
+    latestGuides(3, guides).map((g) => g.slug),
+    ['b', 'c', 'a']
+  );
+});
+
+test('latestGuides: 同じpublishedDateは配列順（GUIDESの並び順）でタイブレークする', () => {
+  const guides: Guide[] = [
+    { ...sampleGuide, slug: 'first', publishedDate: '2026-09-12' },
+    { ...sampleGuide, slug: 'second', publishedDate: '2026-09-12' },
+    { ...sampleGuide, slug: 'older', publishedDate: '2026-09-01' },
+  ];
+  // 同日なら配列に書いた順（first→second）を保つ。並び替えのたびに順番が揺れない。
+  assert.deepEqual(
+    latestGuides(2, guides).map((g) => g.slug),
+    ['first', 'second']
+  );
+});
+
+test('latestGuides: 実際のGUIDESで先頭3本を出すと root-rot → plant-diseases → hydroculture になる（同日タイブレークの実例）', () => {
+  assert.deepEqual(
+    latestGuides(3).map((g) => g.slug),
+    ['root-rot', 'plant-diseases', 'hydroculture']
+  );
+});
+
+test('latestGuides: nより記事数が少ない場合は全件を新しい順で返す', () => {
+  const guides: Guide[] = [
+    { ...sampleGuide, slug: 'a', publishedDate: '2026-01-01' },
+    { ...sampleGuide, slug: 'b', publishedDate: '2026-02-01' },
+  ];
+  const result = latestGuides(5, guides);
+  assert.equal(result.length, 2);
+  assert.deepEqual(result.map((g) => g.slug), ['b', 'a']);
+});
+
+test('latestGuides: nが0なら空配列を返す', () => {
+  assert.deepEqual(latestGuides(0), []);
 });

@@ -5,7 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import DiagnosisTool from '../components/DiagnosisTool.astro';
 import PlantIcon from '../components/PlantIcon.astro';
 import { HERO_PHOTO } from '../lib/plant-photos.ts';
-import { GUIDES, guidesByCategory } from '../lib/guides.ts';
+import { GUIDES, guidesByCategory, latestGuides } from '../lib/guides.ts';
 import { PLANTS } from '../lib/plants.ts';
 import { SITE_TITLE, SITE_URL } from '../consts.ts';
 
@@ -68,6 +68,15 @@ const topGuideGroups = guidesByCategory(GUIDES).map((group) => ({
   category: group.category,
   guides: group.guides.slice(0, TOP_GUIDES_PER_CATEGORY),
 }));
+
+/**
+ * 新着記事（公開日の新しい順・先頭3本）。カテゴリ群より前に置く。
+ * 件数方式なので、次の記事を足した瞬間に自動で入れ替わる（vault:
+ * 1-projects/green-lab/tasks/20260913-add-new-articles-section.md）。
+ * カテゴリではないため、下の`topGuideGroups`のループ（h3見出し）には混ぜない。
+ */
+const NEW_GUIDES_COUNT = 3;
+const newGuides = latestGuides(NEW_GUIDES_COUNT, GUIDES);
 ---
 
 <BaseLayout>
@@ -118,6 +127,18 @@ const topGuideGroups = guidesByCategory(GUIDES).map((group) => ({
     「虫が出た」「部屋が暗い」「ペットがいる」「鉢はどれを選ぶ」「植え替えはいつやる」。
     植物選びでつまずきやすいところを、種類をまたいでまとめました。
   </p>
+  <div class="new-guides">
+    <h3 class="new-guides-title">新着記事</h3>
+    <ul class="guide-links">
+      {newGuides.map((guide) => (
+        <li>
+          <a href={`/guides/${guide.slug}/`}>{guide.title}</a>
+          <span class="guide-summary">{guide.summary}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+
   {topGuideGroups.map((group) => (
     <div class="guide-category">
       <h3 class="guide-category-title">{group.category.label}</h3>
@@ -241,6 +262,19 @@ const topGuideGroups = guidesByCategory(GUIDES).map((group) => ({
      * そのまま使う（個別のfont-size指定をしない）。上のh2（悩みから選ぶガイド記事）より
      * 小さく、リンクより大きい既存の比率に乗るだけで、強弱関係は崩れない。
      */
+    /*
+     * 新着記事はカテゴリではないので、カテゴリ見出し（h3.guide-category-title）と
+     * 同じ見た目にしない。文字色だけ補助強調色（--highlight。design.mdの色ルールで
+     * 「新着・おすすめ等」用に割り当てている役割）にして区別し、装飾は足さない。
+     */
+    .new-guides {
+      margin-bottom: var(--space-3);
+    }
+    .new-guides-title {
+      margin-top: 0;
+      color: var(--highlight);
+    }
+
     .guide-links {
       display: grid;
       gap: var(--space-2);
