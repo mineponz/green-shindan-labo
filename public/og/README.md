@@ -15,24 +15,38 @@
   （トップページ用の元画像）のまま
 
 ## 生成方法
-`public/og-image.jpg`と同じ要領（Playwrightで1200x630のHTMLをスクリーンショット）。
-テンプレートはこのリポジトリには残していない（一度きりの生成作業だったため）。
-再生成する場合は、`src/assets/photos/<slug>.jpg`を背景に、左上にロゴ+サイト名、右上に
-バッジ（植物ページは「植物図鑑」、ガイドは「お悩み解決ガイド」）、下部に見出し・学名（または
-サブコピー）を置くレイアウトを再現すればよい。配色は`--accent`系のグリーン、見出しは白文字+
-グラデーション影で背景写真の上でも読めるようにしている。
+2026-09-13、`scripts/og/`にテンプレート化した（それまでは記事を足すたびにこのREADMEの実測値から
+手作業で作り直していた。vault: `1-projects/green-lab/tasks/20260913-commit-ogp-generator.md`）。
+**テンプレートはこのリポジトリに残っている**（`scripts/og/template.mjs`がHTML/CSS、
+`scripts/og/generate.mjs`がCLI本体）。コマンド1発で生成できる:
 
-Playwrightが入っていない環境でも、同じHTMLをheadless Chromeで撮れば同じ結果になる
-（2026-08-30の`guide-watering.jpg`・`guide-leaf-problems.jpg`はこの方法で生成した）:
 ```
-"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --disable-gpu \
-  --hide-scrollbars --force-device-scale-factor=1 --window-size=1200,630 \
-  --screenshot=out.png file://<テンプレート.html>
+npm run og -- --slug=root-rot --type=guide \
+  --photo=src/assets/photos/root-rot.jpg \
+  --heading="観葉植物の根腐れ" \
+  --subcopy="見分け方と、まだ間に合う復活のさせ方" \
+  --position="center 42%"
 ```
-写真は`<img>`ではなくCSSの`background`に**data URI**で埋め込むと、file://でも確実に読める。
-PNGで撮ってからJPEG（quality 88）へ変換する。
 
-実測値（2026-08-25に`guide-pruning.jpg`を再現したときのもの。次に作る人はここから始めると早い）:
+- `--type`は`guide`（既定。バッジ「お悩み解決ガイド」）か`plant`（バッジ「植物図鑑」・サブコピーは
+  学名なので既定でitalic）
+- 縦長・被写体が枠いっぱいの写真で`cover`だけだと切れる場合（後述）は`--two-layer`を付ける
+- 見出しのfont-sizeは46〜52pxの範囲で1行に収まるよう自動見積りする（`--heading-size`で上書き可）
+- 引数の全一覧は`scripts/og/generate.mjs`の先頭コメントを参照
+- **mac + ローカルのGoogle Chrome前提のツール**（headless Chrome直叩き→`sips`でJPEG化。
+  Playwrightには依存しない）。CI実行は未検証
+
+再現確認: 2026-09-13に`guide-root-rot.jpg`（単層+`center 42%`）・`guide-soil.jpg`（単層+既定
+center）・`guide-leaf-problems.jpg`（2層構成）の3枚をこのCLIで再生成し、コミット済み画像と
+目視で一致することを確認済み（レイアウト用の余白・フォントサイズは下記の実測値をコードに
+落としたもの。ただしヘッダー行・バッジの上下左右の余白だけは、下記の実測値の記述だと
+ずれが出たため、既存画像をピクセル単位で計測し直して`top: 24px` / ロゴ`left: 24px` /
+バッジ`right: 24px`に補正している）。
+
+以下は2026-09-13にスクリプト化する前の実測値・判断根拠の記録（スクリプトの初期値の元ネタであり、
+今後レイアウトを見直す時の背景情報として残す）。
+
+実測値（2026-08-25に`guide-pruning.jpg`を再現したときのもの）:
 ロゴは`public/favicon.svg`のパスを白い円（44px・`border-radius: 50%`）に載せ、
 サイト名は白30px/太字。バッジは白背景の`border-radius: 999px`に`--accent`(#146c43)の22px/太字。
 見出しは白46〜52px/太字（**1行に収まるサイズまで下げる**。既存はどれも1行）、サブコピーは白26px。

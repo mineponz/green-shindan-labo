@@ -10,6 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "og": "node scripts/og/generate.mjs",
     "test": "node --test src/lib/*.test.ts",
     "check": "astro check && npm test"
   },
