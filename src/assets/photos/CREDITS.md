@@ -29,6 +29,8 @@
 | `display-ideas.jpg` | 部屋の飾り方アイデアガイド記事の見出し（`GUIDE_PHOTOS['display-ideas']`） | cottonbro studio（Pexels: @cottonbro） | https://images.pexels.com/photos/9707261/pexels-photo-9707261.jpeg を`sips -c 1200 1600 --cropOffset 700 0`で切り出し（下記） |
 | `root-rot.jpg` | 根腐れガイド記事の見出し（`GUIDE_PHOTOS['root-rot']`） | Sasha Kim（Pexels: @sasha-kim） | https://images.pexels.com/photos/9414299/pexels-photo-9414299.jpeg を`sips -c 1200 1600 --cropOffset 250 0`で切り出し（下記） |
 | `plant-diseases.jpg` | 病気ガイド記事の見出し（`GUIDE_PHOTOS['plant-diseases']`） | Kaboompics.com（Pexels: @karola-g） | https://images.pexels.com/photos/5978603/pexels-photo-5978603.jpeg |
+| `grow-light.jpg` | 育成ライトガイド記事の見出し（`GUIDE_PHOTOS['grow-light']`） | Ninh Van Son（Pexels） | https://images.pexels.com/photos/38540962/pexels-photo-38540962.jpeg を`sips -c 1200 1600 --cropOffset 300 0`で切り出し（下記） |
+| `hyakkin-plants.jpg` | 100均の観葉植物ガイド記事の見出し（`GUIDE_PHOTOS['hyakkin-plants']`） | Oy Visual（Pexels） | https://images.pexels.com/photos/19657731/pexels-photo-19657731.jpeg を`sips -c 1200 1600 --cropOffset 1180 0`で切り出し（下記） |
 
 - 2026-08-13: 管理者の指示（「もっときれいめに」、参考: livingorchid.comの商品写真のような
   明るい・背景がすっきりした雰囲気）で全6枚を差し替え。旧版（暗め・生活感のある写真）から、
@@ -124,6 +126,20 @@
     （`soil.jpg`・`watering.jpg`と同様、主題が画面の上下中央あたりに収まる構図のため）。葉に茶色い
     斑点が広がったマクロ写真で、症状そのものが写っている。植物の種の紹介写真ではないため、
     PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
+- 2026-09-17: ガイド記事20・21本目（育成ライト／100均の観葉植物）用に`grow-light.jpg`・
+  `hyakkin-plants.jpg`を2枚追加。上と同じ理由（記事ごとに写真を重複させない）で新規調達している。
+  写真検索は`pexels.com/search/`への直curlが弾かれたため`r.jina.ai`経由の読み取りプロキシで検索結果
+  ページを取得して選定した（上記と同じ回避策。vault:
+  3-resources/knowledge/20260830-pexels-search-cloudflare-workaround.md）。
+  - `grow-light.jpg` は**構図を切り出している**（原本は1600×2400の縦長で、下部に書籍が写り込んでおり
+    見出し写真の4:3切り抜きに素で掛けると鉢が画面外へ出るため、ライトとポトスの葉が収まる上寄りの
+    範囲を選んだ）。切り出しコマンドは表に記載。原本はPexelsのURLから再取得できる。白いクリップ式
+    LEDライトが照らすポトスの葉がはっきり見える構図。植物の種の紹介写真ではないため、PLANT_PHOTOSには
+    入れず`GUIDE_PHOTOS`だけで持っている。
+  - `hyakkin-plants.jpg` も**構図を切り出している**（原本は1600×2416の縦長で、上部の大半が白い壁の
+    余白のため、鉢が並んでいる下部の範囲を選んだ）。切り出しコマンドは表に記載。原本はPexelsのURLから
+    再取得できる。白い小さな鉢に植わった3つの小さな多肉植物が、白いテーブルの上に並んだ構図。
+    植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
 - 取得日: 2026-08-13（`?auto=compress&cs=tinysrgb&w=1600` を付けて長辺1600pxで取得）
 - 表示は `<Image>`（astro:assets）経由。リサイズとWebP変換はビルド時に走るので、
   ここに置く原本は加工せずそのまま残しておく。

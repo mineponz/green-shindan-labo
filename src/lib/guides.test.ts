@@ -32,7 +32,7 @@ test('GUIDES に形式エラーがない（relatedPlants が実在する植物�
   assert.deepEqual(validateGuides(GUIDES, PLANT_SLUGS), []);
 });
 
-test('GUIDES は決定した19本を過不足なく持つ', () => {
+test('GUIDES は決定した21本を過不足なく持つ', () => {
   assert.deepEqual(
     GUIDES.map((g) => g.slug).sort(),
     [
@@ -40,6 +40,8 @@ test('GUIDES は決定した19本を過不足なく持つ', () => {
       'beginner-mistakes',
       'display-ideas',
       'fertilizer',
+      'grow-light',
+      'hyakkin-plants',
       'hydroculture',
       'leaf-problems',
       'low-light-plants',
@@ -178,10 +180,10 @@ test('latestGuides: 同じpublishedDateは配列順（GUIDESの並び順）で�
   );
 });
 
-test('latestGuides: 実際のGUIDESで先頭3本を出すと root-rot → plant-diseases → hydroculture になる（同日タイブレークの実例）', () => {
+test('latestGuides: 実際のGUIDESで先頭3本を出すと grow-light → hyakkin-plants → root-rot になる（同日タイブレークの実例）', () => {
   assert.deepEqual(
     latestGuides(3).map((g) => g.slug),
-    ['root-rot', 'plant-diseases', 'hydroculture']
+    ['grow-light', 'hyakkin-plants', 'root-rot']
   );
 });
 

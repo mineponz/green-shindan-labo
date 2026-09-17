@@ -1,0 +1,183 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('grow-light')!;
+
+/**
+ * 「ライトがあると置き場所が広がる種／補助程度で十分な種」の分け方は、診断の点数に使っている
+ * shade（耐陰性）から描く（記事に手書きすると診断結果・耐陰性ガイドとずれる / AGENTS.md）。
+ * しきい値は low-light-plants.astro が使っている尺度と揃えて、shade<=3（もともと暗さに弱く
+ * 明るい場所を欲しがる側）／shade>=4（もとから暗さに耐える側）で分ける。
+ */
+const needsLight = PLANTS.filter((plant) => plant.attributes.shade <= 3);
+const toleratesShade = PLANTS.filter((plant) => plant.attributes.shade >= 4);
+
+const nameList = (plants: typeof PLANTS) => plants.map((plant) => plant.name).join('・');
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-grow-light.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>育成ライトが要る部屋・要らない部屋</h2>
+  <p>
+    まず結論から言うと、<strong>窓からの距離が近くてレースカーテン越しの光がしっかり入る部屋なら、
+    育成ライトはたぶん要りません。</strong>私の失敗はまさにここで、窓から少し離れた棚に鉢を置いて
+    「明るい部屋だから大丈夫」と油断していたら、いつの間にか茎ばかりが間延びしていました。
+  </p>
+  <ul>
+    <li>
+      <strong>窓から離れた棚・部屋の奥・北向きの部屋。</strong>
+      日中でも照明をつけないと手元が見えないような場所は、植物にとってもかなり厳しい環境です
+    </li>
+    <li>
+      <strong>冬は特に日照時間そのものが短くなる。</strong>
+      同じ場所でも夏は平気だったのに、秋から冬にかけて急に元気がなくなる、ということが起こります
+    </li>
+    <li>
+      <strong>徒長のサインが出たら、それは「もう足りていない」の合図。</strong>
+      葉と葉の間隔が間延びしたり、茎がひょろひょろと不自然に伸びたりしていたら、
+      置き場所を変えるか、育成ライトを検討するタイミングです
+    </li>
+  </ul>
+  <p class="note">
+    暗さに強い植物の選び方は<a href="/guides/low-light-plants/">日当たりが悪い部屋でも育つ観葉植物まとめ</a>に、徒長してしまった株の切り戻し方は<a href="/guides/pruning/">剪定・切り戻しのやり方</a>にまとめています。まずは置き場所や種類の見直しで解決できないか、そちらもあわせて
+    見てみてください。
+  </p>
+
+  <h2>普通の電球・部屋の照明ではダメなの？</h2>
+  <p>
+    私も最初はここでつまずきました。「部屋、明るくしてるんだけどな」と思っていたのですが、
+    どうも<strong>人が「明るい」と感じる度合いと、植物が生長のために使う光は、別のものらしい</strong>
+    と知って腑に落ちました。人の目は暗さに合わせて感度を調整してしまうので、実際にはかなり
+    暗い部屋でも「まあまあ明るい」と感じてしまうことがあるそうです。
+  </p>
+  <p>
+    普通の室内照明でまったく育たないと言い切るつもりはありませんが、<strong>植物が育つための光としては、
+    量が足りないことが多い</strong>というのが実感です。
+    「照明をつけているのに調子が悪い」場合は、育成ライトを検討してみる価値があります。
+  </p>
+
+  <h2>選ぶときに見る3つ</h2>
+  <p>
+    種類が多くて最初は何を見ればいいのか分からなかったのですが、絞り込んでみると
+    だいたいこの3つを見れば選べます。
+  </p>
+  <ul>
+    <li>
+      <strong>形。</strong> 棚や机のふちに挟むクリップ式、既存の照明ソケットに付ける電球型、
+      棚全体を照らすパネル・スタンド型があります。1〜2鉢だけならクリップ式、
+      棚にいくつも並べているならパネルやスタンド型が向いています
+    </li>
+    <li>
+      <strong>光の色。</strong> 育成用というと紫やピンクの光を想像するかもしれませんが、
+      最近は白色系（昼白色に近いもの）の製品も増えていて、部屋の雰囲気になじみやすいです
+    </li>
+    <li>
+      <strong>明るさの表記。</strong> ワット数やPPFDといった数値が書かれていますが、
+      製品によって測り方の基準が違うことがあるので、この記事で「これ以上あればOK」と
+      断定するのは避けます。<strong>置きたい場所の広さ・鉢の数に合った製品かどうかは、
+      それぞれの商品ページの説明や口コミを参考にしてください。</strong>
+    </li>
+  </ul>
+
+  <h2>使い方</h2>
+  <p>
+    製品を選んだあとの使い方も、私は最初「つけっぱなしでいいのでは」と思っていたのですが、
+    それは違いました。
+  </p>
+  <ul>
+    <li>
+      <strong>距離。</strong> 近づけるほど効果がありそうな気がしますが、近すぎると葉焼けの原因に
+      なります。<strong>製品の説明書に書かれている推奨距離を守るのがいちばん確実</strong>です
+    </li>
+    <li>
+      <strong>点灯時間。</strong> ここも製品や置きたい植物によって幅があるので断定はできませんが、
+      <strong>1日8〜12時間くらいを目安にしている人が多い</strong>印象です。まずは短めから始めて、
+      株の様子を見ながら調整するのが安心です
+    </li>
+    <li>
+      <strong>タイマーを使う。</strong> 毎日手動でオン・オフするのは正直続きません。
+      コンセントタイマーに任せてしまえば、点け忘れも消し忘れも無くなります
+    </li>
+    <li>
+      <strong>夜はちゃんと消す。</strong> 植物にも人と同じように、光の当たらない時間が必要です。
+      24時間ずっと点けっぱなしにするのはおすすめしません
+    </li>
+  </ul>
+  <AmazonLink keyword="植物育成ライト クリップ" label="Amazonで「植物育成ライト クリップ」を見る" />
+  <AmazonLink keyword="植物育成ライト 電球型" label="Amazonで「植物育成ライト 電球型」を見る" />
+  <AmazonLink keyword="コンセントタイマー" label="Amazonで「コンセントタイマー」を見る" />
+
+  <h2>{PLANTS.length}種でみる、ライトの効果を感じやすい種</h2>
+  <p>
+    育成ライトの効果を感じやすいかどうかも、診断の点数に使っている<strong>耐陰性</strong>
+    （数字が小さいほど、もともと明るい場所を欲しがる）とほぼ重なります。
+  </p>
+  <p>
+    {nameList(needsLight)}は、もともと暗さが苦手で明るい場所を欲しがる側。
+    窓から離れた場所に置きたいなら、この子たちこそ育成ライトの出番です。
+    ライトを足すことで、これまで諦めていた棚の上や部屋の奥にも置き場所が広がります。
+    反対に{nameList(toleratesShade)}はもともと暗さにある程度耐えられる側で、
+    こちらは育成ライトが無くても育ちますが、冬場の日照不足で間延びしてきたときに
+    補助として足す、くらいの使い方で十分です。
+  </p>
+  <p class="note">
+    それぞれの種類の詳しい性質は<a href="/plants/gajumaru/">ガジュマル</a>・
+    <a href="/plants/areca-palm/">アレカヤシ</a>など、各植物のページも見てみてください。
+  </p>
+
+  <h2>やりがちな失敗</h2>
+  <p>
+    最後に、私も含めて陥りやすい失敗を3つ挙げておきます。
+  </p>
+  <ul>
+    <li>
+      <strong>近づけすぎて葉焼けする。</strong> 「明るいほうがいいはず」と鉢ぎりぎりまで
+      近づけた結果、葉が茶色く焼けてしまうことがあります。距離は製品の推奨を守ってください
+    </li>
+    <li>
+      <strong>つけっぱなしにする。</strong> 光を足せば足すほど良いわけではなく、
+      植物にも暗い時間は必要です。タイマーで区切りをつけるのが安心です
+    </li>
+    <li>
+      <strong>ライトを足したのに、水やりのペースはそのまま。</strong> 光が増えると生長も
+      早まるぶん、水を欲しがるタイミングも変わってきます。土の乾き具合はこれまでより
+      こまめに確認してあげてください
+    </li>
+  </ul>
+  <p class="note">
+    水やりの頻度と見極め方は<a href="/guides/watering/">観葉植物の水やりの頻度と量</a>に、
+    葉焼け・葉が茶色くなるなどのトラブルは<a href="/guides/leaf-problems/">葉の症状から原因を見分けるガイド</a>にまとめています。心当たりがあれば、あわせて見てみてください。
+  </p>
+
+  <h2>迷ったら診断で、Q1「あまり当たらない」を選んでみてください</h2>
+  <p>
+    <a href="/#diagnosis">4つの質問の診断</a>のQ1「お部屋の日当たりは？」で
+    <strong>「あまり当たらない」</strong>を選ぶと、耐陰性の高い種に配点が寄ります。
+    育成ライトを足す前提で「どの植物なら暗い部屋でも無理なく育てられるか」を知りたいときにも、
+    参考にしてみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /* 補足は本文より一段弱く（色を足さずミュートで後退させる / design.md） */
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>

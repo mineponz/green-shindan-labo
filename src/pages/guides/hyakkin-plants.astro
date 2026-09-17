@@ -1,0 +1,185 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('hyakkin-plants')!;
+
+/**
+ * 「小さい苗からでも始めやすい種」は、診断の点数に使っているease（ズボラ耐性）から描く
+ * （記事に手書きすると、種の入れ替えで診断結果と食い違う / AGENTS.md）。
+ * しきい値はroot-rot.astro・watering.astroと同じ（ease>=4 / <=3）にそろえている。
+ * チランジアは土を使わない種類なので、この章では「植え替え」系の述語は当てず、
+ * 「始めやすさ・失敗しにくさ」という共通の切り口だけで語る。
+ */
+const beginnerFriendly = PLANTS.filter((plant) => plant.attributes.ease >= 4);
+const wantsSomeExperience = PLANTS.filter((plant) => plant.attributes.ease <= 3);
+const nameList = (plants: typeof PLANTS) => plants.map((plant) => plant.name).join('・');
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-hyakkin-plants.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>100均の観葉植物でも、ちゃんと育ちます</h2>
+  <p>
+    冒頭でも書きましたが、私は最初「100均で売っているくらいだから、そのうち枯れるんだろうな」
+    と正直なめていました。ところが試しに買ってみた小さな一鉢が、今ではうちにある鉢の中でも
+    いちばん元気に葉を茂らせています。<strong>100均の観葉植物は、特別に弱い品種というわけでは
+    なく、単に「小さい苗」だというだけ</strong>なんです。
+  </p>
+  <p>
+    もちろん、お店や時期によって置いてある品ぞろえや価格は変わりますし、いつも同じものが
+    買えるとは限りません。そこは過度に期待しないほうがいいのですが、<strong>小さい苗ならではの
+    伸びしろ</strong>があるのも事実です。最初から大きな鉢の観葉植物を育てるのはハードルが
+    高く感じても、手のひらサイズの苗からなら気軽に始められます。育つ過程を見られるのも、
+    小さい苗から始める楽しみのひとつだと思います。
+  </p>
+
+  <h2>お店で見るポイント</h2>
+  <p>
+    お店で選ぶときに見ておきたい基本は、通常の観葉植物を選ぶときと変わりません。
+    <strong>葉の色つやとハリ、虫がついていないか、土の表面にカビが出ていないか、根が鉢底から
+    出すぎていないか</strong>、この4点はさっと確認しておくと安心です。
+  </p>
+  <p class="note">
+    より詳しいチェックポイントと、持ち帰ってから最初の数日にやるべきことは
+    <a href="/guides/after-purchase/">観葉植物を買ってきたら最初にやること</a>にまとめています。
+    100均に限らず、お店で株を選ぶときの共通の作法なので、あわせて読んでもらえると分かりやすいと
+    思います。
+  </p>
+
+  <h2>持ち帰ったら</h2>
+  <p>
+    100均の観葉植物は、<strong>鉢がかなり小さく、土もぎりぎりの量しか入っていないことが
+    多い</strong>です。私が最初に買ったときも、持ち上げた瞬間「これだけ？」と思うくらい土が
+    少なくて驚きました。根が窮屈な状態のまま長く置いておくと、水切れも早くなりますし、
+    生長のペースも鈍ってしまいます。
+  </p>
+  <p>
+    とはいえ、買ってすぐに植え替える必要はありません。お迎え直後は移動だけでも株にとって
+    ストレスなので、<strong>1〜2週間ほど環境に慣らしてから</strong>、ひと回り大きい鉢と
+    新しい土で植え替えてあげるのがおすすめです。土や鉢の選び方に迷ったら、次の2つを
+    見てもらえれば大丈夫です。
+  </p>
+  <p class="note">
+    植え替えの具体的な手順とタイミングは
+    <a href="/guides/repotting/">観葉植物の植え替え、タイミングとやり方</a>、
+    土の配合の選び方は<a href="/guides/soil/">観葉植物の土・用土選び</a>、
+    鉢そのものの選び方は<a href="/guides/pot-guide/">おしゃれな鉢・プランターの選び方</a>に
+    まとめています。
+  </p>
+
+  <h2>100均の鉢・土・グッズで足りるもの、足りないもの</h2>
+  <p>
+    100均には観葉植物まわりのグッズも一通り揃っていて、私もよくお世話になっています。
+    ただ、<strong>すべてがそのまま使えるわけではない</strong>ので、そこだけ整理しておきます。
+  </p>
+  <ul>
+    <li>
+      <strong>鉢カバー。</strong> 見た目を整えるだけの役割なら、100均のもので十分です。
+      サイズさえ合えば、値段の高いものにこだわる必要はありません
+    </li>
+    <li>
+      <strong>じょうろ・霧吹き・スコップなどの小物。</strong> こちらも実用に困ることはなく、
+      気軽に買い足せるのがありがたいところです
+    </li>
+    <li>
+      <strong>底穴のない容器。</strong> おしゃれな見た目に惹かれて買いたくなりますが、
+      そこに植物を直植えするのはおすすめしません。水の逃げ場がなく、根腐れの原因になります。
+      使うなら、あくまで鉢カバーとして外側にかぶせる形にしてください
+    </li>
+    <li>
+      <strong>培養土。</strong> 少量ならすぐに使い切れて便利ですが、植え替えでまとまった量が
+      必要になると割高になりがちです。ある程度の量を使うなら、専用の培養土をまとめて用意した
+      ほうが結果的に楽だと感じています
+    </li>
+  </ul>
+  <p class="note">
+    底穴のない容器に直植えしてしまったときの症状や立て直し方は
+    <a href="/guides/root-rot/">観葉植物の根腐れ、見分け方と復活のさせ方</a>で詳しく解説しています。
+    「なんとなく元気がない」と思ったら、まずここを疑ってみてください。
+  </p>
+  <AmazonLink keyword="観葉植物 培養土" label="Amazonで「観葉植物用培養土」を見る" />
+  <AmazonLink keyword="鉢底石" label="Amazonで「鉢底石」を見る" />
+  <AmazonLink keyword="スリット鉢" label="Amazonで「スリット鉢」を見る" />
+
+  <h2>{PLANTS.length}種でみる、小さい苗から始めやすい種</h2>
+  <p>
+    どの種類なら小さい苗からでも安心して始められるかは、診断の点数に使っている
+    <strong>ズボラ耐性</strong>（大きいほど水やりを忘れても枯れにくい）から見分けがつきます。
+  </p>
+  <p>
+    {nameList(beginnerFriendly)}は、小さい苗の状態からでも育てやすい側。多少水やりの間隔が
+    空いても粘ってくれるので、100均のような小さな苗から練習を始めるにはぴったりです。
+    反対に{nameList(wantsSomeExperience)}は、苗が小さいうちは水切れや環境の変化に敏感な傾向が
+    あるので、<strong>少し観葉植物の世話に慣れてから</strong>挑戦するほうが安心だと思います。
+    もちろん、これから育てながら経験を積んでいくのも十分ありです。各植物の詳しい特徴は、
+    それぞれの紹介ページにまとめています。
+  </p>
+  <ul class="plant-link-list">
+    {PLANTS.map((plant) => (
+      <li>
+        <a href={`/plants/${plant.slug}/`}>{plant.name}</a>
+      </li>
+    ))}
+  </ul>
+
+  <h2>大きく育てたくなったら</h2>
+  <p>
+    小さい苗から育てていると、思っていたより早く鉢いっぱいに根が回ることがあります。
+    <strong>生長のスピードは種類によってかなり差がある</strong>ので、「なかなか大きくならないな」
+    と焦らなくても大丈夫です。私が育てているものの中にも、ゆっくり構えていいタイプと、
+    気づいたら見違えるほど大きくなっていたタイプの両方があります。
+  </p>
+  <p>
+    鉢のふちから根がはみ出してきたり、水を与えてもすぐ表面が乾くようになったりしたら、
+    それが次の植え替えのサインです。茎が伸びてきたら、切って挿し木にして数を増やす楽しみ方も
+    できます。
+  </p>
+  <p class="note">
+    挿し木・水挿しでの増やし方は<a href="/guides/propagation/">観葉植物の増やし方ガイド</a>に、
+    育った株の飾り方は<a href="/guides/display-ideas/">観葉植物の飾り方</a>に
+    まとめています。小さな一鉢から始めた楽しみを、ぜひその先まで広げてみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /* 補足は本文より一段弱く（色を足さずミュートで後退させる / design.md） */
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+  .plant-link-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .plant-link-list li {
+    margin: 0;
+  }
+  .plant-link-list a {
+    display: inline-block;
+    padding: var(--space-1) var(--space-2);
+    background: var(--accent-weak);
+    border-radius: var(--radius);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+  }
+</style>

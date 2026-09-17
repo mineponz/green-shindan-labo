@@ -38,6 +38,8 @@ import hydroculturePhoto from '../assets/photos/hydroculture.jpg';
 import displayIdeasPhoto from '../assets/photos/display-ideas.jpg';
 import rootRotPhoto from '../assets/photos/root-rot.jpg';
 import plantDiseasesPhoto from '../assets/photos/plant-diseases.jpg';
+import growLightPhoto from '../assets/photos/grow-light.jpg';
+import hyakkinPlantsPhoto from '../assets/photos/hyakkin-plants.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -169,6 +171,17 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  *   葉に茶色い斑点が広がったマクロ写真で、症状そのものが写っている。
  *   `PLANT_PHOTOS.monstera`等の健康な株の紹介写真とは別物なので取り違えないこと。
  *   植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている
+ * - 育成ライト（2026-09-17追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/grow-light.jpg`）。**構図を切り出している**（原本は1600×2400の縦長で、
+ *   下部に書籍が写り込んでいるうえ見出し写真の4:3切り抜きに素で掛けると鉢が画面外へ出るため、
+ *   ライトとポトスの葉が収まる上寄りの範囲を選んだ）。切り出しコマンドはCREDITS.mdに記載。
+ *   白いクリップ式LEDライトがポトスを照らしている構図。植物の種の紹介写真ではないため、
+ *   PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている
+ * - 100均の観葉植物（2026-09-17追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/hyakkin-plants.jpg`）。**構図を切り出している**（原本は1600×2416の縦長で、
+ *   上部の大半が白い壁の余白のため、鉢が並んでいる下部の範囲を選んだ）。切り出しコマンドは
+ *   CREDITS.mdに記載。白い小さな鉢が3つ並んだ構図。植物の種の紹介写真ではないため、
+ *   PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -220,6 +233,14 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'plant-diseases': {
     src: plantDiseasesPhoto,
     alt: '茶色く盛り上がった斑点がいくつも広がった、緑の葉のマクロクローズアップ',
+  },
+  'grow-light': {
+    src: growLightPhoto,
+    alt: '白い壁を背景に、クリップ式のLED育成ライトに照らされたポトスの葉が明るく浮かび上がっている様子',
+  },
+  'hyakkin-plants': {
+    src: hyakkinPlantsPhoto,
+    alt: '白いテーブルの上に、小さな白い鉢に植えられた3つの小さな多肉植物が並んでいる様子',
   },
 };
 
