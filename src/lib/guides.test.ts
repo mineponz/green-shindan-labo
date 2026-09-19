@@ -32,12 +32,13 @@ test('GUIDES に形式エラーがない（relatedPlants が実在する植物�
   assert.deepEqual(validateGuides(GUIDES, PLANT_SLUGS), []);
 });
 
-test('GUIDES は決定した21本を過不足なく持つ', () => {
+test('GUIDES は決定した22本を過不足なく持つ', () => {
   assert.deepEqual(
     GUIDES.map((g) => g.slug).sort(),
     [
       'after-purchase',
       'beginner-mistakes',
+      'display-by-plant',
       'display-ideas',
       'fertilizer',
       'grow-light',
@@ -180,10 +181,10 @@ test('latestGuides: 同じpublishedDateは配列順（GUIDESの並び順）で�
   );
 });
 
-test('latestGuides: 実際のGUIDESで先頭3本を出すと grow-light → hyakkin-plants → root-rot になる（同日タイブレークの実例）', () => {
+test('latestGuides: 実際のGUIDESで先頭3本を出すと display-by-plant → grow-light → hyakkin-plants になる（同日タイブレークの実例）', () => {
   assert.deepEqual(
     latestGuides(3).map((g) => g.slug),
-    ['grow-light', 'hyakkin-plants', 'root-rot']
+    ['display-by-plant', 'grow-light', 'hyakkin-plants']
   );
 });
 

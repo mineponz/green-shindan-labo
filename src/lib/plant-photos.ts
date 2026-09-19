@@ -40,6 +40,7 @@ import rootRotPhoto from '../assets/photos/root-rot.jpg';
 import plantDiseasesPhoto from '../assets/photos/plant-diseases.jpg';
 import growLightPhoto from '../assets/photos/grow-light.jpg';
 import hyakkinPlantsPhoto from '../assets/photos/hyakkin-plants.jpg';
+import displayByPlantPhoto from '../assets/photos/display-by-plant.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -182,6 +183,13 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  *   上部の大半が白い壁の余白のため、鉢が並んでいる下部の範囲を選んだ）。切り出しコマンドは
  *   CREDITS.mdに記載。白い小さな鉢が3つ並んだ構図。植物の種の紹介写真ではないため、
  *   PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている
+ * - 種類別の飾り方（2026-09-19追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/display-by-plant.jpg`）。既存の`display-ideas.jpg`（部屋全体の配置の原則）とは
+ *   別の写真。**構図を切り出している**（原本は1600×2416の縦長で、見出し写真の4:3切り抜きに素で掛けると
+ *   鉢の下部か吊り紐の上部が画面外へ出るため、金属リングの鉢とポトスの垂れる葉が収まる範囲を選んだ）。
+ *   切り出しコマンドはCREDITS.mdに記載。白い壁と木製ドア枠を背景に、金色のリングプランターに植えた
+ *   ポトスが天井から吊るされている構図（「吊るして飾る」が一目で伝わるものを選んだ）。植物の種の
+ *   紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -241,6 +249,10 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'hyakkin-plants': {
     src: hyakkinPlantsPhoto,
     alt: '白いテーブルの上に、小さな白い鉢に植えられた3つの小さな多肉植物が並んでいる様子',
+  },
+  'display-by-plant': {
+    src: displayByPlantPhoto,
+    alt: '白い壁と木製のドア枠を背景に、金色のリングプランターに植えられたポトスが天井から吊るされ、垂れた葉が大きく茂っている様子',
   },
 };
 

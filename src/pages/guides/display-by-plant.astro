@@ -1,0 +1,249 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('display-by-plant')!;
+
+/**
+ * 8種の早見表（おすすめの飾り方／置く高さ／気をつけること）。
+ * plants.ts の attributes には「かたち・飾り方」を表す値が無いため、ここは属性から
+ * 動的生成せず、種ごとに手書きしている。ただし PLANTS に対する過不足だけは
+ * ビルド時に検証し、8種の漏れ・過不足が静かに残らないようにする
+ * （vault: 1-projects/green-lab/notes/20260907-dynamic-plant-list-needs-universal-predicate.md）。
+ */
+const DISPLAY_NOTES: Record<string, { style: string; height: string; caution: string }> = {
+  pachira: {
+    style: '床に置いて、大きめの鉢で存在感を出す',
+    height: '低い（床）',
+    caution:
+      '生長すると幹が太くなり鉢ごと重くなっていくので、最初から置き場所を決めておくと後で動かさずに済みます',
+  },
+  monstera: {
+    style: '大きな鉢に植えて床置きし、葉の切れ込みを主役にする',
+    height: '低い（床）',
+    caution: '葉が横にも大きく広がるので、通路をふさがない幅の余裕を見ておきたいところです',
+  },
+  sansevieria: {
+    style: '縦に伸びる葉のラインを生かして、細長い鉢で棚やテーブルに',
+    height: '中くらい（棚・テーブル）',
+    caution: '横に広がらないぶん単体だと寂しく見えがちなので、ほかの鉢と並べてあげると映えます',
+  },
+  pothos: {
+    style: 'つるを垂らして吊るす',
+    height: '高い（吊るす）',
+    caution: '天井近くは意外と乾きやすいので、水やりを忘れないよう目につく高さに吊るすのがおすすめです',
+  },
+  gajumaru: {
+    style: '個性的な幹の気根（根）を見せるように鉢を選ぶ',
+    height: '中くらい（棚・テーブル）',
+    caution: '日当たりのよい窓ぎわを好むので、見せたい場所より先に日照のよさを優先して選んでください',
+  },
+  'areca-palm': {
+    style: '大きな鉢に植えて床に置き、細い葉が広がるリゾート感を出す',
+    height: '低い（床）',
+    caution: '株が大きくなるほど鉢も重くなるので、キャスター付きの鉢台に乗せておくと掃除や模様替えのときに助かります',
+  },
+  peperomia: {
+    style: '棚やデスクにちょこんと置く（垂れて育つ品種は吊るしても様になります）',
+    height: '中くらい（棚・テーブル）',
+    caution: '小さい鉢は土が乾きやすいので、置き場所を決めたら水やりの間隔もそこに合わせてあげてください',
+  },
+  tillandsia: {
+    style: '土を使わず、流木にのせたり、口の広いガラスの器に入れたりして飾る',
+    height: '自由（軽いのでどこにでも）',
+    caution: '固定されていないぶん動かしたときに落ちやすいので、安定した場所を選んでください',
+  },
+};
+
+for (const plant of PLANTS) {
+  if (!DISPLAY_NOTES[plant.slug]) {
+    throw new Error(`display-by-plant: DISPLAY_NOTES に "${plant.slug}" の飾り方が無い`);
+  }
+}
+const displayRows = PLANTS.map((plant) => ({ plant, notes: DISPLAY_NOTES[plant.slug] }));
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-display-by-plant.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>飾り方は、株の「かたち」でだいたい決まります</h2>
+  <p>
+    同じ観葉植物でも、置き方ひとつで見え方がまったく変わります。
+    部屋全体の高さの散らし方や鉢のトーンをそろえるコツは
+    <a href="/guides/display-ideas/">観葉植物の飾り方ガイド</a>にまとめたので、
+    <strong>部屋全体の配置の考え方はそちら、この記事は種類ごとの向き不向き</strong>を
+    掘り下げます。
+  </p>
+  <p>
+    向き不向きを分けているのは、突き詰めると<strong>株の「かたち」</strong>です。
+    つるが垂れるのか、まっすぐ上に伸びるのか、横に広がるのか、小さくまとまるのか。
+    このかたちに逆らって置くと、なんとなく落ち着かない見た目になってしまいます。
+    私も最初のころは全部を同じ高さの棚に並べていて、どこか窮屈な部屋だなと思っていました。
+    かたちに合わせて置き場所を変えただけで、急に部屋が広く感じられるようになったのを覚えています。
+  </p>
+
+  <h2>吊るすのが似合う: ポトス・チランジア、垂れて育つペペロミア</h2>
+  <p>
+    つるが自然に垂れ下がるタイプは、床や棚に置くより<strong>吊るしてしまうほうが本来のかたちが生きます</strong>。
+    このサイトの8種だと、ポトスとチランジアがその代表です。ペペロミアも品種によっては垂れて育つものがあり、
+    そのタイプなら吊るす候補に入ります。
+  </p>
+  <p>
+    ただ、吊るす飾り方には注意点もあります。<strong>水やりがしにくい</strong>のが正直いちばんのネックで、
+    私も高い位置に吊るした鉢は水やりを後回しにしがちです。それと、
+    <strong>部屋の上のほうは下より暖かく乾きやすい</strong>ので、床置きの感覚のままだと水切れに気づきにくくなります。
+    あとは単純に、<strong>フックや金具が緩んでいないか</strong>。落下すると鉢も株も傷むので、
+    重さに見合った金具を使い、たまに揺らして確かめる習慣をつけておくと安心です。
+  </p>
+  <p>
+    サイトで紹介している8種以外だと、シュガーバインやヘデラ（アイビー）、グリーンネックレスも
+    吊るして飾るのが定番の種類です。細く枝垂れる姿は、吊るしたときにいちばん映えるかたちをしています。
+  </p>
+  <AmazonLink keyword="ハンギングプランター 観葉植物 吊り下げ" label="Amazonで「ハンギングプランター」を見る" />
+
+  <h2>大きな鉢で床に置くと映える: パキラ・モンステラ・アレカヤシ</h2>
+  <p>
+    逆に、まっすぐ上や横に大きく育つタイプは<strong>床に据えてこそ主役</strong>になります。
+    パキラ・モンステラ・アレカヤシがそうで、大きめの鉢に植えて床置きにすると、その1鉢で
+    空間の印象が決まります。ソファの横や窓ぎわの角など、視線がすっと抜ける場所に置くのが
+    いちばん効きます。
+  </p>
+  <p>
+    ここで効いてくるのが<strong>鉢の重さ</strong>です。土が入った大鉢は見た目以上にずっしりしていて、
+    模様替えのたびに動かすのが正直しんどいです。私は一度、大鉢を1人で動かそうとして腰を痛めかけました。
+    最初からキャスター付きの鉢台に乗せておくと、掃除や模様替えのときにすっと動かせて助かります。
+    それと、<strong>人がよく通る動線をふさがない位置</strong>を先に決めてから鉢を選ぶことも忘れずに。
+  </p>
+  <p>
+    鉢そのものの選び方は<a href="/guides/pot-guide/">おしゃれな鉢・プランターの選び方</a>に、
+    株が大きくなって鉢が窮屈になってきたときの見分け方とやり方は
+    <a href="/guides/repotting/">観葉植物の植え替えのタイミングとやり方</a>にまとめています。
+  </p>
+  <p>
+    8種以外だと、フィカス・ウンベラータやエバーフレッシュ、ドラセナ（幸福の木）も
+    大きな鉢で床に置くのが定番の飾り方です。背丈のある木立ちの姿は、床に据えることでいちばん
+    映えます。ただ、このあたりはサイトでは詳しく扱っていないので、ペットがいる家では
+    迎える前にその種類がペットに安全かを調べてから選んでください
+    （サイトの8種については<a href="/guides/pet-safe-plants/">ペットに安全な観葉植物の選び方</a>にまとめています）。
+  </p>
+  <AmazonLink keyword="プラントスタンド キャスター付き 鉢台" label="Amazonで「キャスター付きの鉢台」を見る" />
+
+  <h2>棚やテーブルに小さくまとめる: ペペロミア・ガジュマル・サンスベリアの小株</h2>
+  <p>
+    コンパクトにまとまるタイプは、無理に主役にしなくても<strong>棚やテーブルの上でちょうどよく収まります</strong>。
+    ペペロミア、ガジュマル、サンスベリアの小株あたりがこの役回りです。
+    デスクの端や、キッチンカウンターのすみなど、「ついでに緑が見える」くらいの気軽な場所が向いています。
+  </p>
+  <p>
+    このサイズ感のいいところは、<strong>2〜3鉢まとめて置いても圧迫感が出ない</strong>ことです。
+    高さや鉢の色を少しだけ変えて並べると、それだけで「飾ってある」感じが出てきます。
+    1鉢だけだと寂しいと感じたら、まずは仲間を増やしてみてください。
+  </p>
+  <AmazonLink keyword="プラントスタンド 木製 卓上 棚置き" label="Amazonで「棚置き用のプラントスタンド」を見る" />
+
+  <h2>ひと工夫で、もっと映える飾り方</h2>
+  <p>
+    定番の置き方に慣れてきたら、種類ごとの個性を生かした飾り方も試してみてほしいです。
+  </p>
+  <ul>
+    <li>
+      <strong>チランジア</strong>: そもそも土を使わない種類なので、流木にのせたりガラスの器に入れたり、
+      雑貨のように自由に飾れます。土や鉢のことを考えなくていいぶん、いちばん遊べる種類だと思います。
+      ただ、ふたをした瓶のように空気がこもる器だと蒸れやすいので、口の広い器を選んでください。
+      ほかの種類も土なしで飾ってみたくなったら、
+      <a href="/guides/hydroculture/">土を使わない育て方（ハイドロカルチャー）ガイド</a>が入口になります
+    </li>
+    <li>
+      <strong>ガジュマル</strong>: 個性的な幹の気根（根）をあえて見せる植え方にすると、
+      その株だけの造形が主役になります。鉢は主張しない色・形を選ぶと、幹の表情がより引き立ちます
+    </li>
+    <li>
+      <strong>サンスベリア</strong>: 葉が縦にまっすぐ伸びる性質を生かして、あえて細長い鉢に植えると
+      シャープな印象になります。丸い鉢に植えたときとはずいぶん雰囲気が変わるので、
+      模様替えの気分転換にも向いています
+    </li>
+  </ul>
+
+  <h2>{PLANTS.length}種の早見表：おすすめの飾り方・置く高さ・気をつけること</h2>
+  <p>
+    最後に、このサイトで紹介している{PLANTS.length}種をまとめて並べておきます。
+    どれを迎えるか迷っている人は、置きたい場所と見比べてみてください。
+  </p>
+  <table class="display-table">
+    <thead>
+      <tr>
+        <th scope="col">植物</th>
+        <th scope="col">おすすめの飾り方</th>
+        <th scope="col">置く高さ</th>
+        <th scope="col">気をつけること</th>
+      </tr>
+    </thead>
+    <tbody>
+      {displayRows.map(({ plant, notes }) => (
+        <tr>
+          <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+          <td>{notes.style}</td>
+          <td class="score">{notes.height}</td>
+          <td>{notes.caution}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p class="note">
+    どの種類も、置き方さえ合っていれば特別な手間は増えません。日当たりや水やりの手間まで含めて
+    自分に合う一鉢を知りたいときは、<a href="/#diagnosis">4つの質問の診断</a>も試してみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 早見表。ほかのガイドの比較表と見た目をそろえている
+   * （横罫だけ・囲みの重さを出さない / design.md）。
+   */
+  .display-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .display-table th,
+  .display-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .display-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .display-table tbody th {
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .score {
+    white-space: nowrap;
+  }
+
+  /* 補足は本文より一段弱く（色を足さずミュートで後退させる / design.md） */
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>
