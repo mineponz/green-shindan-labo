@@ -1,0 +1,56 @@
+---
+/**
+ * 記事中の比較表を包むスクロール枠。
+ *
+ * 和文の比較表は列が多いとSP幅（実効358px前後）に収まらない。折り返させると
+ * 1行1〜2文字の細長い列になって読めないので、表は表のまま横スクロールさせる。
+ * 画面が広いときはスクロールバーも注記も出ず、見た目は変わらない。
+ *
+ * キーボードだけの人もスクロールできるよう、枠に role="region" と tabindex を付ける
+ * （スクロール可能な領域はフォーカスできる必要がある）。label は表の内容を一言で。
+ */
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+
+<div class="table-scroll" data-table-scroll role="region" aria-label={label} tabindex="0">
+  <slot />
+</div>
+<p class="table-scroll-hint">← 表は横にスクロールできます →</p>
+
+<script>
+  /* はみ出しているときだけ注記を出す（幅が足りていれば黙っている）。
+     JSが動かなくても表自体はスクロールできるので、注記が出ないだけで困らない。 */
+  const sync = () => {
+    for (const box of document.querySelectorAll<HTMLElement>('[data-table-scroll]')) {
+      const hint = box.nextElementSibling;
+      if (!hint) continue;
+      hint.classList.toggle('is-visible', box.scrollWidth > box.clientWidth + 1);
+    }
+  };
+  sync();
+  window.addEventListener('resize', sync);
+</script>
+
+<style>
+  .table-scroll {
+    overflow-x: auto;
+    /* フォーカスリングが表の罫線に食い込まないぶんの逃げ */
+    outline-offset: 2px;
+  }
+
+  /* 表のすぐ下に小さく添えるだけ（色を足さずミュートで後退させる / design.md） */
+  .table-scroll-hint {
+    display: none;
+    margin-top: calc(var(--space-1) * -1);
+    margin-bottom: var(--space-2);
+    color: var(--muted);
+    font-size: var(--text-sm);
+    text-align: center;
+  }
+  .table-scroll-hint.is-visible {
+    display: block;
+  }
+</style>

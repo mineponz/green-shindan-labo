@@ -4,6 +4,7 @@ import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
 import RelatedGuides from '../../components/RelatedGuides.astro';
 import AmazonLink from '../../components/AmazonLink.astro';
 import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import TableScroll from '../../components/TableScroll.astro';
 import { findGuide } from '../../lib/guides.ts';
 import { PLANTS } from '../../lib/plants.ts';
 
@@ -180,26 +181,28 @@ const nameList = (plants: typeof PLANTS) => plants.map((plant) => plant.name).jo
     <strong>季節による光量の変化に強く</strong>、置き場所をあまり動かさなくても機嫌よく育ちます。
     はじめての一鉢なら、こちら側から選ぶと季節の変わり目で慌てずに済みます。
   </p>
-  <table class="season-table">
-    <thead>
-      <tr>
-        <th scope="col">植物</th>
-        <th scope="col">日ざしへの強さ</th>
-        <th scope="col">耐陰性</th>
-        <th scope="col">季節のひとこと</th>
-      </tr>
-    </thead>
-    <tbody>
-      {seasonRanking.map((plant) => (
+  <TableScroll label="8種の日ざし・耐陰性の早見表">
+    <table class="season-table">
+      <thead>
         <tr>
-          <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
-          <td class="score">{plant.attributes.sun} / 5</td>
-          <td class="score">{plant.attributes.shade} / 5</td>
-          <td>{SEASON_NOTES[plant.slug]}</td>
+          <th scope="col">植物</th>
+          <th scope="col">日ざしへの強さ</th>
+          <th scope="col">耐陰性</th>
+          <th scope="col">季節のひとこと</th>
         </tr>
-      ))}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {seasonRanking.map((plant) => (
+          <tr>
+            <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+            <td class="score">{plant.attributes.sun} / 5</td>
+            <td class="score">{plant.attributes.shade} / 5</td>
+            <td>{SEASON_NOTES[plant.slug]}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </TableScroll>
   <p class="note">
     なお、この表は日ざしと暗さへの強さを見たもので、耐寒性（何度まで耐えられるか）そのものではありません。
     どの種類も、冬に窓ぎわで冷気に当て続けるのは避けたほうが無難です。

@@ -4,6 +4,7 @@ import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
 import RelatedGuides from '../../components/RelatedGuides.astro';
 import AmazonLink from '../../components/AmazonLink.astro';
 import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import TableScroll from '../../components/TableScroll.astro';
 import { findGuide } from '../../lib/guides.ts';
 import { PLANTS } from '../../lib/plants.ts';
 
@@ -179,26 +180,28 @@ const displayRows = PLANTS.map((plant) => ({ plant, notes: DISPLAY_NOTES[plant.s
     最後に、このサイトで紹介している{PLANTS.length}種をまとめて並べておきます。
     どれを迎えるか迷っている人は、置きたい場所と見比べてみてください。
   </p>
-  <table class="display-table">
-    <thead>
-      <tr>
-        <th scope="col">植物</th>
-        <th scope="col">おすすめの飾り方</th>
-        <th scope="col">置く高さ</th>
-        <th scope="col">気をつけること</th>
-      </tr>
-    </thead>
-    <tbody>
-      {displayRows.map(({ plant, notes }) => (
+  <TableScroll label="8種の飾り方の早見表">
+    <table class="display-table">
+      <thead>
         <tr>
-          <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
-          <td>{notes.style}</td>
-          <td class="score">{notes.height}</td>
-          <td>{notes.caution}</td>
+          <th scope="col">植物</th>
+          <th scope="col">おすすめの飾り方</th>
+          <th scope="col">置く高さ</th>
+          <th scope="col">気をつけること</th>
         </tr>
-      ))}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {displayRows.map(({ plant, notes }) => (
+          <tr>
+            <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+            <td>{notes.style}</td>
+            <td class="score">{notes.height}</td>
+            <td>{notes.caution}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </TableScroll>
   <p class="note">
     どの種類も、置き方さえ合っていれば特別な手間は増えません。日当たりや水やりの手間まで含めて
     自分に合う一鉢を知りたいときは、<a href="/#diagnosis">4つの質問の診断</a>も試してみてください。
