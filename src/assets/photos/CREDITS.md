@@ -32,6 +32,7 @@
 | `grow-light.jpg` | 育成ライトガイド記事の見出し（`GUIDE_PHOTOS['grow-light']`） | Ninh Van Son（Pexels） | https://images.pexels.com/photos/38540962/pexels-photo-38540962.jpeg を`sips -c 1200 1600 --cropOffset 300 0`で切り出し（下記） |
 | `hyakkin-plants.jpg` | 100均の観葉植物ガイド記事の見出し（`GUIDE_PHOTOS['hyakkin-plants']`） | Oy Visual（Pexels） | https://images.pexels.com/photos/19657731/pexels-photo-19657731.jpeg を`sips -c 1200 1600 --cropOffset 1180 0`で切り出し（下記） |
 | `display-by-plant.jpg` | 種類別の飾り方ガイド記事の見出し（`GUIDE_PHOTOS['display-by-plant']`） | Skylar Kang（Pexels） | https://images.pexels.com/photos/6207298/pexels-photo-6207298.jpeg を`sips -c 1200 1600 --cropOffset 500 0`で切り出し（下記） |
+| `entrance-tree.jpg` | 玄関の木の選び方ガイド記事の見出し（`GUIDE_PHOTOS['entrance-tree']`） | Sergej Karpow（Pexels: @strannik-sk） | https://images.pexels.com/photos/37122470/pexels-photo-37122470.jpeg を`sips -c 1200 1600 --cropOffset 780 0`で切り出し（下記） |
 
 - 2026-08-13: 管理者の指示（「もっときれいめに」、参考: livingorchid.comの商品写真のような
   明るい・背景がすっきりした雰囲気）で全6枚を差し替え。旧版（暗め・生活感のある写真）から、
@@ -153,6 +154,21 @@
   背景に、金色のリングプランターに植えたポトスが天井から吊るされ、垂れた葉が大きく写っている構図
   （「吊るして飾る」がひと目で伝わるものを選んだ）。植物の種の紹介写真ではないため、PLANT_PHOTOSには
   入れず`GUIDE_PHOTOS`だけで持っている。
+- 2026-09-21: ガイド記事23本目（玄関におすすめの木）用に`entrance-tree.jpg`を1枚追加。屋外の庭木を
+  扱う初めての記事のため、既存8種＋既存ガイド写真の使い回しはできず新規調達した。写真検索は
+  `pexels.com/search/`への直curlが弾かれたため`r.jina.ai`経由の読み取りプロキシで検索結果ページを
+  取得して選定した（上記と同じ回避策。vault:
+  3-resources/knowledge/20260830-pexels-search-cloudflare-workaround.md）。取得日は2026-09-21、
+  同じく`?auto=compress&cs=tinysrgb&w=1600`付きで取得（原本1600×2400）。**構図を切り出している**
+  （見出し写真の4:3切り抜き（`GuideArticleHeader.astro`）に素で掛けると株元の複数の幹か上部の花房の
+  どちらかが画面外へ出るため、複数の幹が根元から立ち上がる様子とレンガ敷きの園路がどちらも収まる
+  範囲を選んだ）。切り出しコマンドは表に記載。原本はPexelsのURLから再取得できる。ドイツ・Coesfeldの
+  住宅で撮影された写真で、白壁の家の角とレンガ敷きの園路のわきに、複数の幹が根元から分かれて
+  立ち上がる（株立ち）中くらいの高さの庭木が白い花を咲かせている構図（Pexels側の元タイトルは
+  「Magnolia」だが、花の付き方・株立ちの樹形から見て実際はマグノリア（コブシ・モクレン類）ではなく
+  別の花木と見られる。**サイト本文では特定の樹種名を断定するラベルとして使わない**こと。あくまで
+  「玄関先に植えられた株立ちの中くらいの庭木」の様子を伝えるための写真として採用している）。植物の
+  種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
 - 取得日: 2026-08-13（`?auto=compress&cs=tinysrgb&w=1600` を付けて長辺1600pxで取得）
 - 表示は `<Image>`（astro:assets）経由。リサイズとWebP変換はビルド時に走るので、
   ここに置く原本は加工せずそのまま残しておく。

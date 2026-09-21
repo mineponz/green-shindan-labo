@@ -41,6 +41,7 @@ import plantDiseasesPhoto from '../assets/photos/plant-diseases.jpg';
 import growLightPhoto from '../assets/photos/grow-light.jpg';
 import hyakkinPlantsPhoto from '../assets/photos/hyakkin-plants.jpg';
 import displayByPlantPhoto from '../assets/photos/display-by-plant.jpg';
+import entranceTreePhoto from '../assets/photos/entrance-tree.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -190,6 +191,14 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  *   切り出しコマンドはCREDITS.mdに記載。白い壁と木製ドア枠を背景に、金色のリングプランターに植えた
  *   ポトスが天井から吊るされている構図（「吊るして飾る」が一目で伝わるものを選んだ）。植物の種の
  *   紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている
+ * - 玄関におすすめの木（2026-09-21追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/entrance-tree.jpg`）。屋外の庭木を扱う初めての記事のため、8種＋既存ガイド写真の
+ *   使い回しはできず新規調達した。**構図を切り出している**（原本は1600×2400の縦長で、見出し写真の
+ *   4:3切り抜きに素で掛けると株元の幹か上部の花房のどちらかが画面外へ出るため、複数の幹が根元から
+ *   立ち上がる様子とレンガの園路がどちらも収まる範囲を選んだ）。切り出しコマンドはCREDITS.mdに記載。
+ *   白壁の家の角、レンガ敷きの園路のわきに、複数の幹が根元から分かれて立ち上がる（株立ち）中くらいの
+ *   高さの花木が白い花を咲かせている構図。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず
+ *   `GUIDE_PHOTOS`だけで持っている
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -253,6 +262,10 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'display-by-plant': {
     src: displayByPlantPhoto,
     alt: '白い壁と木製のドア枠を背景に、金色のリングプランターに植えられたポトスが天井から吊るされ、垂れた葉が大きく茂っている様子',
+  },
+  'entrance-tree': {
+    src: entranceTreePhoto,
+    alt: '白壁の家の角とレンガ敷きの園路のわきで、複数の幹が根元から分かれて立ち上がる中くらいの高さの庭木が、白い花を株いっぱいに咲かせている様子',
   },
 };
 
