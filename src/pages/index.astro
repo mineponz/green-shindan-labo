@@ -140,7 +140,8 @@ const newGuides = latestGuides(NEW_GUIDES_COUNT, GUIDES);
     {guideCategoryGroups.map((group) => (
       <li>
         <a href={`/guides/#${group.category.key}`}>
-          {group.category.label}（{group.guides.length}本）
+          <span class="guide-category-label">{group.category.label}</span>
+          <span class="guide-category-count">{group.guides.length}本</span>
         </a>
       </li>
     ))}
@@ -303,6 +304,17 @@ const newGuides = latestGuides(NEW_GUIDES_COUNT, GUIDES);
       font-weight: 600;
       text-align: center;
       text-decoration: none;
+    }
+    /* 本数は別行・小さめにして、SP幅で「（6\n本）」のように途中改行されないようにする */
+    .guide-category-label,
+    .guide-category-count {
+      display: block;
+      white-space: nowrap;
+    }
+    .guide-category-count {
+      color: var(--muted);
+      font-size: var(--text-sm);
+      font-weight: 400;
     }
     .guide-category-links a:hover {
       border-color: var(--accent);
