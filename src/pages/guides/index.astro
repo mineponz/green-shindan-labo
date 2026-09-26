@@ -41,8 +41,20 @@ const newGuideSlugs = new Set(latestGuides(NEW_GUIDES_COUNT, GUIDES).map((g) => 
     種類をまたいでまとめました。どの一鉢にするか迷ったら、<a href="/#diagnosis">4つの質問の診断</a>からどうぞ。
   </p>
 
+  <nav class="category-jump" aria-label="カテゴリへ移動">
+    <ul>
+      {guideGroups.map((group) => (
+        <li>
+          <a href={`#${group.category.key}`}>
+            {group.category.label}（{group.guides.length}本）
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
   {guideGroups.map((group) => (
-    <section class="guide-category">
+    <section class="guide-category" id={group.category.key}>
       <h2 class="guide-category-title">{group.category.label}</h2>
       <ul class="guide-list">
         {group.guides.map((guide) => (
@@ -78,12 +90,31 @@ const newGuideSlugs = new Set(latestGuides(NEW_GUIDES_COUNT, GUIDES).map((g) => 
   }
 
   /*
+   * カテゴリへのページ内ジャンプ。三次アクション扱いでリンクのみ（design.mdの
+   * 「主要=塗りつぶし／副次=枠線／三次=リンクのみ」）。SP幅でも折り返して1行に
+   * 収まらなくても崩れないよう、常にflex-wrapさせる。
+   */
+  .category-jump ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+    list-style: none;
+    margin: 0 0 var(--space-3);
+    padding: 0;
+    font-size: var(--text-sm);
+  }
+
+  /*
    * カテゴリ見出し（.guide-category-title、実体はh2）はBaseLayoutのタイプスケールを
    * そのまま使う（個別のfont-size指定をしない）。カテゴリ間の余白だけ8pxスケール内で
    * var(--space-4)に調整している（h2の既定var(--space-6)は縦に伸びすぎるため）。
    */
   .guide-category + .guide-category {
     margin-top: var(--space-4);
+  }
+  .guide-category {
+    /* ページ内ジャンプで飛んだ先の見出しが画面上端ぴったりで詰まらないようにする */
+    scroll-margin-top: var(--space-2);
   }
   .guide-category-title {
     margin-top: 0;

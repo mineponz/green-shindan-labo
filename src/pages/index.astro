@@ -57,17 +57,14 @@ const itemListJsonLd = {
 };
 
 /**
- * トップのガイド欄は19本を全部出さず、カテゴリごとに先頭3本だけの「入口」にする
- * （2026-09-12。全件は/guides/に譲る。vault:
- * 1-projects/green-lab/tasks/20260912-restructure-top-guide-list.md）。
- * 各カテゴリの3本は`guidesByCategory`が返す配列（GUIDESの並び順＝読んでほしい順）の
- * 先頭からそのまま取る。独自に並べ替えない。
+ * トップのガイド欄は記事本文を出さず「新着3本＋カテゴリへのリンクボタン＋ぜんぶ見る」
+ * だけにする（2026-09-26。カテゴリ別の先頭3本プレビューは/guides/に譲って廃止した。
+ * vault: 1-projects/green-lab/tasks/20260926-guides-nav-and-slim-top.md）。
+ * カテゴリの表示名・本数は`guidesByCategory`（guides.tsのGUIDE_CATEGORIES）から引く。
+ * ボタンは`/guides/#<category>`へ飛ぶ（ジャンプ先の見出しは/guides/index.astro側で
+ * scroll-marginを持たせている）。
  */
-const TOP_GUIDES_PER_CATEGORY = 3;
-const topGuideGroups = guidesByCategory(GUIDES).map((group) => ({
-  category: group.category,
-  guides: group.guides.slice(0, TOP_GUIDES_PER_CATEGORY),
-}));
+const guideCategoryGroups = guidesByCategory(GUIDES);
 
 /**
  * 新着記事（公開日の新しい順・先頭3本）。カテゴリ群より前に置く。
@@ -139,19 +136,15 @@ const newGuides = latestGuides(NEW_GUIDES_COUNT, GUIDES);
     </ul>
   </div>
 
-  {topGuideGroups.map((group) => (
-    <div class="guide-category">
-      <h3 class="guide-category-title">{group.category.label}</h3>
-      <ul class="guide-links">
-        {group.guides.map((guide) => (
-          <li>
-            <a href={`/guides/${guide.slug}/`}>{guide.title}</a>
-            <span class="guide-summary">{guide.summary}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  ))}
+  <ul class="guide-category-links">
+    {guideCategoryGroups.map((group) => (
+      <li>
+        <a href={`/guides/#${group.category.key}`}>
+          {group.category.label}（{group.guides.length}本）
+        </a>
+      </li>
+    ))}
+  </ul>
   <p class="guide-all-link">
     <a href="/guides/">ガイド記事をぜんぶ見る（{GUIDES.length}本）</a>
   </p>
@@ -256,16 +249,9 @@ const newGuides = latestGuides(NEW_GUIDES_COUNT, GUIDES);
     }
 
     /*
-     * ガイド記事へのリンク。カードにはせず「リンク＋補足」の三次アクション扱いにして、
-     * 上のカードグリッド（植物一覧）と主張がぶつからないようにする（design.md）。
-     * カテゴリ見出し（.guide-category-title、実体はh3）はBaseLayoutのタイプスケールを
-     * そのまま使う（個別のfont-size指定をしない）。上のh2（悩みから選ぶガイド記事）より
-     * 小さく、リンクより大きい既存の比率に乗るだけで、強弱関係は崩れない。
-     */
-    /*
-     * 新着記事はカテゴリではないので、カテゴリ見出し（h3.guide-category-title）と
-     * 同じ見た目にしない。文字色だけ補助強調色（--highlight。design.mdの色ルールで
-     * 「新着・おすすめ等」用に割り当てている役割）にして区別し、装飾は足さない。
+     * 新着記事はカテゴリではないので、下のカテゴリボタンと同じ見た目にしない。
+     * 文字色だけ補助強調色（--highlight。design.mdの色ルールで「新着・おすすめ等」用に
+     * 割り当てている役割）にして区別し、装飾は足さない。
      */
     .new-guides {
       margin-bottom: var(--space-3);
@@ -293,6 +279,36 @@ const newGuides = latestGuides(NEW_GUIDES_COUNT, GUIDES);
       color: var(--muted);
       font-size: var(--text-sm);
     }
+
+    /*
+     * カテゴリへのリンクボタン。副次アクション扱いで枠線のみ（枠線＋影の二重使いは
+     * しない / design.md）。SP幅では2列程度に折り返す想定でgrid-template-columnsを
+     * auto-fillにしている。
+     */
+    .guide-category-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+      gap: var(--space-1);
+      list-style: none;
+      margin: 0 0 var(--space-3);
+      padding: 0;
+    }
+    .guide-category-links a {
+      display: block;
+      padding: var(--space-1) var(--space-2);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+    }
+    .guide-category-links a:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
     .guide-all-link {
       margin-top: var(--space-3);
     }

@@ -57,6 +57,16 @@ const breadcrumbJsonLd = {
     item: new URL(c.href, SITE_URL).href,
   })),
 };
+
+// ヘッダーの一覧ナビ。フッターの導線だけでは一覧の存在が伝わらないため追加
+// （vault: 1-projects/green-lab/tasks/20260926-guides-nav-and-slim-top.md）。
+// 現在地には aria-current="page" を付ける。判定はパスの先頭一致（/plants/xxx/ でも
+// 「植物図鑑」がカレント扱いになる）。
+const headerNavLinks = [
+  { href: '/plants/', label: '植物図鑑' },
+  { href: '/guides/', label: 'ガイド記事' },
+];
+const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -106,10 +116,26 @@ const breadcrumbJsonLd = {
     <a class="skip-link" href="#main">本文へスキップ</a>
 
     <header class="site-header">
-      <a href="/" class="wordmark">
-        <LeafMark size={24} />
-        <span>{SITE_TITLE}</span>
-      </a>
+      <div class="site-header-top">
+        <a href="/" class="wordmark">
+          <LeafMark size={24} />
+          <span>{SITE_TITLE}</span>
+        </a>
+        <nav class="header-nav" aria-label="サイト内一覧">
+          <ul>
+            {headerNavLinks.map((link) => {
+              const isCurrent = currentPath.startsWith(link.href);
+              return (
+                <li>
+                  <a href={link.href} aria-current={isCurrent ? 'page' : undefined}>
+                    {link.label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </div>
       <p class="tagline">{SITE_TAGLINE}</p>
     </header>
 
@@ -273,6 +299,19 @@ const breadcrumbJsonLd = {
         padding-bottom: var(--space-2);
       }
 
+      /*
+       * ワードマークとナビを横並びにする。SP幅（375px）で両方の幅を確保できない場合は
+       * 折り返す（横スクロールさせない）。ナビ自体はリンクのみの三次アクション扱い
+       * （design.md）で、ワードマークより主張を弱くする。
+       */
+      .site-header-top {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-1) var(--space-2);
+      }
+
       .wordmark {
         display: inline-flex;
         align-items: center;
@@ -285,8 +324,29 @@ const breadcrumbJsonLd = {
       }
       .wordmark:hover { color: var(--accent); }
 
-      .tagline {
+      .header-nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        list-style: none;
         margin: 0;
+        padding: 0;
+        font-size: var(--text-sm);
+      }
+      .header-nav a {
+        color: var(--muted);
+        text-decoration: none;
+      }
+      .header-nav a:hover {
+        color: var(--accent);
+      }
+      .header-nav a[aria-current='page'] {
+        color: var(--accent);
+        font-weight: 600;
+      }
+
+      .tagline {
+        margin: var(--space-1) 0 0;
         color: var(--muted);
         font-size: var(--text-sm);
       }
