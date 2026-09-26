@@ -42,6 +42,7 @@ import growLightPhoto from '../assets/photos/grow-light.jpg';
 import hyakkinPlantsPhoto from '../assets/photos/hyakkin-plants.jpg';
 import displayByPlantPhoto from '../assets/photos/display-by-plant.jpg';
 import entranceTreePhoto from '../assets/photos/entrance-tree.jpg';
+import bringIndoorsPhoto from '../assets/photos/bring-indoors.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -199,6 +200,15 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  *   白壁の家の角、レンガ敷きの園路のわきに、複数の幹が根元から分かれて立ち上がる（株立ち）中くらいの
  *   高さの花木が白い花を咲かせている構図。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず
  *   `GUIDE_PHOTOS`だけで持っている
+ * - 秋の取り込みガイド（2026-09-26追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/bring-indoors.jpg`）。窓辺に何鉢もの観葉植物が寄せて置かれている様子が
+ *   必要で、既存8種の写真は1鉢ずつのポートレートのため使い回せず新規調達した。原本は1600×2400の
+ *   縦長で、見出し写真の4:3切り抜きは中央（上下とも600pxずつ切り落とす、cropOffset指定なしの
+ *   中央クロップ）で複数の鉢がバランスよく収まったため、オフセット指定はしていない。切り出しコマンドは
+ *   CREDITS.mdに記載。逆光ぎみの窓を背景に、赤黒い光沢のあるハート形の葉・黄緑の細長い葉・
+ *   斑入りの丸葉など、葉の色や形が異なる観葉植物が植わった複数の鉢が寄せて置かれている構図
+ *   （種名は断定しない）。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず
+ *   `GUIDE_PHOTOS`だけで持っている
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -266,6 +276,10 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'entrance-tree': {
     src: entranceTreePhoto,
     alt: '白壁の家の角とレンガ敷きの園路のわきで、複数の幹が根元から分かれて立ち上がる中くらいの高さの庭木が、白い花を株いっぱいに咲かせている様子',
+  },
+  'bring-indoors': {
+    src: bringIndoorsPhoto,
+    alt: '逆光ぎみの窓を背景に、赤黒い光沢のあるハート形の葉、黄緑の細長い葉、斑入りの丸葉など、葉の色や形が異なる観葉植物の鉢が窓辺に何鉢も寄せて置かれている様子',
   },
 };
 

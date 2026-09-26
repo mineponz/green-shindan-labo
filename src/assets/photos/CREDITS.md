@@ -33,6 +33,7 @@
 | `hyakkin-plants.jpg` | 100均の観葉植物ガイド記事の見出し（`GUIDE_PHOTOS['hyakkin-plants']`） | Oy Visual（Pexels） | https://images.pexels.com/photos/19657731/pexels-photo-19657731.jpeg を`sips -c 1200 1600 --cropOffset 1180 0`で切り出し（下記） |
 | `display-by-plant.jpg` | 種類別の飾り方ガイド記事の見出し（`GUIDE_PHOTOS['display-by-plant']`） | Skylar Kang（Pexels） | https://images.pexels.com/photos/6207298/pexels-photo-6207298.jpeg を`sips -c 1200 1600 --cropOffset 500 0`で切り出し（下記） |
 | `entrance-tree.jpg` | 玄関の木の選び方ガイド記事の見出し（`GUIDE_PHOTOS['entrance-tree']`） | Sergej Karpow（Pexels: @strannik-sk） | https://images.pexels.com/photos/37122470/pexels-photo-37122470.jpeg を`sips -c 1200 1600 --cropOffset 780 0`で切り出し（下記） |
+| `bring-indoors.jpg` | 秋の取り込みガイド記事の見出し（`GUIDE_PHOTOS['bring-indoors']`） | Katarzyna Modrzejewska（Pexels: @katarzyna-modrzejewska-495044） | https://images.pexels.com/photos/7928742/pexels-photo-7928742.jpeg を`sips -c 1200 1600 --cropOffset 600 0`で切り出し（下記） |
 
 - 2026-08-13: 管理者の指示（「もっときれいめに」、参考: livingorchid.comの商品写真のような
   明るい・背景がすっきりした雰囲気）で全6枚を差し替え。旧版（暗め・生活感のある写真）から、
@@ -169,6 +170,18 @@
   別の花木と見られる。**サイト本文では特定の樹種名を断定するラベルとして使わない**こと。あくまで
   「玄関先に植えられた株立ちの中くらいの庭木」の様子を伝えるための写真として採用している）。植物の
   種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
+- 2026-09-26: ガイド記事24本目（秋の取り込み）用に`bring-indoors.jpg`を1枚追加。窓辺に何鉢もの
+  観葉植物が寄せて置かれている様子が必要で、既存8種の写真は1鉢ずつのポートレートのため使い回せず
+  新規調達した。写真検索は上記と同じ`r.jina.ai`経由の読み取りプロキシ経由（vault:
+  3-resources/knowledge/20260830-pexels-search-cloudflare-workaround.md）。取得日は2026-09-26、
+  同じく`?auto=compress&cs=tinysrgb&w=1600`付きで取得（原本1600×2400）。**構図を切り出している**
+  （見出し写真の4:3切り抜きに素で掛けると縦長の原本の上下が余分に写り込むため、複数の鉢がバランスよく
+  収まる中央帯を選んだ。上下均等に切るだけなので水平方向のオフセットは付けていない）。切り出し
+  コマンドは表に記載。原本はPexelsのURLから再取得できる。逆光ぎみの窓を背景に、赤黒い光沢のある
+  ハート形の葉・黄緑の細長い葉・斑入りの丸葉など、葉の色や形が異なる観葉植物が植わった素焼き鉢・
+  プラ鉢が窓辺に寄せて置かれている構図（**種名は断定しない**。写っている植物の正確な種はサイト本文
+  では言及しない）。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで
+  持っている。
 - 取得日: 2026-08-13（`?auto=compress&cs=tinysrgb&w=1600` を付けて長辺1600pxで取得）
 - 表示は `<Image>`（astro:assets）経由。リサイズとWebP変換はビルド時に走るので、
   ここに置く原本は加工せずそのまま残しておく。

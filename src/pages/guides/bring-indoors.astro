@@ -1,0 +1,260 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import TableScroll from '../../components/TableScroll.astro';
+import { findGuide } from '../../lib/guides.ts';
+
+const guide = findGuide('bring-indoors')!;
+
+/**
+ * 8種の早見表用データ。数値はresearcher報告（vault: 1-projects/green-lab/tasks/
+ * 20260925-add-autumn-bring-indoors-guide.md の「事実確認の結果」）の範囲だけを使う。
+ * ①寒さの限界（これを下回ると株が傷む温度）と②戻しはじめる目安（①より高め、行動の
+ * トリガーにする温度）は別物として書き分け、①を取り込みの目安として使い回さない。
+ * 出所によって幅がある項目はそのまま幅で書き、断定しない。
+ */
+const BRING_INDOORS_PLANTS: {
+  slug: string;
+  name: string;
+  limit: string;
+  start: string;
+  note: string;
+}[] = [
+  {
+    slug: 'pachira',
+    name: 'パキラ',
+    limit: '5〜7℃',
+    start: '10℃以上',
+    note: '寒さはそこまで強くないので、10℃を目安に早めに動いておくと安心です',
+  },
+  {
+    slug: 'monstera',
+    name: 'モンステラ',
+    limit: '5℃',
+    start: '15℃前後',
+    note: '限界と目安の差がいちばん大きい種。数字の低さに油断しないで',
+  },
+  {
+    slug: 'sansevieria',
+    name: 'サンスベリア',
+    limit: '5〜10℃',
+    start: '10℃',
+    note: '10℃を下回ったら、水やりの間隔をさらに空ける「断水寄り」に切り替えて',
+  },
+  {
+    slug: 'pothos',
+    name: 'ポトス',
+    limit: '5〜8℃',
+    start: '10〜15℃（出所により幅あり）',
+    note: '季節の変化に強く、8種の中では扱いやすいほうです',
+  },
+  {
+    slug: 'gajumaru',
+    name: 'ガジュマル',
+    limit: '5℃',
+    start: '10℃前後（10〜11月ごろが目安）',
+    note: '置き場所が変わると葉を落とすことがあります。幹が硬いままなら、たいてい戻ります',
+  },
+  {
+    slug: 'areca-palm',
+    name: 'アレカヤシ',
+    limit: '5〜13℃（出所により差が大きい）',
+    start: '10℃以上',
+    note: '5℃くらいまで耐えるという情報もありますが、10℃を切ると葉が傷みやすいです',
+  },
+  {
+    slug: 'peperomia',
+    name: 'ペペロミア',
+    limit: '5℃',
+    start: '8〜10℃',
+    note: '厚い葉に水をためるタイプで、乾燥にはわりと強めです',
+  },
+  {
+    slug: 'tillandsia',
+    name: 'チランジア',
+    limit: '品種による差が大きい',
+    start: '10℃を下回ったら室内へ、が一般的',
+    note: '耐寒性は品種次第なところが大きいので、心配なら早めに入れてあげてください',
+  },
+];
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-bring-indoors.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>いつ戻す？</h2>
+  <p>
+    夏のあいだベランダや庭に出していた鉢を、いつ部屋に戻すか。気温の目安を調べると、
+    じつは<strong>2種類の数字が混ざって出てきます</strong>。ここをごちゃまぜにしないのが大事だと私は思っています。
+    ひとつは<strong>①寒さの限界</strong>——これを下回ると株が傷んでしまう温度。
+    もうひとつは<strong>②戻しはじめる目安</strong>——①よりいくらか高めに設定しておく、
+    行動を起こすためのラインです。植物のページに書いてある「寒さは◯℃くらいまで」は①の
+    ほうなので、そのまま取り込みのタイミングとして使ってしまうと、動くのが遅すぎます。
+  </p>
+  <p>
+    見る気温も、日中の最高気温ではなく<strong>朝の最低気温</strong>のほうがいい、という
+    考え方があります。日中は暖かくても、明け方にぐっと冷え込む日はこの時期けっこう
+    あるので、私は朝の予報を気にするようにしています。
+  </p>
+  <p>
+    時期の感覚としては、<strong>早いものは9月末ごろから、霜が降りる前までに</strong>済ませておく、
+    くらいに考えておくと安心です。住んでいる地域によって最低気温が下がる時期は
+    ずいぶん違うので、天気予報で自分の地域の最低気温がどう推移しているかを
+    見ながら判断してください。
+  </p>
+
+  <h2>戻す前にやる3つ</h2>
+  <p>
+    屋外に出していた鉢には、気づかないうちに虫が付いていることがあります。部屋に戻す前に、
+    ひと手間かけておくと後がずいぶん楽になります。
+  </p>
+  <ul>
+    <li>
+      <strong>虫の点検。</strong>
+      <strong>ハダニは葉の裏</strong>、<strong>カイガラムシは新芽まわり</strong>、
+      <strong>ナメクジは鉢底</strong>、<strong>土の表面はコバエ</strong>が発生していないか
+      チェックします。葉はシャワーで丸ごと洗い流し、虫が多いようなら屋外にいる
+      うちに薬剤を使っておくと、部屋に持ち込まずに済みます。虫の見分け方や
+      対処は
+      <a href="/guides/pest-control/">観葉植物の虫対策ガイド</a>にまとめているので
+      あわせて読んでみてください
+    </li>
+    <li>
+      <strong>鉢の外側と受け皿を洗う。</strong>
+      土だけでなく鉢の外側にもコケや汚れが付いていることが多いので、この機会に
+      サッと洗っておきます
+    </li>
+    <li>
+      <strong>枯れ葉の整理。</strong>
+      夏のあいだに傷んだ葉や枯れた葉を取り除いてから戻すと、見た目もすっきりしますし、
+      枯れ葉に潜んでいた虫を室内に持ち込まずに済みます
+    </li>
+  </ul>
+  <AmazonLink keyword="観葉植物 殺虫スプレー" label="Amazonで「観葉植物用の殺虫スプレー」を見る" />
+
+  <h2>部屋では明るい窓ぎわに置く</h2>
+  <p>
+    屋外の明るさに慣れていた株を、いきなり部屋の奥の暗い場所に置くのは避けたいところです。
+    まずは家の中でいちばん明るい窓ぎわを用意してあげてください。置き場所選びに迷ったら
+    <a href="/guides/low-light-plants/">日当たりが悪い部屋でも育つ観葉植物</a>や
+    <a href="/guides/grow-light/">植物育成ライトの選び方</a>も参考にしてみてください。
+    どうしても明るい窓ぎわが確保できない部屋なら、育成ライトで補ってあげるのもひとつの手です。
+  </p>
+
+  <h2>戻したあとは水やりのペースを落とす</h2>
+  <p>
+    気温が下がると土が乾くスピードもゆっくりになります。屋外にいたときと同じ感覚で
+    水をやり続けると、土がいつまでも湿ったままになって根を傷めてしまうので、
+    戻したタイミングで水やりの間隔を少し空けるようにしてください。
+    このあたりの季節ごとの感覚は
+    <a href="/guides/watering/">観葉植物の水やりの頻度と量</a>や
+    <a href="/guides/seasonal-care/">観葉植物の夏越し・冬越しガイド</a>にも詳しく書いているので、
+    あわせて読んでもらえると迷いにくいと思います。
+  </p>
+
+  <h2>窓ぎわの夜の冷え・暖房の風に注意</h2>
+  <p>
+    部屋に戻したあとも、気をつけたいポイントがもうふたつあります。ひとつは
+    <strong>窓ぎわの夜の冷え</strong>です。日中は暖かい窓ぎわでも、夜になると
+    ガラス面がかなり冷えるので、<strong>葉が窓ガラスに触れないようにし</strong>、
+    夜は少し部屋の内側に寄せてあげると安心です。
+  </p>
+  <p>
+    もうひとつは<strong>暖房の風</strong>。エアコンやヒーターの風が直接当たる場所は、
+    乾燥して葉が傷みやすくなります。置き場所を決めるときは、風の通り道からも
+    外れているかどうかを確認してみてください。
+  </p>
+
+  <h2>8種でみる、寒さの限界と戻しはじめる目安</h2>
+  <p>
+    最後に、このサイトで診断に使っている8種について、①寒さの限界と②戻しはじめる
+    目安をまとめておきます。繰り返しになりますが、①はあくまで「これを下回ると傷む」
+    ラインなので、取り込みの目安として使うのは②のほうです。
+  </p>
+  <TableScroll label="8種の寒さの限界・戻しはじめる目安の早見表">
+    <table class="bring-indoors-table">
+      <thead>
+        <tr>
+          <th scope="col">植物</th>
+          <th scope="col">①寒さの限界の目安</th>
+          <th scope="col">②戻しはじめる目安</th>
+          <th scope="col">ひとこと</th>
+        </tr>
+      </thead>
+      <tbody>
+        {BRING_INDOORS_PLANTS.map((plant) => (
+          <tr>
+            <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+            <td>{plant.limit}</td>
+            <td>{plant.start}</td>
+            <td>{plant.note}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </TableScroll>
+  <p class="note">
+    数値は情報源によって幅があるものが多く、ここではその幅をそのまま載せています。
+    迷ったら、早めに戻す判断をしたほうが安心だと私は思います。
+  </p>
+
+  <h2>置き場所や水やりに迷ったら</h2>
+  <p>
+    取り込んだあとの置き場所選びは、その部屋の日当たりやお世話にかけられる手間との
+    相性しだいなところがあります。<a href="/#diagnosis">4つの質問の診断</a>では、
+    日当たりとお世話の手間から今の部屋に合う種類を出せるので、模様替えのついでに
+    使ってみてください。鉢を室内で移動させやすくしておきたい方は、キャスター付きの
+    鉢台も便利です。窓ぎわの気温を見える化しておきたい方は、置き型の温湿度計を
+    ひとつ置いておくと、朝の冷え込みにも気づきやすくなります。
+  </p>
+  <AmazonLink keyword="キャスター付き 鉢カバー 鉢台" label="Amazonで「キャスター付きの鉢台」を見る" />
+  <AmazonLink keyword="温湿度計 卓上" label="Amazonで「温湿度計」を見る" />
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 早見表。ほかのガイドの比較表と見た目をそろえている
+   * （横罫だけ・囲みの重さを出さない / design.md）。
+   * 和文セルに white-space: nowrap は付けない（付けると文字数がそのまま列の最小幅になり、
+   * SP幅でページごとはみ出す / 3-resources/knowledge/20260920-ja-table-nowrap-breaks-sp.md）。
+   */
+  .bring-indoors-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .bring-indoors-table th,
+  .bring-indoors-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .bring-indoors-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .bring-indoors-table tbody th {
+    font-weight: 600;
+  }
+
+  /* 補足は本文より一段弱く（色を足さずミュートで後退させる / design.md） */
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>

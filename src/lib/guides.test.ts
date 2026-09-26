@@ -32,12 +32,13 @@ test('GUIDES に形式エラーがない（relatedPlants が実在する植物�
   assert.deepEqual(validateGuides(GUIDES, PLANT_SLUGS), []);
 });
 
-test('GUIDES は決定した23本を過不足なく持つ', () => {
+test('GUIDES は決定した24本を過不足なく持つ', () => {
   assert.deepEqual(
     GUIDES.map((g) => g.slug).sort(),
     [
       'after-purchase',
       'beginner-mistakes',
+      'bring-indoors',
       'display-by-plant',
       'display-ideas',
       'entrance-tree',
@@ -182,10 +183,10 @@ test('latestGuides: 同じpublishedDateは配列順（GUIDESの並び順）で�
   );
 });
 
-test('latestGuides: 実際のGUIDESで先頭3本を出すと entrance-tree → display-by-plant → grow-light になる（同日タイブレークの実例）', () => {
+test('latestGuides: 実際のGUIDESで先頭3本を出すと bring-indoors → entrance-tree → display-by-plant になる（同日タイブレークの実例）', () => {
   assert.deepEqual(
     latestGuides(3).map((g) => g.slug),
-    ['entrance-tree', 'display-by-plant', 'grow-light']
+    ['bring-indoors', 'entrance-tree', 'display-by-plant']
   );
 });
 
