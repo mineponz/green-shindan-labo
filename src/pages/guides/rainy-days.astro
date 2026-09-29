@@ -1,0 +1,217 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import TableScroll from '../../components/TableScroll.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('rainy-days')!;
+
+/**
+ * 8種の早見表の「ひとこと」。各植物ページ・既存ガイドの記述の範囲だけを使う
+ * （根拠の無い一般論を足さない / vault: 1-projects/green-lab/tasks/20260929-add-rainy-days-guide.md）。
+ * 植物名・リンクは plants.ts から描き、種数は手書きしない。
+ * ease（乾燥への強さ）を反転した「過湿への強さ」は作らない。
+ */
+const RAINY_NOTES: Record<string, string> = {
+  pachira: '受け皿の水は毎回捨てる。コバエの原因はほぼ「土が常に湿っていること」なので、土の表面を乾かします',
+  monstera: '土は乾かして、空気は湿らせる。葉が重なって風通しが悪いと、虫の隠れ場所になります',
+  sansevieria: '受け皿に水を溜めない。水はけの悪い土だと、水やりを控えても根腐れします',
+  pothos: '湿った土を好むぶん、コバエは出やすめ。表面の土を工夫すると変わります',
+  gajumaru: '日当たりのよい場所で風が通れば安定します。暗いと枝がひょろひょろ伸びます',
+  'areca-palm': '不調の原因はほとんどが水のやりすぎ。大きい鉢はいちど水を含むとなかなか乾きません',
+  peperomia: '鉢が大きすぎると土がいつまでも乾かず、根腐れの原因になります。乾かし気味に育てるのでコバエも出にくいです',
+  tillandsia: '土は使いませんが、濡れたまま風の通らない場所に置くと株の中心から腐ります。水気を切ってしっかり乾かします',
+};
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-rainy-days.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>今年の関東、雨が多い？</h2>
+  <p>
+    ここ数か月、空が重たい日ばかりで、「今年は雨が多いなあ」と私は感じていました。
+    気になって、気象庁の東京のデータを見てみたところ、感覚だけの話ではありませんでした。
+  </p>
+  <p>
+    なかでも目立つのが9月です。月末前の時点で、降水量は平年の<strong>約2.8倍</strong>、
+    日照時間は平年の<strong>約4割</strong>。関東甲信の9月上旬については、気象庁が
+    「降水量は1946年以降でもっとも多く、日照時間は1961年以降でもっとも少ない」
+    と発表しています。6月も平年の約2.6倍、8月も約1.8倍の雨でした。
+  </p>
+  <p>
+    ちなみに7月だけは、雨が平年より少なめでした。夏じゅうずっと降り続けていたわけではなく、
+    とくに雨が多かったのは6月・8月・9月、という年です。
+    （数値は気象庁の東京の観測をもとに丸めています）
+  </p>
+  <p>
+    雨が続くのは外の話、と思いがちですが、室内の鉢も無関係ではいられません。
+    ここでは、雨続きで植物に起きやすいことと、家でできる対処をまとめます。
+  </p>
+
+  <h2>雨続きで起きること3つ</h2>
+  <p>
+    雨の日が続くと、室内の鉢でも次の3つが同時に起きやすくなります。
+  </p>
+  <ul>
+    <li>
+      <strong>土が乾かない。</strong>
+      曇りや雨の日は植物の蒸散（葉から水が出ていくこと）が落ちるので、
+      水を吸う量も減って、鉢の土がなかなか乾きません
+    </li>
+    <li>
+      <strong>光が足りない。</strong>
+      日照不足が続くと、茎がひょろっと間延びする「徒長」や、葉の色が薄くなることがあります
+    </li>
+    <li>
+      <strong>湿気でカビ・コバエが出やすい。</strong>
+      空気も土も湿ったままだと、土の表面にカビが出たり、コバエが増えたりします
+    </li>
+  </ul>
+  <p>
+    この3つは別々の問題に見えて、じつは根っこでつながっています。
+    「雨の日は、いつもより植物が水を使わないし、光ももらえていない」と考えると、
+    次からの対処が腑に落ちやすいと思います。
+  </p>
+
+  <h2>水やりは「日付」ではなく「土の乾き」で</h2>
+  <p>
+    いちばん大事なのは、水やりを「毎週この曜日」と日付で決めないことです。
+    雨が続くと土の乾きが遅くなるので、いつものペースで水をあげると、
+    土がいつまでも湿ったままになってしまいます。私なら、水をあげる前に必ず
+    土の表面を触って、指を2〜3cm入れても乾いているかを確かめます。
+    乾いていなければ、その日はあげずに待ちます。
+  </p>
+  <p>
+    水やりの基本は<a href="/guides/watering/">観葉植物の水やりの頻度と量</a>に、
+    水をあげすぎたときのサインと立て直し方は<a href="/guides/root-rot/">根腐れの見分け方と対処</a>に
+    まとめています。鉢の底穴や素材が水の抜け方に関わることは
+    <a href="/guides/pot-guide/">鉢の選び方ガイド</a>、
+    土の水はけについては<a href="/guides/soil/">観葉植物の土ガイド</a>も参考にしてください。
+  </p>
+  <p>
+    指を入れるのが不安なときは、土の水分計があると目安になります。
+  </p>
+  <AmazonLink keyword="観葉植物 水分計 土壌水分計" label="Amazonで「土の水分計」を見る" />
+
+  <h2>光を補う</h2>
+  <p>
+    雨や曇りの日が続くあいだは、家の中でいちばん明るい窓ぎわに鉢を寄せてあげてください。
+    そして晴れ間がのぞいたら、その時間だけでも窓の近くに置いてあげると、
+    植物もほっとするはずです。
+  </p>
+  <p>
+    それでも足りないときは、育成ライトで補う方法があります。
+    暗い場所でも育てやすい種類は
+    <a href="/guides/low-light-plants/">日当たりが悪い部屋でも育つ観葉植物</a>に、
+    ライトの選び方は<a href="/guides/grow-light/">植物育成ライトの選び方</a>に書いています。
+  </p>
+  <AmazonLink keyword="植物育成ライト 観葉植物" label="Amazonで「植物育成ライト」を見る" />
+
+  <h2>風を通す</h2>
+  <p>
+    湿気がこもると、カビやコバエの出番になります。窓を開けにくい雨の日は、
+    <strong>サーキュレーターで空気を動かす</strong>のがいちばん手軽です。
+    鉢に風を直接強く当てるというより、部屋の空気をゆるく回してあげるイメージです。
+  </p>
+  <p>
+    あわせて、<strong>受け皿にたまった水は毎回捨てて</strong>ください。溜めっぱなしは
+    根腐れとコバエの元になります。ここは、雨続きのときこそ横着しないほうがいいと私は思います。
+  </p>
+  <AmazonLink keyword="サーキュレーター 小型 静音" label="Amazonで「小型サーキュレーター」を見る" />
+  <AmazonLink keyword="観葉植物 受け皿 鉢皿" label="Amazonで「受け皿」を見る" />
+  <p>
+    土の表面に白いふわふわしたものが出ても、多くの場合は植物に大きな害のないカビです。
+    見つけたら、<strong>表面の土を取り除いて新しい土と入れ替え</strong>、風通しをよくしてあげてください。
+    ただ、これは過湿のサインでもあるので、水やりのペースも見直すきっかけにしましょう。
+    コバエが出たときの対処や、葉に出る病気の見分け方は、
+    <a href="/guides/pest-control/">観葉植物の虫対策ガイド</a>と
+    <a href="/guides/plant-diseases/">観葉植物の病気ガイド</a>にまとめています。
+  </p>
+
+  <h2>ベランダ・玄関先の鉢</h2>
+  <p>
+    外に置いている鉢は、雨をまともに受けてしまいます。長雨のあいだは、
+    <strong>軒下など雨の当たりにくい場所へ移して</strong>あげてください。
+    受け皿や鉢底に水が溜まったままにならないよう、
+    <strong>鉢を少し持ち上げて</strong>水の逃げ道をつくっておくのも手です。
+  </p>
+  <p>
+    もうすぐ寒くなる時期でもあるので、部屋に取り込むタイミングは
+    <a href="/guides/bring-indoors/">観葉植物を室内に戻す時期と手順</a>もあわせて読んでみてください。
+  </p>
+
+  <h2>8種でみる、雨続きで気をつけたいこと</h2>
+  <p>
+    このサイトで診断に使っている{PLANTS.length}種について、雨続きのときに気をつけたいことを
+    それぞれの植物ページの内容から拾ってまとめました。
+  </p>
+  <TableScroll label="8種の雨続きで気をつけたいことの早見表">
+    <table class="rainy-days-table">
+      <thead>
+        <tr>
+          <th scope="col">植物</th>
+          <th scope="col">雨続きで気をつけたいこと</th>
+        </tr>
+      </thead>
+      <tbody>
+        {PLANTS.map((plant) => (
+          <tr>
+            <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+            <td>{RAINY_NOTES[plant.slug]}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </TableScroll>
+
+  <h2>迷ったら診断で</h2>
+  <p>
+    雨が多い年は、水やりのペースが読みにくくて疲れますよね。私は、
+    <strong>乾かし気味に育てやすい種類を選んでおく</strong>と気持ちが楽になると思います。
+    <a href="/#diagnosis">4つの質問の診断</a>では、お部屋の日当たりとお世話の手間から
+    合う種類を出せるので、次に迎える一鉢の参考にしてみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 早見表。ほかのガイドの比較表と見た目をそろえている
+   * （横罫だけ・囲みの重さを出さない / design.md）。
+   * 和文セルに white-space: nowrap は付けない（SP幅でページごとはみ出す /
+   * 3-resources/knowledge/20260920-ja-table-nowrap-breaks-sp.md）。
+   */
+  .rainy-days-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .rainy-days-table th,
+  .rainy-days-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .rainy-days-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .rainy-days-table tbody th {
+    font-weight: 600;
+  }
+</style>

@@ -43,6 +43,7 @@ import hyakkinPlantsPhoto from '../assets/photos/hyakkin-plants.jpg';
 import displayByPlantPhoto from '../assets/photos/display-by-plant.jpg';
 import entranceTreePhoto from '../assets/photos/entrance-tree.jpg';
 import bringIndoorsPhoto from '../assets/photos/bring-indoors.jpg';
+import rainyDaysPhoto from '../assets/photos/rainy-days.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -209,6 +210,13 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  *   斑入りの丸葉など、葉の色や形が異なる観葉植物が植わった複数の鉢が寄せて置かれている構図
  *   （種名は断定しない）。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず
  *   `GUIDE_PHOTOS`だけで持っている
+ * - 雨続きガイド（2026-09-30追加）＝**この記事のためだけに新規調達した写真**
+ *   （`src/assets/photos/rainy-days.jpg`）。雨粒の付いた窓を背景にした窓辺の鉢植えが必要で、
+ *   既存の写真には無い構図のため新規調達した。原本は1600×2844の縦長で、4:3の中央よりやや
+ *   上寄り（縦オフセット1000px）で切り出している。切り出しコマンドはCREDITS.mdに記載。
+ *   雨粒の付いた窓を背景に、白い縞の入った細長い葉と、小さな丸い葉を茂らせた細い茎の鉢植えが
+ *   窓辺に並ぶ構図（種名は断定しない）。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず
+ *   `GUIDE_PHOTOS`だけで持っている。全体に緑がかった色調の写真
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -280,6 +288,10 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'bring-indoors': {
     src: bringIndoorsPhoto,
     alt: '逆光ぎみの窓を背景に、赤黒い光沢のあるハート形の葉、黄緑の細長い葉、斑入りの丸葉など、葉の色や形が異なる観葉植物の鉢が窓辺に何鉢も寄せて置かれている様子',
+  },
+  'rainy-days': {
+    src: rainyDaysPhoto,
+    alt: '雨粒がびっしり付いた窓を背景に、白い縞の入った細長い葉や、小さな丸い葉をつけた細い茎の鉢植えが窓辺に並んでいる様子',
   },
 };
 

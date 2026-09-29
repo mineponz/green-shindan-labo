@@ -34,6 +34,7 @@
 | `display-by-plant.jpg` | 種類別の飾り方ガイド記事の見出し（`GUIDE_PHOTOS['display-by-plant']`） | Skylar Kang（Pexels） | https://images.pexels.com/photos/6207298/pexels-photo-6207298.jpeg を`sips -c 1200 1600 --cropOffset 500 0`で切り出し（下記） |
 | `entrance-tree.jpg` | 玄関の木の選び方ガイド記事の見出し（`GUIDE_PHOTOS['entrance-tree']`） | Sergej Karpow（Pexels: @strannik-sk） | https://images.pexels.com/photos/37122470/pexels-photo-37122470.jpeg を`sips -c 1200 1600 --cropOffset 780 0`で切り出し（下記） |
 | `bring-indoors.jpg` | 秋の取り込みガイド記事の見出し（`GUIDE_PHOTOS['bring-indoors']`） | Katarzyna Modrzejewska（Pexels: @katarzyna-modrzejewska-495044） | https://images.pexels.com/photos/7928742/pexels-photo-7928742.jpeg を`sips -c 1200 1600 --cropOffset 600 0`で切り出し（下記） |
+| `rainy-days.jpg` | 雨続きのときのケアガイド記事の見出し（`GUIDE_PHOTOS['rainy-days']`） | amir selfish（Pexels） | https://images.pexels.com/photos/33826014/pexels-photo-33826014.jpeg を`sips -c 1200 1600 --cropOffset 1000 0`で切り出し（下記） |
 
 - 2026-08-13: 管理者の指示（「もっときれいめに」、参考: livingorchid.comの商品写真のような
   明るい・背景がすっきりした雰囲気）で全6枚を差し替え。旧版（暗め・生活感のある写真）から、
@@ -182,6 +183,13 @@
   プラ鉢が窓辺に寄せて置かれている構図（**種名は断定しない**。写っている植物の正確な種はサイト本文
   では言及しない）。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで
   持っている。
+- 2026-09-30: ガイド記事25本目（雨続きのときのケア）用に`rainy-days.jpg`を1枚追加。雨粒の付いた窓と
+  窓辺の鉢植えが必要で、既存写真に無い構図のため新規調達。検索は`r.jina.ai`経由の読み取りプロキシ
+  （vault: 3-resources/knowledge/20260830-pexels-search-cloudflare-workaround.md）。取得日は2026-09-30、
+  `?auto=compress&cs=tinysrgb&w=1600`付きで取得（原本1600×2844）。**構図を切り出している**（縦長原本から
+  4:3を縦オフセット1000pxで切り出し）。ページ: https://www.pexels.com/photo/indoor-plants-by-rainy-window-with-raindrops-33826014/
+  。ライセンスはPexels License。全体に緑がかった色調の写真（種名は断定しない）。植物の種の紹介写真では
+  ないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
 - 取得日: 2026-08-13（`?auto=compress&cs=tinysrgb&w=1600` を付けて長辺1600pxで取得）
 - 表示は `<Image>`（astro:assets）経由。リサイズとWebP変換はビルド時に走るので、
   ここに置く原本は加工せずそのまま残しておく。
