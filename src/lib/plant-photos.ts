@@ -44,6 +44,9 @@ import displayByPlantPhoto from '../assets/photos/display-by-plant.jpg';
 import entranceTreePhoto from '../assets/photos/entrance-tree.jpg';
 import bringIndoorsPhoto from '../assets/photos/bring-indoors.jpg';
 import rainyDaysPhoto from '../assets/photos/rainy-days.jpg';
+import longWeekendPhoto from '../assets/photos/long-weekend.jpg';
+import soilDisposalPhoto from '../assets/photos/soil-disposal.jpg';
+import giftPlantsPhoto from '../assets/photos/gift-plants.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -217,6 +220,10 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  *   雨粒の付いた窓を背景に、白い縞の入った細長い葉と、小さな丸い葉を茂らせた細い茎の鉢植えが
  *   窓辺に並ぶ構図（種名は断定しない）。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず
  *   `GUIDE_PHOTOS`だけで持っている。全体に緑がかった色調の写真
+ * - 3連休のお手入れ・古い土の捨て方・贈り物ガイド（2026-10-03追加）＝**それぞれ新規調達した写真**
+ *   （`long-weekend.jpg` / `soil-disposal.jpg` / `gift-plants.jpg`）。soil-disposalとgift-plantsは縦長原本から
+ *   4:3に切り出している。切り出しの詳細と出典はCREDITS.mdに記載。種名は断定しない。
+ *   植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -292,6 +299,18 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'rainy-days': {
     src: rainyDaysPhoto,
     alt: '雨粒がびっしり付いた窓を背景に、白い縞の入った細長い葉や、小さな丸い葉をつけた細い茎の鉢植えが窓辺に並んでいる様子',
+  },
+  'long-weekend': {
+    src: longWeekendPhoto,
+    alt: '明るい室内で、細長い緑の葉をつけた観葉植物の葉を、手に持った布でやさしく拭いている様子',
+  },
+  'soil-disposal': {
+    src: soilDisposalPhoto,
+    alt: '白い布の上に、土の入った半透明のバケツとスコップ、重ねた空の鉢が置かれている様子',
+  },
+  'gift-plants': {
+    src: giftPlantsPhoto,
+    alt: 'ピンクのリボンを結んだ白い陶器の鉢に、白と薄いピンクの斑が入った葉の植物が植わり、両手で差し出されている様子',
   },
 };
 

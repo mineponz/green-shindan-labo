@@ -1,0 +1,240 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import TableScroll from '../../components/TableScroll.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('gift-plants')!;
+
+/**
+ * 贈り物向けの早見表は、手がかからない順（attributes.ease の降順、同点は PLANTS の配列順）。
+ * 種数・順位・ペットの安全性は plants.ts から描き、本文に手書きしない
+ * （診断結果と記事がずれないように / AGENTS.md）。
+ * Array.prototype.sort は安定ソートなので、同点は配列順のまま残る。
+ */
+const rankedByEase = [...PLANTS].sort((a, b) => b.attributes.ease - a.attributes.ease);
+const maxEase = rankedByEase[0].attributes.ease;
+const easiest = rankedByEase.filter((plant) => plant.attributes.ease === maxEase);
+const petSafePlants = PLANTS.filter((plant) => plant.petSafe);
+const tillandsia = PLANTS.find((plant) => plant.slug === 'tillandsia');
+
+// 「暗めの部屋でも育ちやすい」と書く基準（shade は 1〜5）。low-light-plants の上位と同じ向きの数値
+const SHADE_OK = 4;
+
+const joinNames = (list: { name: string }[]) => list.map((plant) => plant.name).join('・');
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-gift-plants.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>植物の贈り物は「相手の部屋に合うか」がすべて</h2>
+  <p>
+    贈り物の観葉植物は、見た目の立派さより、<strong>相手の部屋と暮らしに合っているか</strong>のほうが
+    ずっと大事だと私は思います。どんなにすてきな一鉢でも、置く場所が暗すぎたり、
+    世話の時間が取れなかったりすると、もらった側が申し訳ない気持ちになってしまいますよね。
+  </p>
+  <p>
+    ここでは、贈る前に確かめておきたいことから順に、場面ごとの気づかい、
+    手のかからない種類の選び方までをまとめました。
+  </p>
+
+  <h2>贈る前に確かめておきたい3つ</h2>
+  <p>
+    相手のことを考えるとき、私なら次の3つが気になります。
+  </p>
+  <ul>
+    <li>
+      <strong>置き場所の日当たり。</strong>
+      窓の近くなのか、少し暗めの部屋なのかで、合う種類が変わります
+    </li>
+    <li>
+      <strong>世話にかけられる手間。</strong>
+      忙しい人や、植物を育てるのがはじめての人には、手がかからない種類のほうが安心です
+    </li>
+    <li>
+      <strong>ペットや小さな子どもがいるか。</strong>
+      いるなら、種類選びの条件がひとつ増えます
+    </li>
+  </ul>
+  <p>
+    じつはこの3つ、このサイトの<a href="/#diagnosis">診断</a>の質問と同じ軸です。
+    相手の部屋の様子が分かるなら、<strong>相手になったつもりで診断に答えてみる</strong>のも
+    ひとつの手だと思います。贈る人の好みではなく、相手の条件から選べるので、
+    迷いがぐっと減ります。
+  </p>
+  <p>
+    とはいえ、「お部屋の日当たりはどう？」とは直接聞きにくいこともありますよね。
+    そんなときは、分からない部分を<strong>いちばん厳しい条件に合わせておく</strong>のが私の考え方です。
+    つまり、暗めの部屋でも育ちやすくて、手がかからない種類に寄せておきます。
+    日当たりの悪い部屋に向く種類は
+    <a href="/guides/low-light-plants/">日当たりが悪い部屋でも育つ観葉植物</a>にまとめています。
+  </p>
+
+  <h2>大きさの目安は、相手の負担も考えて</h2>
+  <p>
+    植木鉢の大きさは「号」という単位で表されます。<strong>1号が直径約3cm</strong>で、
+    3号なら約9cm、5号なら約15cm、というふうに、号が1つ上がるごとに3cmずつ大きくなります。
+    これは園芸の世界で広く使われている目安で、公的な規格ではありません。
+  </p>
+  <p>
+    大きい鉢のほうが贈り物として見栄えはします。ただ、運ぶのも、置き場所を空けるのも、
+    もらった側の負担になります。私なら、相手の部屋の広さが分からないときは、
+    少し控えめな大きさを選んで、「置く場所に困らせないこと」を優先したいです。
+  </p>
+
+  <h2>場面ごとの気づかい</h2>
+  <h3>引っ越し祝い・新築祝い</h3>
+  <p>
+    新築祝いなどでは、赤い花や赤いものは「火を連想させる」として避ける慣習が広く紹介されています。
+    その点、葉を楽しむ観葉植物は色の心配が少なくて、選びやすい贈り物だと思います。
+  </p>
+  <h3>開店祝い・開業祝い</h3>
+  <p>
+    立て札は、「祝 御開店」などの表書きに、贈り主の名前を添える形が一般的と言われています。
+    開店祝いの赤については、避けたほうがいいとするお店と、そこまで気にしなくていいとするお店があって、
+    見解が分かれているようです。気になるなら避けておけば十分、くらいの気持ちでいいと私は思います。
+  </p>
+  <h3>お見舞い</h3>
+  <p>
+    お見舞いに鉢植えは、「根付く」が「寝付く」に通じるとして、昔から避けられてきたと言われています。
+    それに、病院によっては鉢植えの持ち込み自体ができないこともあるそうです。
+    なので正直なところ、<strong>お見舞いには向かない</strong>と私は思います。
+  </p>
+
+  <h2>{PLANTS.length}種から選ぶなら</h2>
+  <p>
+    このサイトの診断で扱っている{PLANTS.length}種を、<strong>手がかからない順</strong>に並べました。
+    「手がかからなさ」は5段階の数字で、診断と同じデータから出しています。
+  </p>
+  <TableScroll label={`${PLANTS.length}種の手がかからなさ・暗めの部屋・ペットの早見表`}>
+    <table class="gift-plants-table">
+      <thead>
+        <tr>
+          <th scope="col">植物</th>
+          <th scope="col">手がかからなさ</th>
+          <th scope="col">暗めの部屋</th>
+          <th scope="col">ペット</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rankedByEase.map((plant) => (
+          <tr>
+            <th scope="row">
+              <a href={`/plants/${plant.slug}/`}>{plant.name}</a>
+              {plant.slug === 'tillandsia' && <span class="note">土も鉢も使わない</span>}
+            </th>
+            <td>{plant.attributes.ease} / 5</td>
+            <td>{plant.attributes.shade >= SHADE_OK ? '向いている' : '明るさがほしい'}</td>
+            <td>{plant.petSafe ? '非毒性とされている' : '届かない場所に'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </TableScroll>
+  <p>
+    いちばん手がかからないのは、{joinNames(easiest)}です（5段階で{maxEase}）。
+    忙しい人や、植物をはじめて迎える人への贈り物には、この辺りから選ぶと安心だと私は思います。
+  </p>
+  <p>
+    ペットがいる相手なら、非毒性とされている{joinNames(petSafePlants)}から選ぶのがいいと思います。
+    これは一般に知られている情報のまとめで、「絶対に安全」と言い切れるものではありません。
+    誤食が心配な相手には、<a href="/guides/pet-safe-plants/">ペットに安全な観葉植物の選び方</a>も
+    あわせて読んでもらえるとうれしいです。
+  </p>
+  {tillandsia && (
+    <p>
+      {tillandsia.name}だけは、鉢植えとは勝手が違う贈り物です。
+      土も鉢も使わないので、鉢を置く場所がない部屋にも、雑貨のように飾れます。
+      そのかわり、水やりは霧吹きが基本で、風の通る場所に置いてあげる必要があります。
+      詳しくは<a href={`/plants/${tillandsia.slug}/`}>{tillandsia.name}の紹介</a>に書いています。
+    </p>
+  )}
+
+  <h2>いっしょに渡すと親切なもの</h2>
+  <p>
+    植物だけを渡すより、短い育て方メモを添えてあげると、もらった人はきっとほっとします。
+    私なら、次の2つは書いておきたいです。
+  </p>
+  <ul>
+    <li>
+      水やりは、日付ではなく<strong>土が乾いてから</strong>。
+      くわしくは<a href="/guides/watering/">観葉植物の水やりの頻度と量</a>に
+    </li>
+    <li>
+      もらってすぐに、植え替えなくて大丈夫。
+      <a href="/guides/after-purchase/">買ってきたら最初にやることガイド</a>も参考になります
+    </li>
+  </ul>
+  <p>
+    あとは、受け皿と鉢カバーも、あると助かる贈り物です。
+    鉢カバーの選び方は<a href="/guides/pot-guide/">鉢の選び方ガイド</a>にまとめています。
+  </p>
+  <AmazonLink keyword="鉢カバー 観葉植物 おしゃれ" label="Amazonで「鉢カバー」を見る" />
+  <AmazonLink keyword="観葉植物 受け皿 鉢皿" label="Amazonで「受け皿」を見る" />
+  <AmazonLink keyword="観葉植物 ギフト" label="Amazonで「観葉植物 ギフト」を見る" />
+
+  <h2>花言葉は、こだわりすぎなくていい</h2>
+  <p>
+    贈り物だと、花言葉も気になりますよね。ただ、花言葉には公的な決まりがなく、
+    お店や図鑑によって書いてあることが違います。よく紹介されるものとして、
+    パキラは「快活」「勝利」、モンステラは「うれしい便り」、ガジュマルは「健康」、
+    サンスベリアは「永久」「不滅」、ポトスは「永遠の富」などと紹介されることが多いようです。
+    気持ちを込める手がかりとして添えるくらいで十分で、私はこだわりすぎなくていいと思います。
+  </p>
+
+  <h2>迷ったら診断で</h2>
+  <p>
+    相手の部屋の日当たりと、世話にかけられる手間が分かるなら、
+    <a href="/#diagnosis">4つの質問の診断</a>に相手になったつもりで答えてみてください。
+    合う種類が分かれば、贈り物選びの迷いはだいぶ軽くなるはずです。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 早見表。ほかのガイドの比較表と見た目をそろえている
+   * （横罫だけ・囲みの重さを出さない / design.md）。
+   * 和文セルに white-space: nowrap は付けない（SP幅でページごとはみ出す /
+   * 3-resources/knowledge/20260920-ja-table-nowrap-breaks-sp.md）。
+   */
+  .gift-plants-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .gift-plants-table th,
+  .gift-plants-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .gift-plants-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .gift-plants-table tbody th {
+    font-weight: 600;
+  }
+  .gift-plants-table .note {
+    display: block;
+    color: var(--muted);
+    font-size: var(--text-sm);
+    font-weight: 400;
+  }
+</style>

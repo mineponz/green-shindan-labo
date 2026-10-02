@@ -1,0 +1,308 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import TableScroll from '../../components/TableScroll.astro';
+import { findGuide } from '../../lib/guides.ts';
+
+const guide = findGuide('long-weekend')!;
+
+/**
+ * 3日間の段取り早見表。各行の内容は本文と同じ範囲だけ（既存ガイドの記述に合わせる）。
+ * 所要時間は根拠が無いので載せない
+ * （vault: 1-projects/green-lab/tasks/20261003-add-long-weekend-and-two-guides.md）。
+ */
+const PLAN_ROWS = [
+  {
+    day: '1日目',
+    todo: '全部の鉢を見て回る。枯れた葉を取り、葉のホコリを拭き、受け皿を洗う',
+    links: [
+      { href: '/guides/leaf-problems/', label: '葉の異変' },
+      { href: '/guides/pest-control/', label: '虫対策' },
+      { href: '/guides/plant-diseases/', label: '病気' },
+      { href: '/guides/root-rot/', label: '根腐れ' },
+    ],
+  },
+  {
+    day: '2日目',
+    todo: '冬に向けた支度。外の鉢を戻す段取り、置き場所と水やり間隔の見直し、肥料は最後の一回、明るさが足りなければ育成ライト',
+    links: [
+      { href: '/guides/bring-indoors/', label: '室内に戻す時期と手順' },
+      { href: '/guides/seasonal-care/', label: '夏越し・冬越し' },
+      { href: '/guides/watering/', label: '水やり' },
+      { href: '/guides/fertilizer/', label: '肥料' },
+      { href: '/guides/grow-light/', label: '育成ライト' },
+    ],
+  },
+  {
+    day: '3日目',
+    todo: '模様替えを楽しむ。高さを散らす、鉢や鉢カバーの見た目をそろえる',
+    links: [
+      { href: '/guides/display-ideas/', label: '飾り方' },
+      { href: '/guides/display-by-plant/', label: '種類別の飾り方' },
+      { href: '/guides/pot-guide/', label: '鉢の選び方' },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-long-weekend.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>連休は「まとめてやる」のにちょうどいい</h2>
+  <p>
+    ふだんの平日は、どうしても水やりだけで終わってしまいがちです。
+    鉢を一つずつじっくり見る時間なんて、なかなか取れませんよね。
+    だから私は、秋の3連休を「まとめてお世話する日」にするのがちょうどいいと思っています。
+  </p>
+  <p>
+    ただ、全部を1日で片づけようとすると、きっと途中で気が重くなります。
+    なので、<strong>1日目は点検と掃除、2日目は冬支度、3日目は模様替え</strong>の3つに分けてみてください。
+    1日にやることを絞れば、無理なく進められると思います。
+  </p>
+  <TableScroll label="3日間の段取り早見表">
+    <table class="long-weekend-table">
+      <thead>
+        <tr>
+          <th scope="col">日</th>
+          <th scope="col">やること</th>
+          <th scope="col">詳しい記事</th>
+        </tr>
+      </thead>
+      <tbody>
+        {PLAN_ROWS.map((row) => (
+          <tr>
+            <th scope="row">{row.day}</th>
+            <td>{row.todo}</td>
+            <td>
+              {row.links.map((link, i) => (
+                <>
+                  {i > 0 && '・'}
+                  <a href={link.href}>{link.label}</a>
+                </>
+              ))}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </TableScroll>
+
+  <h2>1日目: 全部の鉢を見て回る（点検と掃除）</h2>
+  <p>
+    最初の日は、手を動かす前に「見る」ところから始めます。全部の鉢を順番に見て回ってください。
+    見るのは次のところです。
+  </p>
+  <ul>
+    <li><strong>葉の表と裏。</strong>いつもと違うところがないか</li>
+    <li><strong>茎。</strong>ひょろっと間のびしていないか</li>
+    <li><strong>土の表面。</strong>カビやコバエが出ていないか</li>
+    <li><strong>鉢底。</strong>穴から根がはみ出していないか</li>
+    <li><strong>受け皿。</strong>水が溜まったままになっていないか</li>
+  </ul>
+  <p>
+    ここで枯れてしまった葉を見つけたら、取ってあげましょう。
+    枯れた葉を取り除くくらいなら、冬でも構いません（くわしくは
+    <a href="/guides/pruning/">剪定ガイド</a>に書いています）。
+    ひととおり見終わるころには、どの鉢が元気で、どの鉢が気がかりか、だいぶ頭に入っているはずです。
+  </p>
+
+  <h3>葉のホコリを拭く</h3>
+  <p>
+    点検のついでに、葉のホコリも落としてしまいましょう。やり方は、
+    <strong>水で湿らせた柔らかい布で、葉を一枚ずつ拭く</strong>だけです。
+    屋外でシャワーをかけて流す方法もありますが、これは暖かい季節向きです。
+    涼しくなってからは株を冷やしてしまうので、私は布のほうが安心だと思います。
+  </p>
+  <p>
+    ホコリを落とすのは、見た目のためだけではありません。ホコリがたまった葉は乾燥していて、
+    ハダニが出やすい状態にあると園芸メーカーが解説しています。
+    霧吹きで葉に水をかける「葉水」にも、ホコリを落とす効果があります。
+  </p>
+  <AmazonLink keyword="マイクロファイバークロス 柔らかい 拭き掃除" label="Amazonで「やわらかい布（マイクロファイバークロス）」を見る" />
+  <AmazonLink keyword="霧吹き 園芸 スプレーボトル 葉水" label="Amazonで「葉水用の霧吹き」を見る" />
+
+  <h3>牛乳やビールで拭くのは、やめておきます</h3>
+  <p>
+    ツヤが出ると言われて、牛乳やビールで葉を拭く方法を目にすることがあります。
+    けれど、園芸メディアでは注意点が複数挙がっています。
+    葉裏を拭くと気孔（葉の呼吸の穴）をふさいでしまうこと、糖分が虫を呼ぶこと、
+    時間が経つとにおいやカビの元になること。この3つです。
+    私なら、ふつうに湿らせた布で拭くだけにしておきます。
+  </p>
+  <p>
+    葉のツヤ出しスプレーを使うなら、製品の説明書のとおりに、葉の表面だけにしてください。
+    使いすぎると油分が葉に染み込んで、シミや枯れの原因になることがあるそうです。
+  </p>
+
+  <h3>受け皿を洗って、溜まった水を捨てる</h3>
+  <p>
+    最後に受け皿です。溜まった水は捨てて、受け皿を洗っておきましょう。
+    溜めっぱなしの水は、根腐れの元にも虫の発生源にもなります。
+    受け皿が古くなっていたら、この機会に替えるのもいいですね。
+  </p>
+  <AmazonLink keyword="観葉植物 受け皿 鉢皿" label="Amazonで「受け皿」を見る" />
+
+  <h3>見つけたものは、ここで調べる</h3>
+  <p>
+    点検で気になるものが見つかったら、次のガイドを開いてみてください。
+    見つけた時点で分かっていれば、慌てずに済みます。
+  </p>
+  <ul>
+    <li>葉の色や形がおかしい → <a href="/guides/leaf-problems/">葉の異変ガイド</a></li>
+    <li>虫がいる → <a href="/guides/pest-control/">観葉植物の虫対策ガイド</a></li>
+    <li>斑点や変色が病気っぽい → <a href="/guides/plant-diseases/">観葉植物の病気ガイド</a></li>
+    <li>土がずっと湿っている → <a href="/guides/root-rot/">根腐れの見分け方と対処</a></li>
+  </ul>
+
+  <h2>2日目: 冬に向けた支度</h2>
+  <p>
+    2日目は、これから来る冬のための準備です。やることが多く見えますが、
+    詳しい手順はそれぞれのガイドに任せて、ここでは「何を見直すか」だけを書いておきます。
+  </p>
+
+  <h3>外に出している鉢を戻す段取りを決める</h3>
+  <p>
+    夏のあいだベランダや庭に出していた鉢がある人は、室内に戻す段取りを考えておきましょう。
+    戻しはじめる気温の目安や手順は
+    <a href="/guides/bring-indoors/">観葉植物を室内に戻す時期と手順</a>にまとめています。
+    数字はそちらを見てもらうのが確実です。
+  </p>
+
+  <h3>置き場所を見直す</h3>
+  <p>
+    窓ぎわは、日中は暖かくても夜になるとガラス面がかなり冷えます。
+    <strong>葉が窓ガラスに触れないようにして、夜は少し部屋の内側へ寄せて</strong>あげると安心です。
+    もうひとつ、エアコンやヒーターの<strong>風が直接当たる場所</strong>も避けてください。
+    乾燥して葉が傷みやすくなります。冬の置き場所の考え方は
+    <a href="/guides/seasonal-care/">観葉植物の夏越し・冬越しガイド</a>にもあります。
+  </p>
+
+  <h3>水やりの間隔を見直す</h3>
+  <p>
+    寒くなるほど、土は乾きにくくなります。夏と同じペースで水をあげていると、
+    土がいつまでも湿ったままになってしまいます。
+    私は、<strong>カレンダーではなく土を確かめてから</strong>あげるのがいちばん確実だと思います。
+    基本は<a href="/guides/watering/">観葉植物の水やりの頻度と量</a>を見てください。
+  </p>
+
+  <h3>肥料は10月ごろを最後に</h3>
+  <p>
+    肥料は、10月ごろを最後にして、それ以降は足さずに冬へ送り出してあげてください。
+    10月の連休なら、その「最後の一回」を済ませるのにちょうどいいタイミングだと思います。
+    もう11月に入っているなら、今年のぶんはおしまいで大丈夫です。
+    与え方は<a href="/guides/fertilizer/">観葉植物の肥料ガイド</a>にまとめています。
+  </p>
+
+  <h3>明るさが足りない場所には育成ライト</h3>
+  <p>
+    冬は日が短くなって、部屋の中も暗くなりがちです。窓から離れた場所に置いている鉢は、
+    育成ライトで補う方法があります。選び方は
+    <a href="/guides/grow-light/">植物育成ライトの選び方</a>に書いています。
+  </p>
+
+  <h2>3日目: 模様替えを楽しむ</h2>
+  <p>
+    最後の日は、お世話というより楽しむ日にしましょう。
+    点検して、きれいに拭いて、冬支度も終わったら、あとは気持ちよく飾り直すだけです。
+  </p>
+  <p>
+    <strong>高さを散らす</strong>と、鉢がごちゃっと見えにくくなります。
+    <strong>鉢や鉢カバーの色や素材をそろえる</strong>のも、それだけでまとまって見えます。
+    くわしくは<a href="/guides/display-ideas/">観葉植物の飾り方ガイド</a>、
+    種類ごとの合わせ方は<a href="/guides/display-by-plant/">種類別の飾り方</a>、
+    鉢の選び方は<a href="/guides/pot-guide/">鉢の選び方ガイド</a>が参考になります。
+  </p>
+  <AmazonLink keyword="鉢カバー 観葉植物 おしゃれ" label="Amazonで「鉢カバー」を見る" />
+  <p>
+    ひとつだけ、動かすときの注意です。植物は、その場所の光や温度に合わせて、
+    時間をかけて体をつくり変えていきます。数日おきに環境が変わると、
+    そのたびに調整をやり直すことになってしまいます。
+    模様替えが楽しいのは私もよく分かりますが、
+    <strong>置き場所を変えるのは今回の1回にして、落ち着ける場所が見つかったら基本は動かさない</strong>
+    ようにしてあげてください。
+    理由は<a href="/guides/beginner-mistakes/#moving">初心者がやりがちなNG行動</a>の「置き場所をころころ変える」に書いています。
+  </p>
+
+  <h2>秋の連休には、あえてやらないこと</h2>
+  <p>
+    連休は時間があるぶん、「ついでに植え替えも」「伸びた枝も切ってしまおう」と思いがちです。
+    でも、ここはぐっとこらえて春まで待つのがいいと私は思います。
+  </p>
+  <ul>
+    <li>
+      <strong>植え替え。</strong>生長期（おおよそ5〜9月）の作業です。
+      <a href="/guides/repotting/">植え替えガイド</a>を見てください
+    </li>
+    <li>
+      <strong>強い剪定。</strong>生きている枝を切るのは暖かくなってから。
+      <a href="/guides/pruning/">剪定ガイド</a>に書いています
+    </li>
+    <li>
+      <strong>挿し木。</strong>これも生長期の作業です。
+      <a href="/guides/propagation/">挿し木・水挿しガイド</a>を見てください
+    </li>
+  </ul>
+  <p>
+    9月のうちならまだ生長期のうちですが、10月に入ってからの連休は、
+    「手を入れる」より「冬に備えて整える」ほうにまわす時期だと思っています。
+    鉢底から根がはみ出していた鉢も、あわてて植え替えずに、春いちばんの予定に入れておけば十分です。
+    やりたい気持ちは、春の楽しみに取っておきましょう。
+  </p>
+
+  <h2>連休に出かける人へ</h2>
+  <p>
+    旅行や帰省で家を空ける人は、留守中の水やりが気になりますよね。
+    出かける前のやり方は
+    <a href="/guides/travel-watering/">留守中・旅行中の水やり対策</a>にまとめています。
+    点検は出発前の1日目に済ませておくと、気持ちよく出かけられると思います。
+  </p>
+
+  <h2>時間が余ったら、診断で次の一鉢</h2>
+  <p>
+    もし時間が余ったら、次に迎える一鉢を考えてみるのも楽しいですよ。
+    <a href="/#diagnosis">4つの質問の診断</a>では、お部屋の日当たりとお世話の手間から
+    合う種類を出せるので、よかったら試してみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 3日間の段取り早見表。ほかのガイドの比較表と見た目をそろえている
+   * （横罫だけ・囲みの重さを出さない / design.md）。
+   * 和文セルに white-space: nowrap は付けない（SP幅でページごとはみ出す /
+   * 3-resources/knowledge/20260920-ja-table-nowrap-breaks-sp.md）。
+   */
+  .long-weekend-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .long-weekend-table th,
+  .long-weekend-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .long-weekend-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .long-weekend-table tbody th {
+    font-weight: 600;
+  }
+</style>

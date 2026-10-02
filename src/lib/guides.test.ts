@@ -32,7 +32,7 @@ test('GUIDES に形式エラーがない（relatedPlants が実在する植物�
   assert.deepEqual(validateGuides(GUIDES, PLANT_SLUGS), []);
 });
 
-test('GUIDES は決定した25本を過不足なく持つ', () => {
+test('GUIDES は決定した28本を過不足なく持つ', () => {
   assert.deepEqual(
     GUIDES.map((g) => g.slug).sort(),
     [
@@ -43,10 +43,12 @@ test('GUIDES は決定した25本を過不足なく持つ', () => {
       'display-ideas',
       'entrance-tree',
       'fertilizer',
+      'gift-plants',
       'grow-light',
       'hyakkin-plants',
       'hydroculture',
       'leaf-problems',
+      'long-weekend',
       'low-light-plants',
       'pest-control',
       'pet-safe-plants',
@@ -59,6 +61,7 @@ test('GUIDES は決定した25本を過不足なく持つ', () => {
       'root-rot',
       'seasonal-care',
       'soil',
+      'soil-disposal',
       'travel-watering',
       'watering',
     ]
@@ -184,10 +187,10 @@ test('latestGuides: 同じpublishedDateは配列順（GUIDESの並び順）で�
   );
 });
 
-test('latestGuides: 実際のGUIDESで先頭3本を出すと rainy-days → bring-indoors → entrance-tree になる（同日タイブレークの実例）', () => {
+test('latestGuides: 実際のGUIDESで先頭3本を出すと long-weekend → soil-disposal → gift-plants になる（同日タイブレークの実例）', () => {
   assert.deepEqual(
     latestGuides(3).map((g) => g.slug),
-    ['rainy-days', 'bring-indoors', 'entrance-tree']
+    ['long-weekend', 'soil-disposal', 'gift-plants']
   );
 });
 

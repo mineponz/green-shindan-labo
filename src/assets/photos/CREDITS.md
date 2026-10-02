@@ -35,6 +35,9 @@
 | `entrance-tree.jpg` | 玄関の木の選び方ガイド記事の見出し（`GUIDE_PHOTOS['entrance-tree']`） | Sergej Karpow（Pexels: @strannik-sk） | https://images.pexels.com/photos/37122470/pexels-photo-37122470.jpeg を`sips -c 1200 1600 --cropOffset 780 0`で切り出し（下記） |
 | `bring-indoors.jpg` | 秋の取り込みガイド記事の見出し（`GUIDE_PHOTOS['bring-indoors']`） | Katarzyna Modrzejewska（Pexels: @katarzyna-modrzejewska-495044） | https://images.pexels.com/photos/7928742/pexels-photo-7928742.jpeg を`sips -c 1200 1600 --cropOffset 600 0`で切り出し（下記） |
 | `rainy-days.jpg` | 雨続きのときのケアガイド記事の見出し（`GUIDE_PHOTOS['rainy-days']`） | amir selfish（Pexels） | https://images.pexels.com/photos/33826014/pexels-photo-33826014.jpeg を`sips -c 1200 1600 --cropOffset 1000 0`で切り出し（下記） |
+| `long-weekend.jpg` | 3連休のお手入れガイド記事の見出し（`GUIDE_PHOTOS['long-weekend']`） | cottonbro studio（Pexels） | https://images.pexels.com/photos/7407942/pexels-photo-7407942.jpeg（加工なし・1600×1067） |
+| `soil-disposal.jpg` | 古い土の捨て方ガイド記事の見出し（`GUIDE_PHOTOS['soil-disposal']`） | Teona Swift（Pexels） | https://images.pexels.com/photos/6913414/pexels-photo-6913414.jpeg を縦オフセット700pxで4:3（1600×1200）に切り出し（下記） |
+| `gift-plants.jpg` | 贈り物の観葉植物ガイド記事の見出し（`GUIDE_PHOTOS['gift-plants']`） | Amar Preciado（Pexels） | https://images.pexels.com/photos/11121423/pexels-photo-11121423.jpeg を縦オフセット750pxで4:3（1600×1200）に切り出し（下記） |
 
 - 2026-08-13: 管理者の指示（「もっときれいめに」、参考: livingorchid.comの商品写真のような
   明るい・背景がすっきりした雰囲気）で全6枚を差し替え。旧版（暗め・生活感のある写真）から、
@@ -196,3 +199,16 @@
 - alt文言とどのslugに使うかは `src/lib/plant-photos.ts` が持っている。
   写真を差し替えたら **altも中身に合わせて必ず直す**（写っているものが変わるため）。
 - 素材を追加するときは、この表に1行足してから使うこと。
+- 2026-10-03: ガイド記事26〜28本目用に3枚追加（いずれも新規調達・Pexels License・取得日2026-10-03、
+  `?auto=compress&cs=tinysrgb&w=1600`付き。検索は`r.jina.ai`経由）。種名は断定しない。植物の種の紹介写真では
+  ないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
+  - `long-weekend.jpg`: 布で観葉植物の細長い葉を拭く手元。ページ: https://www.pexels.com/photo/a-person-wiping-a-plant-with-a-cloth-7407942/
+    （加工なし）
+  - `soil-disposal.jpg`: 土の入った半透明のバケツ・スコップ・重ねた空の鉢が白い布の上にある構図。
+    ページ: https://www.pexels.com/photo/bucket-of-soil-with-gardening-tools-and-plant-6913414/
+    **構図を切り出している**（原本1600×2400の縦長から、バケツと空の鉢が収まる範囲を縦オフセット700pxで
+    4:3=1600×1200に切り出し。ImageMagick/sipsではなくPython PILの`crop((0,700,1600,1900))`）
+  - `gift-plants.jpg`: ピンクのリボンを結んだ白い陶器の鉢に植わった斑入りの葉の植物を、両手で差し出している構図
+    （顔は写らない）。ページ: https://www.pexels.com/photo/a-plant-in-a-white-ceramic-vase-11121423/
+    **構図を切り出している**（原本1600×2400の縦長から縦オフセット750pxで4:3に切り出し。植物の上部と
+    鉢の下部は枠外になる）
