@@ -1,0 +1,243 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import TableScroll from '../../components/TableScroll.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('airflow')!;
+
+/**
+ * 8種の早見表の「ひとこと」。各植物ページ・既存ガイド（雨続き・虫対策・夏越し冬越し・病気・根腐れ）に
+ * 書いてある範囲だけを、風通しの観点で言い直している（新しい事実を足さない /
+ * vault: 1-projects/green-lab/tasks/20261008-add-autumn-sunny-two-guides.md）。
+ * 植物名・リンクは plants.ts から描き、種数は手書きしない。
+ */
+const AIRFLOW_NOTES: Record<string, string> = {
+  pachira: '葉がしっかりしていて虫がつきにくいほう。コバエの原因はほぼ「土が常に湿っていること」なので、土の表面が乾くようにします',
+  monstera: '葉が大きく重なりやすいので、風通しが悪いと虫の隠れ場所になります。そのぶん葉は拭きやすいです',
+  sansevieria: '水はけの悪い土だと、水やりを控えても根腐れします。土が乾く環境にしてあげてください',
+  pothos: '湿った土を好むぶん、コバエは出やすめ。空気がこもらないようにして、表面の土を工夫すると変わります',
+  gajumaru: '日当たりのよい場所で風が通れば安定します。乾燥するとハダニが出ることがあります',
+  'areca-palm': '細い葉が乾燥するとハダニがつきやすい種類。冬は暖房の風がいちばんの敵なので、直接当てないでください',
+  peperomia: '鉢が大きすぎると土がいつまでも乾かず、根腐れの原因になります。厚い葉に水をためるので乾燥には強めです',
+  tillandsia: '濡れたまま風の通らない場所に置くと株の中心から腐ります。水気を切ってしっかり乾かします',
+};
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-airflow.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>「風通しのいい場所」って結局どこ？</h2>
+  <p>
+    観葉植物の育て方を調べると、ほとんどの記事に「風通しのいい場所に置きましょう」と書いてあります。
+    でも、じゃあ具体的にどうすればいいの？というところまでは、なかなか書いてありません。
+    風がびゅうびゅう吹く場所、という意味ではなさそうだし、かといって何をすればいいのかも見えてこない。
+    分かりにくいなあ、と私は思います。
+  </p>
+  <p>
+    この記事の答えは、<strong>強い風を当てることではなく、部屋の空気がゆるく動いている状態をつくること</strong>です。
+    植物のまわりの空気が入れ替わっていれば、それで十分なんです。
+  </p>
+  <p>
+    秋晴れの日は窓を開けやすいので、風通しを意識しはじめるのにちょうどいい季節だと私は思います。
+    窓の開け方、サーキュレーターの使い方、置き方の工夫の順にまとめます。
+  </p>
+
+  <h2>風が足りないと起きること</h2>
+  <p>
+    空気がこもったままだと、鉢の中でも葉のまわりでも、次のようなことが起きやすくなります。
+  </p>
+  <ul>
+    <li>
+      <strong>土がいつまでも乾かない。</strong>
+      湿った状態が続くと根が傷みます。水をあげすぎたときのサインは
+      <a href="/guides/root-rot/">観葉植物の根腐れガイド</a>にまとめています
+    </li>
+    <li>
+      <strong>湿気がこもって、カビやコバエが出やすくなる。</strong>
+      雨続きのときの対処は<a href="/guides/rainy-days/">雨続きのときのケア</a>にあります
+    </li>
+    <li>
+      <strong>葉が込み合って、虫の隠れ場所になる。</strong>
+      葉の大きい種類はとくにそうです。予防や対処は<a href="/guides/pest-control/">観葉植物の虫対策ガイド</a>へ
+    </li>
+    <li>
+      <strong>病気が出やすくなる。</strong>
+      たとえばうどんこ病は、乾燥していて、なおかつ風通しの悪い環境で発生しやすいのが特徴です。
+      見分け方は<a href="/guides/plant-diseases/">観葉植物の病気ガイド</a>で確認できます
+    </li>
+  </ul>
+  <p>
+    どれも、水やりの回数だけを気にしていても防ぎきれないところが厄介です。
+    空気を動かしてあげると、土も葉も乾きやすくなります。
+  </p>
+
+  <h2>晴れた日は窓を開ける</h2>
+  <p>
+    いちばん手軽な風通しは、やっぱり窓を開けることです。できれば2か所開けて、
+    空気の通り道をつくってあげると、部屋の空気が動きやすくなります。
+  </p>
+  <h3>9〜10月の日中</h3>
+  <p>
+    暑さがやわらいで、窓を開けっぱなしにしても過ごしやすい、いちばん気持ちのいい時期です。
+    晴れた日は、日中しばらく窓を開けて、部屋の空気を入れ替えてあげてください。
+  </p>
+  <h3>朝晩が冷えてくる10月の終わり〜11月</h3>
+  <p>
+    朝晩が冷え込んでくるころは、窓を開けるのは<strong>日中のあたたかい時間だけ</strong>にしましょう。
+    そして、窓ぎわの鉢に冷たい外気が直接当たらないよう、少し内側へ寄せておくと安心です。
+    夜の窓ぎわはガラス面がかなり冷えるので、この時期の置き場所は
+    <a href="/guides/bring-indoors/">秋の取り込みのタイミングと手順</a>も読んでみてください。
+    種類ごとの寒さの目安も、そちらの早見表に載せています。
+  </p>
+
+  <h2>サーキュレーターの使い方</h2>
+  <p>
+    雨の日や寒い日で窓を開けられないとき、それから窓から遠い部屋の奥の鉢には、サーキュレーターが頼りになります。
+    使い方のコツは、鉢に風を直接強く当て続けるのではなく、<strong>壁や天井に向けて部屋の空気をゆるく回す</strong>ことです。
+  </p>
+  <p>
+    首振りが使えるなら、私なら首振りにします。同じ葉に風が当たり続けないので、植物にもやさしいと思うからです。
+    回す時間も、在宅している日中に回すだけでも十分だと私は思います。
+  </p>
+  <p>
+    つけっぱなしにすると電気代が気になりますよね。ソフトバンクでんきの解説ページによると、
+    サーキュレーターの消費電力はDCモーターで16〜25W・1時間あたり0.5〜0.8円程度、
+    ACモーターで27〜53W・0.8〜1.6円程度です（電気代単価31円/kWhで計算した目安）。
+    回しっぱなしでも思ったほどではないな、と私は感じます。
+    出典：<a href="https://www.softbank.jp/energy/saving/circulator/" target="_blank" rel="noopener noreferrer">ソフトバンクでんきの解説ページ</a>
+  </p>
+  <AmazonLink keyword="サーキュレーター 小型 静音" label="Amazonで「小型サーキュレーター」を見る" />
+
+  <h2>エアコン・暖房の風は別もの</h2>
+  <p>
+    ここで気をつけたいのは、サーキュレーターで空気を回すのと、エアコンの風が葉に直接当たるのは別の話、ということです。
+    前者は空気をゆるく動かす風通しで、後者は葉を乾かしてしまう風です。
+  </p>
+  <p>
+    三菱電機（霧ヶ峰PR事務局の2023年1月の発表）によると、エアコン暖房の乾いた風が観葉植物に直接当たらないよう、
+    置き場所か風向きを変えることが勧められています。同じ発表では、乾燥するとハダニやカイガラムシなどが出やすくなること、
+    蒸散が早まって根からの吸水が追いつかず、葉が乾いて枯れるおそれがあること、
+    室内の湿度は50〜60%が理想で、難しければ葉に霧吹きを、と説明されています。
+    出典：<a href="https://www.MitsubishiElectric.co.jp/home/kirigamine/special/oshiete/pdf/230228.pdf" target="_blank" rel="noopener noreferrer">三菱電機 霧ヶ峰PR事務局の発表資料（PDF）</a>
+  </p>
+  <p>
+    冬の暖房との付き合い方は<a href="/guides/seasonal-care/">観葉植物の夏越し・冬越しガイド</a>に、
+    戻したあとの置き場所は<a href="/guides/bring-indoors/">秋の取り込みのタイミングと手順</a>にも書いています。
+    湿度は目に見えないので、数字で分かる温湿度計が一つあると安心です。
+  </p>
+  <AmazonLink keyword="温湿度計 デジタル" label="Amazonで「温湿度計」を見る" />
+
+  <h2>置き方でつくる風通し</h2>
+  <p>
+    機械に頼らなくても、置き方で空気の通りは変わります。
+  </p>
+  <ul>
+    <li>
+      <strong>鉢と鉢の間隔を少し空ける。</strong>
+      ぎゅうぎゅうに並べず、葉と葉のあいだに空気の通るすき間をつくります
+    </li>
+    <li>
+      <strong>壁や家具にぴったり付けない。</strong>
+      少し離すだけで、鉢のまわりの空気が動きやすくなります
+    </li>
+    <li>
+      <strong>葉が込み合ってきたら透かす。</strong>
+      枯れた葉を取る程度ならいつでもできます。枝や茎を切る強めの剪定は時期が大事なので、
+      <a href="/guides/pruning/">観葉植物の剪定・切り戻しのタイミングとやり方</a>に従ってください
+    </li>
+    <li>
+      <strong>鉢スタンドで鉢底を浮かせる。</strong>
+      私なら、床に直置きするより鉢の下にも空気が通るようにします。置き方のアイデアは
+      <a href="/guides/display-ideas/">観葉植物の飾り方ガイド</a>も参考になります
+    </li>
+  </ul>
+  <AmazonLink keyword="鉢スタンド 観葉植物" label="Amazonで「鉢スタンド」を見る" />
+
+  <h2>風を当てすぎていないか</h2>
+  <p>
+    風通しは大事ですが、強い風を同じ葉に当て続けるのはおすすめしません。
+    葉先が乾いてきた、土の乾きが急に早くなったと感じたら、風の向きを変えるか、弱めてみてください。
+  </p>
+  <p>
+    風を通すと土も乾きやすくなるので、水やりは日付ではなく土の乾きで決めるのが基本です。
+    頻度と量は<a href="/guides/watering/">観葉植物の水やりの頻度と量</a>にまとめています。
+  </p>
+
+  <h2>{PLANTS.length}種でみる、風通しで気をつけたいこと</h2>
+  <p>
+    このサイトで診断に使っている{PLANTS.length}種について、風通しの観点で気をつけたいことを、
+    それぞれの植物ページや各ガイドの内容から拾ってまとめました。
+  </p>
+  <TableScroll label={`${PLANTS.length}種の風通しで気をつけたいことの早見表`}>
+    <table class="airflow-table">
+      <thead>
+        <tr>
+          <th scope="col">植物</th>
+          <th scope="col">ひとこと</th>
+        </tr>
+      </thead>
+      <tbody>
+        {PLANTS.map((plant) => (
+          <tr>
+            <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+            <td>{AIRFLOW_NOTES[plant.slug]}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </TableScroll>
+
+  <h2>晴れた日は日光浴もセットで。迷ったら診断で</h2>
+  <p>
+    窓を開けたくなるような晴れた日は、鉢にも日を当ててあげたくなる日でもありますよね。
+    外に出すときの慣らし方は<a href="/guides/sunbathing/">観葉植物の日光浴</a>にまとめています。
+  </p>
+  <p>
+    どんな種類が自分の部屋に合うか迷ったら、
+    <a href="/#diagnosis">4つの質問の診断</a>で、日当たりとお世話の手間から合う種類を探してみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 早見表。ほかのガイドの比較表と見た目をそろえている
+   * （横罫だけ・囲みの重さを出さない / design.md）。
+   * 和文セルに white-space: nowrap は付けない（SP幅でページごとはみ出す /
+   * 3-resources/knowledge/20260920-ja-table-nowrap-breaks-sp.md）。
+   */
+  .airflow-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .airflow-table th,
+  .airflow-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .airflow-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .airflow-table tbody th {
+    font-weight: 600;
+  }
+</style>

@@ -212,3 +212,7 @@
     （顔は写らない）。ページ: https://www.pexels.com/photo/a-plant-in-a-white-ceramic-vase-11121423/
     **構図を切り出している**（原本1600×2400の縦長から縦オフセット750pxで4:3に切り出し。植物の上部と
     鉢の下部は枠外になる）
+- 2026-10-08: ガイド記事29〜30本目用に2枚追加（いずれも新規調達・Pexels License・取得日2026-10-08、`?auto=compress&cs=tinysrgb&w=1600`付き。検索は`r.jina.ai`経由）。種名は断定しない。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
+  - `sunbathing.jpg`: 日の差し込む窓辺の白い天板に置かれた素焼き鉢の植物（日だまりと葉に当たる日ざし）。撮影者: Elena Golovchenko（Pexels）。ページ: https://www.pexels.com/photo/plant-in-pot-on-windowsill-13242090/（加工なし）
+  - `airflow.jpg`: 窓辺に置かれた細かい葉の鉢植えと、小型の卓上扇風機（青い羽根）。撮影者: butfirstcaphesuada（Pexels）。ページ: https://www.pexels.com/photo/fan-and-plant-table-by-window-20780451/
+    **周囲のフィルム風の白縁を除くため四方を切り詰めている**（原本1600×1082から Python PILの`crop((30,30,1572,1050))`で1542×1020）

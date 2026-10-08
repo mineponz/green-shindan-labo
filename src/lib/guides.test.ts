@@ -32,11 +32,12 @@ test('GUIDES に形式エラーがない（relatedPlants が実在する植物�
   assert.deepEqual(validateGuides(GUIDES, PLANT_SLUGS), []);
 });
 
-test('GUIDES は決定した28本を過不足なく持つ', () => {
+test('GUIDES は決定した30本を過不足なく持つ', () => {
   assert.deepEqual(
     GUIDES.map((g) => g.slug).sort(),
     [
       'after-purchase',
+      'airflow',
       'beginner-mistakes',
       'bring-indoors',
       'display-by-plant',
@@ -62,6 +63,7 @@ test('GUIDES は決定した28本を過不足なく持つ', () => {
       'seasonal-care',
       'soil',
       'soil-disposal',
+      'sunbathing',
       'travel-watering',
       'watering',
     ]
@@ -187,10 +189,10 @@ test('latestGuides: 同じpublishedDateは配列順（GUIDESの並び順）で�
   );
 });
 
-test('latestGuides: 実際のGUIDESで先頭3本を出すと long-weekend → soil-disposal → gift-plants になる（同日タイブレークの実例）', () => {
+test('latestGuides: 実際のGUIDESで先頭3本を出すと sunbathing → airflow → long-weekend になる（同日タイブレークの実例）', () => {
   assert.deepEqual(
     latestGuides(3).map((g) => g.slug),
-    ['long-weekend', 'soil-disposal', 'gift-plants']
+    ['sunbathing', 'airflow', 'long-weekend']
   );
 });
 

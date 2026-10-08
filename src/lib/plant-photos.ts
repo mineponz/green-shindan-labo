@@ -47,6 +47,8 @@ import rainyDaysPhoto from '../assets/photos/rainy-days.jpg';
 import longWeekendPhoto from '../assets/photos/long-weekend.jpg';
 import soilDisposalPhoto from '../assets/photos/soil-disposal.jpg';
 import giftPlantsPhoto from '../assets/photos/gift-plants.jpg';
+import sunbathingPhoto from '../assets/photos/sunbathing.jpg';
+import airflowPhoto from '../assets/photos/airflow.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -224,6 +226,9 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  *   （`long-weekend.jpg` / `soil-disposal.jpg` / `gift-plants.jpg`）。soil-disposalとgift-plantsは縦長原本から
  *   4:3に切り出している。切り出しの詳細と出典はCREDITS.mdに記載。種名は断定しない。
  *   植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている
+ * - 日光浴・風通し（2026-10-08追加）＝**それぞれ新規調達した写真**（`sunbathing.jpg` / `airflow.jpg`）。
+ *   airflowは周囲の白縁を切り詰めている。出典と詳細はCREDITS.mdに記載。種名は断定しない。
+ *   植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -311,6 +316,14 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'gift-plants': {
     src: giftPlantsPhoto,
     alt: 'ピンクのリボンを結んだ白い陶器の鉢に、白と薄いピンクの斑が入った葉の植物が植わり、両手で差し出されている様子',
+  },
+  sunbathing: {
+    src: sunbathingPhoto,
+    alt: '日ざしの差し込む窓辺の白い天板に、素焼きの鉢に入った緑の葉の植物が置かれ、葉と天板に日が当たっている様子',
+  },
+  airflow: {
+    src: airflowPhoto,
+    alt: '窓辺の木の台に、細かい葉がふわりと広がる鉢植えと、青い羽根の小さな卓上扇風機が並んでいる様子',
   },
 };
 
