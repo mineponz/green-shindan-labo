@@ -5,21 +5,23 @@ import {
   PRIVACY_POLICY_UPDATED,
   AMAZON_ASSOCIATE_TAG,
   AMAZON_ASSOCIATE_TAG_PLACEHOLDER,
+  ADMAX_ENABLED,
 } from '../consts';
 
 /**
  * プライバシーポリシー。
  *
- * Amazonアソシエイト・プログラムの開示、診断ツールのデータの扱い、および将来AdSense等の
- * ディスプレイ広告を掲載する場合に備えた必須コンテンツ（第三者配信事業者のCookie利用 /
- * パーソナライズ広告の無効化導線 / 第三者広告ネットワークの開示）をまとめている。
+ * Amazonアソシエイト・プログラムの開示、診断ツールのデータの扱い、および広告（Google AdSense）の
+ * 必須コンテンツ（第三者配信事業者のCookie利用 / パーソナライズ広告の無効化導線 /
+ * 第三者広告ネットワークの開示）をまとめている。忍者AdMaxの記載は ADMAX_ENABLED に連動し、
+ * 止めている間は出さない（使っていないサービスを書かない）。
  *
  * 重要: Amazonアソシエイトのタグが未取得（プレースホルダのまま）の間は、
  * 「参加を予定している」という表現に留める。タグ差し替え後は「参加している」に自動で切り替わるので、
  * そのタイミングで PRIVACY_POLICY_UPDATED も更新すること。
  */
 const title = 'プライバシーポリシー';
-const description = `${SITE_TITLE}における利用者情報の取り扱い、診断ツールのデータ、Amazonアソシエイト・プログラムとCookieについての方針を説明します。`;
+const description = `${SITE_TITLE}における利用者情報の取り扱い、診断ツールのデータ、Amazonアソシエイト・プログラム、広告配信とCookieについての方針を説明します。`;
 
 const isAssociateTagPlaceholder = AMAZON_ASSOCIATE_TAG === AMAZON_ASSOCIATE_TAG_PLACEHOLDER;
 ---
@@ -78,33 +80,47 @@ const isAssociateTagPlaceholder = AMAZON_ASSOCIATE_TAG === AMAZON_ASSOCIATE_TAG_
 
   <h2>4. 広告の配信について</h2>
   <p>
-    当サイトは、第三者配信事業者による広告配信サービス「忍者AdMax」（忍者ツールズ株式会社提供）を
-    利用してディスプレイ広告を掲載しています。取り扱いは次のとおりです。
+    当サイトは、第三者配信の広告サービス「Google AdSense」{ADMAX_ENABLED && <>および「忍者AdMax」（忍者ツールズ株式会社提供）</>}を
+    利用して広告を掲載しています。取り扱いは次のとおりです。
   </p>
   <ul>
     <li>
-      忍者AdMaxを含む第三者配信事業者は、Cookie を使用して、利用者が当サイトや他のウェブサイトに
-      過去にアクセスした際の情報に基づいて広告を配信することがあります。
+      Google を含む第三者配信事業者は、Cookie を使用して、利用者が当サイトや他のウェブサイトに
+      過去にアクセスした際の情報に基づいて広告を配信します。
     </li>
     <li>
       これらの Cookie は広告の配信のために使われるものであり、
       それ自体が利用者を個人として特定するものではありません。
     </li>
+    <li>
+      Google が広告配信のために情報をどのように使用するかは、
+      <a
+        href="https://policies.google.com/technologies/partner-sites"
+        rel="nofollow noopener"
+        target="_blank"
+      >Google のサービスを使用するサイトやアプリから収集した情報の Google による使用</a>
+      で説明されています。
+    </li>
   </ul>
 
   <h2>5. パーソナライズ広告を無効にする方法</h2>
   <p>
+    パーソナライズ広告は、
+    <a href="https://adssettings.google.com/" rel="nofollow noopener" target="_blank">Google の広告設定</a>
+    で無効にできます。また、
     <a href="https://www.aboutads.info/" rel="nofollow noopener" target="_blank">www.aboutads.info</a>
     にアクセスすれば、パーソナライズ広告に使われる第三者配信事業者の Cookie を無効にできます。
-    また、お使いのブラウザの設定から Cookie の受け入れを拒否・削除することでも、
+    お使いのブラウザの設定から Cookie の受け入れを拒否・削除することでも、
     パーソナライズ広告を無効にできます。
   </p>
 
   <h2>6. 第三者広告ネットワークについて</h2>
   <p>
-    当サイトが利用している第三者ディスプレイ広告ネットワークは、
+    当サイトが利用している第三者広告ネットワークは、
+    <a href="https://www.google.com/adsense/" rel="nofollow noopener" target="_blank">Google AdSense</a>
+    （Google LLC）{ADMAX_ENABLED && <>、および
     <a href="https://admax.shinobi.jp/" rel="nofollow noopener" target="_blank">忍者AdMax</a>
-    （忍者ツールズ株式会社）です。今後、他の広告ネットワークを追加する場合は、
+    （忍者ツールズ株式会社）</>}です。今後、他の広告ネットワークを追加する場合は、
     そのネットワーク名・当該ネットワークへのリンク・オプトアウト（配信停止）の方法を
     このページに明記し、あわせて末尾の更新日を改めます。
   </p>

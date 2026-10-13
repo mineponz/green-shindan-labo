@@ -8,6 +8,8 @@ import {
   AMAZON_ASSOCIATE_TAG_PLACEHOLDER,
   GA_MEASUREMENT_ID,
   ADMAX_SCRIPT_SRC,
+  ADMAX_ENABLED,
+  ADSENSE_CLIENT_ID,
 } from '../consts';
 import LeafMark from '../components/LeafMark.astro';
 
@@ -23,6 +25,11 @@ interface Props {
    * （`public/og/`、Playwrightで生成。生成手順は`public/og/README.md`参照）。
    */
   ogImagePath?: string;
+  /**
+   * 検索結果に載せないページ（404など）で true にする。`<meta name="robots">` を noindex にし、
+   * AdSense の自動広告スクリプトも入れない。noindex の判定はここ1か所に置く。
+   */
+  noindex?: boolean;
 }
 
 const {
@@ -30,7 +37,11 @@ const {
   description = SITE_DESCRIPTION,
   breadcrumb = [],
   ogImagePath = '/og-image.jpg',
+  noindex = false,
 } = Astro.props;
+
+// AdSense の自動広告は noindex のページには入れない（低価値ページへの広告配信を避ける）。
+const showAdsenseScript = !noindex;
 
 // Amazonアソシエイトの開示文言は、審査通過前（＝タグがプレースホルダのまま）は
 // 事実と異なる（まだ収入を得ていない）ため出さない。タグ差し替え後に自動で表示される。
@@ -77,6 +88,7 @@ const currentPath = Astro.url.pathname;
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="google-site-verification" content="HmkChSgQuPhmfw3e0N9eLgLYi3bLDWkyt37TXtiapK0" />
+    {noindex && <meta name="robots" content="noindex,follow" />}
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
@@ -95,6 +107,15 @@ const currentPath = Astro.url.pathname;
 
     <link rel="sitemap" href="/sitemap-index.xml" />
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} is:inline />
+
+    {showAdsenseScript && (
+      <script
+        async
+        is:inline
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
+        crossorigin="anonymous"
+      ></script>
+    )}
 
     <!-- Google tag (gtag.js) -->
     <script
@@ -158,9 +179,11 @@ const currentPath = Astro.url.pathname;
     <main id="main">
       <slot />
 
-      <div class="ad-slot" aria-label="広告">
-        <script src={ADMAX_SCRIPT_SRC} is:inline></script>
-      </div>
+      {ADMAX_ENABLED && (
+        <div class="ad-slot" aria-label="広告">
+          <script src={ADMAX_SCRIPT_SRC} is:inline></script>
+        </div>
+      )}
     </main>
 
     <footer class="site-footer">

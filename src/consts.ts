@@ -26,8 +26,8 @@ export const CONTACT_EMAIL_PLACEHOLDER = 'CONTACT_EMAIL_TODO';
 export const CONTACT_EMAIL: string = CONTACT_EMAIL_PLACEHOLDER;
 
 /** プライバシーポリシーの最終更新日（ページ末尾の表示に使う）。内容を変えたら必ず更新する。 */
-export const PRIVACY_POLICY_UPDATED = '2026-08-19';
-// 2026-08-19、忍者AdMax再導入の開示を追加した際に更新
+export const PRIVACY_POLICY_UPDATED = '2026-10-13';
+// 2026-10-13、広告をGoogle AdSense（自動広告）へ切り替えた際に更新
 
 /**
  * Amazonアソシエイトのトラッキングタグ。
@@ -44,6 +44,21 @@ export const AMAZON_ASSOCIATE_TAG: string = 'greenlabo-22';
 
 /** Google Analytics(GA4)の測定ID。2026-08-13、本人が発行したプロパティのIDを設定。 */
 export const GA_MEASUREMENT_ID = 'G-BK3NZZ8ZEE';
+
+/**
+ * Google AdSense のパブリッシャーID（`ca-pub-…`）。自動広告スクリプト（BaseLayout の head）で使う。
+ * !!! `public/ads.txt` の販売者行（`pub-` の後ろの数字）と必ず同じ値にすること。食い違うと広告が配信されない !!!
+ * 枠の位置はAdSense側の管理画面（自動広告）で決まるので、ページ側に広告ユニットは置かない。
+ * 2026-10-13 導入（ルートドメイン mineponz.com の審査通過・本人の決定「まず自動広告だけ」）。
+ */
+export const ADSENSE_CLIENT_ID = 'ca-pub-7478797109606594';
+
+/**
+ * 忍者AdMax（第三者ディスプレイ広告）を出すか。`false` にすると広告枠（`div.ad-slot`）ごと
+ * 出力されず、プライバシーポリシーの AdMax の記載も外れる。戻すときはこの1行を `true` にするだけ。
+ * 2026-10-13 に停止（AdSense の自動広告へ置き換える。本人の決定）。
+ */
+export const ADMAX_ENABLED = false;
 
 /**
  * 忍者AdMax（第三者ディスプレイ広告）の広告枠スクリプトURL。
