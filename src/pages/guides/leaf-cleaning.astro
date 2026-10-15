@@ -1,0 +1,230 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import TableScroll from '../../components/TableScroll.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('leaf-cleaning')!;
+
+/**
+ * 早見表の「掃除のしかた」。植物の slug → 一言。
+ * ここに無い slug（将来種が増えたとき）は FALLBACK_NOTE で表示する。
+ * 植物名・リンク・並び順・種数は plants.ts から描き、手書きしない。
+ */
+const CLEANING_NOTES: Record<string, string> = {
+  pachira: '葉が大きめなので、湿らせた布で1枚ずつ。手のひらで葉を下から支えながら拭きます',
+  monstera: '大きな葉は布で1枚ずつ。裏側もさっと拭きながら、虫がいないかも見ます',
+  sansevieria: '厚くて細長い葉は、湿らせた布でさっと。葉の付け根に水をためないようにします',
+  pothos: '小さな葉がたくさんあるので、1枚ずつより、浴室などでシャワーで流すほうが楽です',
+  gajumaru: '葉が小さく数も多いので、シャワーで流すほうが楽です。浴室なら寒い時期でもできます',
+  'areca-palm': '細い葉が多いので、シャワーで流すか、布で軽くなでる程度に。強くしごかないようにします',
+  peperomia: '厚めの小さな葉なので、湿らせた布でやさしく、さっと',
+  tillandsia: '拭かずに、霧吹きとソーキングで。そのあとは必ず乾かします（くわしくは水やりガイド）',
+};
+const FALLBACK_NOTE = '湿らせた布でやさしく拭きます';
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-leaf-cleaning.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>葉にうっすら積もるほこり</h2>
+  <p>
+    部屋のなかの植物は、雨に洗われることがありません。
+    だから気づくと、葉の表にうっすらほこりが積もっています。
+    指でなぞって白っぽくなると、「ごめんね、気づかなくて」と私は思ってしまいます。
+  </p>
+  <p>
+    この記事では、拭き方とシャワーで流すときのコツ、葉の形による違い、
+    やらないほうがいいことを順に書きました。
+    むずかしいことはありません。気づいたときに、ひと拭きしてあげるくらいで十分だと私は思います。
+  </p>
+
+  <h2>ほこりを放っておくと困ること</h2>
+  <p>
+    園芸メーカーのKINCHO園芸は、ハダニの解説のなかで、
+    「葉っぱにほこりがたまっている植物は乾燥しており、ハダニが発生しやすい状況にあります」と書いています
+    （<a href="https://www.kincho-engei.co.jp/gardeningbeginner/gardening_column2/2024/10/post-12.html" target="_blank" rel="noopener noreferrer">KINCHO園芸のハダニの解説</a>）。
+    ほこりそのものが悪さをするというより、ほこりがたまっている状態が、虫の出やすい合図になるということですね。
+    ハダニの見分け方と対処は<a href="/guides/pest-control/">観葉植物の虫対策ガイド</a>にまとめています。
+  </p>
+  <p>
+    それに、きれいに拭いた葉は、つやが戻ってぱっと明るく見えます。
+    植物がすっきりした顔をしているように見えて、私はこの瞬間がけっこう好きです。
+  </p>
+
+  <h2>基本は、湿らせた布で拭く</h2>
+  <p>
+    いちばん手軽なのは、水で湿らせた柔らかい布で拭くやり方です。
+    点検のついでにする掃除は<a href="/guides/long-weekend/">3連休でやる観葉植物のお手入れ</a>でも触れました。
+    ここでは、もう少し細かく書いてみます。
+  </p>
+  <ul>
+    <li>
+      <strong>片手で葉を下から支える。</strong>
+      葉の裏にそっと手を添えると、拭くときに葉が折れにくくなります
+    </li>
+    <li>
+      <strong>表をやさしく拭く。</strong>
+      力を入れず、葉脈にそって、根元から先へなでるように
+    </li>
+    <li>
+      <strong>裏もさっと拭く。</strong>
+      ついでに、虫がいないかも見てあげてください。気になる点があれば
+      <a href="/guides/pest-control/">虫対策ガイド</a>へ
+    </li>
+  </ul>
+  <p>
+    洗剤は使わず、水だけでいいと私は思います。
+    やわらかい布を1枚用意しておくと、気軽に始められます。
+  </p>
+  <AmazonLink keyword="マイクロファイバークロス 柔らかい 拭き掃除" label="Amazonで「やわらかい布（マイクロファイバークロス）」を見る" />
+
+  <h2>葉の形でちがう、私ならこうするやり方</h2>
+  <p>
+    葉の大きさや形によって、やりやすい方法はかなり違います。
+    ここからは、私ならこうする、というお話です。
+  </p>
+  <ul>
+    <li>
+      <strong>大きい葉（モンステラ・パキラ）：</strong>
+      布で1枚ずつ。数がそれほど多くないので、一枚ずつ向き合う時間も楽しめると思います
+    </li>
+    <li>
+      <strong>小さい葉が多い（ガジュマル・ポトス）：</strong>
+      1枚ずつは大変なので、シャワーで流すほうが楽だと思います
+    </li>
+    <li>
+      <strong>厚い葉・細長い葉（サンスベリア・ペペロミア）：</strong>
+      布でさっと。サンスベリアは水のやりすぎが苦手な植物なので、葉の付け根に水をためないようにします。
+      <a href="/plants/sansevieria/">サンスベリアのページ</a>にも書いています
+    </li>
+    <li>
+      <strong>細い葉が多い（アレカヤシ）：</strong>
+      布でしごくと葉を傷めそうなので、軽くなでるくらいにするか、シャワーで流します
+    </li>
+    <li>
+      <strong>チランジア：</strong>
+      拭かずに、霧吹きとソーキング（水につけること）で。
+      そのあと必ず乾かします。<a href="/guides/watering/">水やりのガイド</a>に書いています
+    </li>
+  </ul>
+
+  <h2>シャワーで流すときのコツ</h2>
+  <p>
+    葉が多い株は、シャワーで流すとあっという間にきれいになります。
+    ただ、季節で向き不向きがあります。
+  </p>
+  <ul>
+    <li>
+      <strong>屋外やベランダは、暖かい季節向き。</strong>
+      涼しくなってからは、外でかけると株を冷やしてしまいそうで心配です
+    </li>
+    <li>
+      <strong>浴室なら、一年じゅうできます。</strong>
+      寒い時期はこちらを選びたいです
+    </li>
+    <li>
+      <strong>寒い時期は、濡れたまま窓ぎわに戻さない。</strong>
+      夜に冷える窓ぎわに濡れた葉のまま置くのは、私ならやめておきます。
+      水を切って、暖かい部屋の明るい場所で乾かしてから戻してあげてください
+    </li>
+  </ul>
+  <p>
+    やり方は、土が流れ出ないように株元をビニール袋などで覆って、
+    冷たすぎない水でやさしくかけるだけ。
+    終わったら水をよく切って、明るい場所で乾かします。
+  </p>
+
+  <h2>やらないほうがいいこと</h2>
+  <p>
+    強くこするのは、私はやめておきます。とくに新芽はやわらかいので、そっとしておいてあげたいです。
+  </p>
+  <p>
+    牛乳やビールで拭く方法は、<a href="/guides/long-weekend/">3連休でやる観葉植物のお手入れ</a>に書いたとおり、私ならやりません。
+    ツヤ出しスプレーを使うなら、製品の説明書のとおりに、葉の表面だけにしてください。
+  </p>
+
+  <h2>どれくらいの頻度で？</h2>
+  <p>
+    きっちり決めなくていい、というのが私の考えです。ほこりが見えたら、拭いてあげれば十分だと思います。
+    週に1回くらいを目安にする解説もあります。
+    余裕のある方は、その目安を意識してみてもいいかもしれません。
+  </p>
+  <p>
+    葉水でも、軽いほこりは落ちます。
+    葉水については<a href="/guides/watering/">水やりのガイド</a>で、
+    水やりとは別の作業として書いています。
+  </p>
+
+  <h2>{PLANTS.length}種でみる、掃除のしかた</h2>
+  <p>
+    このサイトで診断に使っている{PLANTS.length}種を、葉の形に合わせて整理しました。
+    迷ったときの目安にしてください。
+  </p>
+  <TableScroll label={`${PLANTS.length}種の掃除のしかたの早見表`}>
+    <table class="leaf-cleaning-table">
+      <thead>
+        <tr>
+          <th scope="col">植物</th>
+          <th scope="col">掃除のしかた</th>
+        </tr>
+      </thead>
+      <tbody>
+        {PLANTS.map((plant) => (
+          <tr>
+            <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+            <td>{CLEANING_NOTES[plant.slug] ?? FALLBACK_NOTE}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </TableScroll>
+
+  <h2>迷ったら診断で</h2>
+  <p>
+    掃除のしやすさも、育てやすさのひとつだと私は思います。
+    <a href="/#diagnosis">4つの質問の診断</a>では、お部屋の日当たりとお世話の手間から
+    合う種類を出せるので、次に迎える一鉢の参考にしてみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 早見表。ほかのガイドの比較表と見た目をそろえている。
+   * 和文セルに white-space: nowrap は付けない（SP幅でページごとはみ出す）。
+   */
+  .leaf-cleaning-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .leaf-cleaning-table th,
+  .leaf-cleaning-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .leaf-cleaning-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .leaf-cleaning-table tbody th {
+    font-weight: 600;
+  }
+</style>

@@ -216,3 +216,6 @@
   - `sunbathing.jpg`: 日の差し込む窓辺の白い天板に置かれた素焼き鉢の植物（日だまりと葉に当たる日ざし）。撮影者: Elena Golovchenko（Pexels）。ページ: https://www.pexels.com/photo/plant-in-pot-on-windowsill-13242090/（加工なし）
   - `airflow.jpg`: 窓辺に置かれた細かい葉の鉢植えと、小型の卓上扇風機（青い羽根）。撮影者: butfirstcaphesuada（Pexels）。ページ: https://www.pexels.com/photo/fan-and-plant-table-by-window-20780451/
     **周囲のフィルム風の白縁を除くため四方を切り詰めている**（原本1600×1082から Python PILの`crop((30,30,1572,1050))`で1542×1020）
+- 2026-10-15: ガイド記事31〜32本目用に2枚追加（いずれも新規調達・Pexels License・取得日2026-10-15、`?auto=compress&cs=tinysrgb&w=1600`付き、加工なし。検索は`r.jina.ai`経由）。種名は断定しない。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
+  - `window-direction.jpg`: 木枠の窓の窓台に置かれた細葉の鉢植え、窓の外の木立がやわらかく透ける構図（1600×1200）。撮影者: Gilberto Olimpio（Pexels）。ページ: https://www.pexels.com/photo/green-potted-plant-beside-window-3686293/
+  - `leaf-cleaning.jpg`: 片手で濃い緑の葉を支え、もう一方の手で布を当てて拭く手元（顔は写らない・1600×1067）。撮影者: Gustavo Fring（Pexels）。ページ: https://www.pexels.com/photo/cleaning-leaves-in-close-up-5635497/

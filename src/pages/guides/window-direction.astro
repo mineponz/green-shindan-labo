@@ -1,0 +1,217 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import TableScroll from '../../components/TableScroll.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('window-direction')!;
+
+/**
+ * 早見表。植物名・リンク・並び順・種数・窓の向きは plants.ts の attributes（sun / shade）から
+ * 描き、手書きしない（属性を調整したら表も自動で追従する / low-light-plants と食い違わない）。
+ */
+function bestWindow(sun: number): string {
+  if (sun >= 4) return '南の窓（真夏はレース越しに）';
+  if (sun === 3) return '南か東の窓（レース越し）';
+  return '東の窓、または南のレース越し';
+}
+
+function northWindow(shade: number): string {
+  if (shade >= 4) return '育てられる組';
+  if (shade === 3) return '明るめの北窓なら';
+  return '日ざし不足になりやすい（育成ライトで補う）';
+}
+
+/** 日ざしを好む順（同じ値は plants.ts の掲載順を保つ） */
+const sorted = [...PLANTS].sort((a, b) => b.attributes.sun - a.attributes.sun);
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-window-direction.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>同じ「窓ぎわ」でも、向きでずいぶんちがいます</h2>
+  <p>
+    「明るい窓ぎわに置いてあげてください」と書いてあっても、自分の部屋の窓は北向きだし、
+    どう受け取ればいいんだろう、と迷うことってありますよね。
+    窓ぎわと言っても、南向きと北向きでは日の入り方がまるで別物です。
+  </p>
+  <p>
+    ここでは、南・東・西・北の窓それぞれの特徴と、季節で変わること、
+    窓の向き以外に明るさを左右するものをまとめました。
+    「うちの窓だとこの子が向いているんだな」と、置き場所選びの手がかりにしてもらえるとうれしいです。
+  </p>
+
+  <h2>南の窓：いちばん明るいけれど、季節で表情が変わります</h2>
+  <p>
+    南の窓は、一日を通していちばん明るい窓です。日ざしが好きな植物にとっては特等席だと私は思います。
+    その一方で、夏の強い日ざしは葉焼けのもとにもなるので、真夏はレースカーテンで和らげてあげると安心です。
+  </p>
+  <p>
+    もうひとつ知っておきたいのが、同じ南の窓でも、季節で日の入り方が大きく変わることです。
+    たとえば2026年の東京では、夏至のころの南中高度（太陽がいちばん高くなるときの高さ）が約78°、
+    冬至のころは約31°です
+    （<a href="https://eco.mtk.nao.ac.jp/koyomi/dni/2026/s1306.html" target="_blank" rel="noopener noreferrer">国立天文台 暦計算室の6月</a>と
+    <a href="https://eco.mtk.nao.ac.jp/koyomi/dni/2026/s1312.html" target="_blank" rel="noopener noreferrer">12月</a>の計算）。
+  </p>
+  <p>
+    夏は太陽がほぼ真上に近いので、日ざしは窓ぎわのすぐそばにしか届きません。
+    反対に冬は太陽が低いぶん、日ざしが部屋の奥まで差し込みます。
+    秋から冬にかけて「窓ぎわが急に明るくなったな」と感じるのは、きっとこのせいです。
+    夏のあいだは窓から少し離しておいた鉢が、冬には日ざしの当たる位置になっていることもあるので、
+    季節の変わり目には鉢の位置を見直してあげてください。
+  </p>
+
+  <h2>東の窓：午前中のやわらかい日ざし</h2>
+  <p>
+    東の窓には、午前中のやわらかい日が入ります。
+    強すぎず、しっかり明るい。多くの観葉植物にとっていちばん扱いやすい窓だと私は思っています。
+    置き場所に迷ったら、まず東の窓ぎわを考えてみるのがおすすめです。
+  </p>
+
+  <h2>西の窓：午後から夕方の日ざし。夏の西日は要注意</h2>
+  <p>
+    西の窓には、午後から夕方にかけて日が入ります。
+    夏の西日は強いので、レースカーテン越しにするか、慣れるまでは避けておくほうが安心です。
+    直射日光への慣らし方は
+    <a href="/guides/sunbathing/">観葉植物の日光浴ガイド</a>に書いているので、西日に当てたいときも参考にしてみてください。
+  </p>
+  <p>
+    その一方で、冬の午後に日が入る西の窓は、ありがたい存在でもあります。
+    寒い季節に夕方まで日ざしが届くと、なんだかほっとしますよね。
+  </p>
+
+  <h2>北の窓：直射はほとんど入らないけれど、明るさはあります</h2>
+  <p>
+    北の窓には、直射日光はほとんど入りません。
+    ただ、直射がないことと暗いことは同じではなく、日中の明るさはちゃんとあります。
+    耐陰性のある種類なら、北の窓でも育てられます。
+    どの種類が向いているかは
+    <a href="/guides/low-light-plants/">日当たりが悪い部屋でも育つ観葉植物</a>にまとめました。
+  </p>
+  <p>
+    それでも光が足りないと感じるときは、
+    <a href="/guides/grow-light/">植物育成ライトの選び方</a>で光を補う方法を見てみてください。
+    「北向きだから諦める」と決めてしまうには、まだ早いと私は思います。
+  </p>
+
+  <h2>向きより効くこと：窓からの距離・レースカーテン・まわりの建物</h2>
+  <p>
+    窓の向きと同じくらい、あるいはそれ以上に明るさを左右するものがあります。
+  </p>
+  <ul>
+    <li>
+      <strong>窓からの距離。</strong>
+      窓から離れるほど、明るさはかなり落ちます。同じ南向きの部屋でも、奥の棚はずいぶん暗いはずです
+    </li>
+    <li>
+      <strong>レースカーテン。</strong>
+      レース越しにすると、日ざしが和らぐぶん、明るさもかなり落ちます。夏は頼もしく、冬は少しもったいなく感じる場面もあります
+    </li>
+    <li>
+      <strong>まわりの建物や木の影。</strong>
+      向かいの建物が近いと、南向きでも日ざしが入りにくいことがあります。
+      自分の窓にどのくらい日が入っているかは、時間帯を変えて眺めてみるとよく分かります
+    </li>
+  </ul>
+  <p>
+    明るさが足りていないときは、茎が間のびして葉と葉の間隔が空く「徒長」が出ることがあります。
+    新しい葉が小さくなる、色が薄くなる、といったサインと一緒に、
+    <a href="/guides/leaf-problems/#pale">葉の症状から原因を見分けるガイド</a>に書いています。
+    間のびした姿を整えるには<a href="/guides/pruning/">剪定・切り戻し</a>が効きますが、
+    置き場所が同じならまた同じように伸びるので、まず置き場所を見直してあげてください。
+  </p>
+  <AmazonLink keyword="レースカーテン ミラー UVカット" label="Amazonで「ミラーレースカーテン」を見る" />
+
+  <h2>窓ぎわの夜の冷えにも気をつけて</h2>
+  <p>
+    日中はぽかぽか明るい窓ぎわでも、秋から冬の夜はガラスの近くが冷えます。
+    せっかく明るい場所を選んだのに、夜の冷えで株が弱ってしまったらもったいないですよね。
+    夜のあいだだけ部屋の内側へ寄せてあげると安心です。
+    窓ぎわの夜の冷えについては、
+    <a href="/guides/bring-indoors/">秋の取り込みのタイミングと手順</a>の
+    「窓ぎわの夜の冷え・暖房の風に注意」の節に書いています。
+  </p>
+  <p>
+    毎晩の移動が億劫にならないよう、キャスター付きの鉢台に載せておくのもひとつの手だと私は思います。
+  </p>
+  <AmazonLink keyword="鉢スタンド キャスター付き 観葉植物" label="Amazonで「キャスター付きの鉢台」を見る" />
+
+  <h2>{PLANTS.length}種でみる、向いている窓</h2>
+  <p>
+    このサイトの診断に使っている{PLANTS.length}種を、日ざしを好む順に並べました。
+    あくまで目安なので、お部屋の窓の状況に合わせて、窓からの距離やレースカーテンで調整してあげてください。
+  </p>
+  <TableScroll label={`${PLANTS.length}種の向いている窓の早見表`}>
+    <table class="window-table">
+      <thead>
+        <tr>
+          <th scope="col">植物</th>
+          <th scope="col">いちばん向く窓</th>
+          <th scope="col">北の窓では</th>
+        </tr>
+      </thead>
+      <tbody>
+        {sorted.map((plant) => (
+          <tr>
+            <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+            <td>{bestWindow(plant.attributes.sun)}</td>
+            <td>{northWindow(plant.attributes.shade)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </TableScroll>
+  <p>
+    表を見て南の窓へ移したくなっても、暗い場所にいた株をいきなり強い日ざしに当てるのは避けてあげてください。
+    慣らし方は<a href="/guides/sunbathing/">観葉植物の日光浴ガイド</a>にあります。
+  </p>
+  <AmazonLink keyword="植物育成ライト 観葉植物" label="Amazonで「植物育成ライト」を見る" />
+
+  <h2>迷ったら診断で</h2>
+  <p>
+    お部屋の窓がどの向きでも、植物選びの答えはひとつではありません。
+    <a href="/#diagnosis">4つの質問の診断</a>には日当たりの設問があるので、
+    お部屋の明るさから合う種類を出して、次に迎える一鉢の参考にしてみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 早見表。ほかのガイドの比較表と見た目をそろえている（横罫だけ・囲みの重さを出さない / design.md）。
+   * 和文セルに white-space: nowrap は付けない（SP幅でページごとはみ出す）。
+   */
+  .window-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .window-table th,
+  .window-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .window-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .window-table tbody th {
+    font-weight: 600;
+  }
+</style>
