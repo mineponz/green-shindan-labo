@@ -219,3 +219,5 @@
 - 2026-10-15: ガイド記事31〜32本目用に2枚追加（いずれも新規調達・Pexels License・取得日2026-10-15、`?auto=compress&cs=tinysrgb&w=1600`付き、加工なし。検索は`r.jina.ai`経由）。種名は断定しない。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
   - `window-direction.jpg`: 木枠の窓の窓台に置かれた細葉の鉢植え、窓の外の木立がやわらかく透ける構図（1600×1200）。撮影者: Gilberto Olimpio（Pexels）。ページ: https://www.pexels.com/photo/green-potted-plant-beside-window-3686293/
   - `leaf-cleaning.jpg`: 片手で濃い緑の葉を支え、もう一方の手で布を当てて拭く手元（顔は写らない・1600×1067）。撮影者: Gustavo Fring（Pexels）。ページ: https://www.pexels.com/photo/cleaning-leaves-in-close-up-5635497/
+- 2026-10-19: ガイド記事33本目用に1枚追加（新規調達・Pexels License・取得日2026-10-19、`?auto=compress&cs=tinysrgb&w=1600`で取得）。種名は断定しない。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
+  - `temperature-swings.jpg`: 窓ぎわの窓台に並ぶ数鉢の観葉植物と、手前のソファの肘掛けに掛けたカラフルな編みのひざ掛け・編みクッション、左に背の高い鉢植えとカーテン（顔は写らない）。**構図を切り出している**（原本1600×2397の縦長を`sips -c 1200 1600 --cropOffset 880 0`で4:3=1600×1200に）。撮影者: Ksenia Chernaya（Pexels）。ページ: https://www.pexels.com/photo/cozy-corner-in-room-by-window-5806983/

@@ -51,6 +51,7 @@ import sunbathingPhoto from '../assets/photos/sunbathing.jpg';
 import airflowPhoto from '../assets/photos/airflow.jpg';
 import windowDirectionPhoto from '../assets/photos/window-direction.jpg';
 import leafCleaningPhoto from '../assets/photos/leaf-cleaning.jpg';
+import temperatureSwingsPhoto from '../assets/photos/temperature-swings.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -234,6 +235,7 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  * - 窓の向き・葉っぱの掃除（2026-10-15追加）＝**それぞれ新規調達した写真**（`window-direction.jpg` / `leaf-cleaning.jpg`）。
  *   加工なし。出典と詳細はCREDITS.mdに記載。種名は断定しない。
  *   植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている
+ * - 寒暖差（2026-10-19追加）＝**新規調達した写真**（`temperature-swings.jpg`）。原本の縦長を4:3に切り出している。出典はCREDITS.md。種名は断定しない。
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -337,6 +339,10 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'leaf-cleaning': {
     src: leafCleaningPhoto,
     alt: '片手でつやのある濃い緑の葉を支え、もう一方の手で布を当てて葉をやさしく拭いている手元',
+  },
+  'temperature-swings': {
+    src: temperatureSwingsPhoto,
+    alt: '明るい窓の窓台に数鉢の観葉植物が並び、手前のソファの肘掛けに編みのひざ掛けとクッションが置かれている室内',
   },
 };
 
