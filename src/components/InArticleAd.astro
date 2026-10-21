@@ -1,0 +1,42 @@
+---
+/**
+ * Google AdSense「記事内広告」ユニット1つ分。BaseLayout が記事本文の h2 の手前に差し込む
+ * （位置の決め方は BaseLayout の `splitForInArticleAds` 参照）。
+ * adsbygoogle.js は BaseLayout の head で読み込み済みなので、ここでは読み込まない（重複させない）。
+ * 表示を止めるときは consts.ts の ADSENSE_IN_ARTICLE_ENABLED を false にする。
+ */
+import { ADSENSE_CLIENT_ID, ADSENSE_IN_ARTICLE_SLOT_ID } from '../consts';
+---
+
+<aside class="in-article-ad" aria-label="広告">
+  <p class="in-article-ad-label">スポンサーリンク</p>
+  <ins
+    class="adsbygoogle"
+    style="display:block; text-align:center;"
+    data-ad-layout="in-article"
+    data-ad-format="fluid"
+    data-ad-client={ADSENSE_CLIENT_ID}
+    data-ad-slot={ADSENSE_IN_ARTICLE_SLOT_ID}></ins>
+  <script is:inline>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</aside>
+
+<style is:global>
+  .in-article-ad {
+    margin-block: var(--space-4);
+  }
+  .in-article-ad-label {
+    margin: 0 0 var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--muted);
+    text-align: center;
+  }
+  /* 広告が埋まらなかったときに、ラベルだけ・空白だけが残らないよう枠ごと隠す */
+  .in-article-ad:has(ins.adsbygoogle[data-ad-status='unfilled']) {
+    display: none;
+  }
+  ins.adsbygoogle[data-ad-status='unfilled'] {
+    display: none !important;
+  }
+</style>

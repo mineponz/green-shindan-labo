@@ -54,6 +54,16 @@ export const GA_MEASUREMENT_ID = 'G-BK3NZZ8ZEE';
 export const ADSENSE_CLIENT_ID = 'ca-pub-7478797109606594';
 
 /**
+ * AdSense「記事内広告」ユニットを出すか。`false` にすると本文への差し込みだけが止まる
+ * （head の adsbygoogle.js・自動広告は別）。対象はガイド記事（/guides/<slug>/）と
+ * 植物の個別ページ（/plants/<slug>/）で、1記事2か所（本文2つ目のh2の前・最後のh2の前）。
+ * 2026-10-21 導入。
+ */
+export const ADSENSE_IN_ARTICLE_ENABLED = true;
+/** 記事内広告ユニットの slot ID（AdSense管理画面の値） */
+export const ADSENSE_IN_ARTICLE_SLOT_ID = '8957188768';
+
+/**
  * 忍者AdMax（第三者ディスプレイ広告）を出すか。`false` にすると広告枠（`div.ad-slot`）ごと
  * 出力されず、プライバシーポリシーの AdMax の記載も外れる。戻すときはこの1行を `true` にするだけ。
  * 2026-10-13 に停止（AdSense の自動広告へ置き換える。本人の決定）。

@@ -10,8 +10,10 @@ import {
   ADMAX_SCRIPT_SRC,
   ADMAX_ENABLED,
   ADSENSE_CLIENT_ID,
+  ADSENSE_IN_ARTICLE_ENABLED,
 } from '../consts';
 import LeafMark from '../components/LeafMark.astro';
+import InArticleAd from '../components/InArticleAd.astro';
 
 interface Props {
   /** ページ固有のタイトル。トップページでは省略する */
@@ -42,6 +44,29 @@ const {
 
 // AdSense の自動広告は noindex のページには入れない（低価値ページへの広告配信を避ける）。
 const showAdsenseScript = !noindex;
+
+/**
+ * 記事内広告（InArticleAd）を本文に差し込む。対象は /guides/<slug>/ と /plants/<slug>/
+ * （一覧の index は含まない）。noindex のページには出さない。
+ * 位置: 本文の2つ目の h2 の直前と、最後の h2 の直前。冒頭（リード文・目次）には置かない。
+ * `data-no-ad` を付けた h2（「ほかのガイド記事」）は数えない。本文の h2 が3つ未満なら出さない
+ * （広告どうしが詰まるため）。
+ */
+const showInArticleAds =
+  ADSENSE_IN_ARTICLE_ENABLED &&
+  showAdsenseScript &&
+  /^\/(guides|plants)\/[^/]+\/?$/.test(Astro.url.pathname);
+
+let mainChunks: string[] | null = null;
+if (showInArticleAds) {
+  const html = await Astro.slots.render('default');
+  const h2Starts = [...html.matchAll(/<h2\b(?![^>]*data-no-ad)/g)].map((m) => m.index as number);
+  if (h2Starts.length >= 3) {
+    const cuts = [h2Starts[1], h2Starts[h2Starts.length - 1]];
+    mainChunks = [html.slice(0, cuts[0]), html.slice(cuts[0], cuts[1]), html.slice(cuts[1])];
+  }
+  console.log(`[in-article-ad] ${Astro.url.pathname} h2=${h2Starts.length} placed=${mainChunks ? 2 : 0}`);
+}
 
 // Amazonアソシエイトの開示文言は、審査通過前（＝タグがプレースホルダのまま）は
 // 事実と異なる（まだ収入を得ていない）ため出さない。タグ差し替え後に自動で表示される。
@@ -177,7 +202,17 @@ const currentPath = Astro.url.pathname;
     )}
 
     <main id="main">
-      <slot />
+      {mainChunks ? (
+        <>
+          <Fragment set:html={mainChunks[0]} />
+          <InArticleAd />
+          <Fragment set:html={mainChunks[1]} />
+          <InArticleAd />
+          <Fragment set:html={mainChunks[2]} />
+        </>
+      ) : (
+        <slot />
+      )}
 
       {ADMAX_ENABLED && (
         <div class="ad-slot" aria-label="広告">
