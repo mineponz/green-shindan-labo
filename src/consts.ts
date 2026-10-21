@@ -48,7 +48,7 @@ export const GA_MEASUREMENT_ID = 'G-BK3NZZ8ZEE';
 /**
  * Google AdSense のパブリッシャーID（`ca-pub-…`）。自動広告スクリプト（BaseLayout の head）で使う。
  * !!! `public/ads.txt` の販売者行（`pub-` の後ろの数字）と必ず同じ値にすること。食い違うと広告が配信されない !!!
- * 枠の位置はAdSense側の管理画面（自動広告）で決まるので、ページ側に広告ユニットは置かない。
+ * 自動広告の枠の位置はAdSense側の管理画面で決まる。記事本文の手動枠（記事内広告）は ADSENSE_IN_ARTICLE_* を参照。
  * 2026-10-13 導入（ルートドメイン mineponz.com の審査通過・本人の決定「まず自動広告だけ」）。
  */
 export const ADSENSE_CLIENT_ID = 'ca-pub-7478797109606594';
