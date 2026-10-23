@@ -1,0 +1,192 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import TableScroll from '../../components/TableScroll.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('christmas-plants')!;
+
+/**
+ * 早見表の「クリスマスの飾り方」。植物の slug → 一言。
+ * 新しい事実は含めない。筆者のアイデア（私見）だけ。
+ * ここに無い slug（将来種が増えたとき）は FALLBACK_NOTE で表示する。
+ * 植物名・リンク・並び順・種数は plants.ts から描き、手書きしない。
+ */
+const XMAS_NOTES: Record<string, string> = {
+  pachira: '幹がしっかりしているので、軽いオーナメントを少しなら。足元に赤い鉢カバーを合わせるのも素敵です',
+  monstera: '大きな葉そのものが主役です。足元にキャンドル風のLEDやオーナメントを置くくらいで十分だと思います',
+  sansevieria: 'まっすぐな葉はツリーには向かないので、鉢カバーを替えるのがいちばん手軽です',
+  pothos: '垂れるつるに、軽いガーランドを添える程度に。葉が多いので、重いものは避けてあげてください',
+  gajumaru: '太い幹がかわいいので、小さな飾りをひとつだけ付けるのがいいなと思います',
+  'areca-palm': '細い葉が多いので、直接飾るより鉢まわりで楽しみたいです',
+  peperomia: '小さな鉢なので、ポインセチアやシクラメンと並べて寄せて飾ると華やぎます',
+  tillandsia: '土がいらないので、オーナメントのように吊るしたり、リースに添えたりできます',
+};
+const FALLBACK_NOTE = '植物に直接付けず、鉢まわりで飾ります';
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-christmas-plants.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>クリスマスの鉢植えは、いつもの観葉植物と少し勝手が違う</h2>
+  <p>
+    このサイトで育て方を紹介している観葉植物は、おもに葉っぱを楽しむ鉢です。
+    いっぽう、ポインセチアやシクラメンは花を楽しむ鉢植えなので、温度や水の扱いが少し変わってきます。
+    ここでは、ホームセンターのコメリが出している育て方のページをもとに、基本のところをまとめました。
+  </p>
+  <p>
+    たとえばポインセチアは、赤く見える部分が「苞（ほう）」で、真ん中にある小さな部分が花だそうです。
+    日照時間が短くなると花芽をつける「短日植物」でもあります
+    （<a href="https://www.komeri.com/contents/howto/html/00840.html" target="_blank" rel="noopener noreferrer">コメリ「ポインセチア」</a>）。
+    赤い色に目がいきがちですが、そう思って眺めると、同じ鉢でも少し違って見えてくる気がします。
+  </p>
+
+  <h2>ポインセチア：明るい窓辺に、暖房の風は避けて</h2>
+  <p>
+    お店で選ぶときの目安は、苞の色が鮮明なこと、下の葉がしっかりしていること、
+    中心の花が2〜3個開いていること、の3つだそうです。
+    置き場所は窓辺など、日光がよく当たる明るい場所。
+    苞が赤くなったものは、最低でも7〜8℃以上のところに置くよう書かれています。
+    ストーブの熱や暖房機の風が直接当たる場所は避けます。
+    水やりは、土の表面が乾いてから。気温が低いときは、乾かし気味に育てるとのことです
+    （出典：<a href="https://www.komeri.com/contents/howto/html/00840.html" target="_blank" rel="noopener noreferrer">コメリ「ポインセチア」</a>）。
+  </p>
+  <p>
+    ここからは出典にあることではなく、私の考えです。
+    窓ぎわは夜になるとぐっと冷えるので、夜だけ部屋の内側へ移してあげたいなと思います。
+    考え方は<a href="/guides/temperature-swings/">寒暖差が激しい時期の守り方</a>にまとめています。
+    それから、買って帰る道のりでは冷たい風に当てたくないので、私なら袋をかけてもらいます。
+    土が乾いたかどうかの見方は、<a href="/guides/watering/">観葉植物の水やりの頻度と量</a>と同じです。
+  </p>
+
+  <h2>シクラメン：暖かい部屋が好きな観葉植物とは逆の「涼しめ」</h2>
+  <p>
+    シクラメンは、日中は12〜18度、夜は5度以下にならないくらいが目安とされています。
+    暖房器具の近くや、床暖房への直置きは避けます。
+    窓ぎわは夜に冷えるので、夜だけ部屋の中央や、厚手のカーテンの内側へ移してあげるとよいそうです。
+    暖房のきいた部屋でしおれてしまったら、涼しい窓際へ置くよう書かれています。
+  </p>
+  <p>
+    水やりでは花や葉の上から水をかけないようにします。
+    球根や葉に水がかかると、灰色カビ病になるおそれがあるからです。
+    底面給水の鉢なら、水が減ったら5〜8分目まで足します。
+    花がらは付け根をつまんで軽くねじって抜き、ハサミは使わないそうです
+    （出典：<a href="https://www.komeri.com/contents/howto/html/00850.html" target="_blank" rel="noopener noreferrer">コメリ「シクラメン」</a>）。
+  </p>
+  <p>
+    暖かい部屋が好きな観葉植物とは逆で、シクラメンは涼しめの場所が向いているんですね。
+    そこが面白いところだなと、私は思っています。
+    置き場所の温度は温湿度計で測ってみると決めやすいです。
+  </p>
+  <AmazonLink keyword="温湿度計 デジタル" label="Amazonで「温湿度計」を見る" />
+
+  <h2>シャコバサボテン（クリスマスカクタス）も：動かさないのがいちばん</h2>
+  <p>
+    シャコバサボテンは、育てられた場所や環境が大きく変わると敏感に反応して、つぼみが落ちることがあります。
+    なので、置き場所を頻繁に変えないことが大切だそうです。
+    5℃以下になると花芽が落ちるともされていて、冬は室内の15〜20℃の明るい場所が向いています。
+    水やりは、花の後と冬、真夏は控えめにします
+    （出典：<a href="https://www.komeri.com/contents/howto/html/00860.html" target="_blank" rel="noopener noreferrer">コメリ「シャコバサボテン」</a>）。
+  </p>
+  <p>
+    「あちこち動かさない」という考え方は、<a href="/guides/temperature-swings/">寒暖差が激しい時期の守り方</a>で書いたことと通じるなと、私は思っています。
+    せっかくの花を楽しむなら、置き場所を決めたらそっとしておきたいですね。
+  </p>
+
+  <h2>いつもの観葉植物をクリスマスらしく飾るなら</h2>
+  <p>
+    ツリーのようにオーナメントをたくさん付けたくなる気持ち、とてもよく分かります。
+    ただ、これは私の考えですが、植物に直接たくさん付けるより、鉢カバーや足元、まわりに置くほうが、植物への負担は少なくてすむと思います。
+    枝や葉に付けるなら、軽いものを少しだけにしておくと安心です。
+  </p>
+  <p>
+    部屋全体の飾り方は<a href="/guides/display-ideas/">観葉植物の飾り方ガイド</a>に、
+    種類ごとの飾り方は<a href="/guides/display-by-plant/">種類別の飾り方ガイド</a>にまとめています。
+  </p>
+  <AmazonLink keyword="鉢カバー 赤" label="Amazonで「赤い鉢カバー」を見る" />
+
+  <h2>{PLANTS.length}種でみる、クリスマスの飾り方</h2>
+  <p>
+    このサイトで診断に使っている{PLANTS.length}種について、飾り方のアイデアをまとめました。
+    出典のある話ではなく、私ならこうしたい、という提案です。
+  </p>
+  <TableScroll label={`${PLANTS.length}種のクリスマスの飾り方の早見表`}>
+    <table class="xmas-table">
+      <thead>
+        <tr>
+          <th scope="col">植物</th>
+          <th scope="col">飾り方のアイデア</th>
+        </tr>
+      </thead>
+      <tbody>
+        {PLANTS.map((plant) => (
+          <tr>
+            <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+            <td>{XMAS_NOTES[plant.slug] ?? FALLBACK_NOTE}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </TableScroll>
+
+  <h2>クリスマスのあとと、贈るとき</h2>
+  <p>
+    クリスマスが過ぎても、ポインセチアとシクラメンは、冬のあいだ同じ置き場所と水やりで楽しめます。
+    片づけてしまわずに、そのまま眺めていてあげてください。
+  </p>
+  <p>
+    誰かに贈るなら、ポインセチアもシクラメンも寒さと暖房の両方に気をつけたい鉢です。
+    相手のお部屋の温度や日当たりを思い浮かべながら選ぶのがいいと、私は思います。
+    それから、新築祝いでは赤い花や赤いものを「火を連想させる」として避ける慣習が広く紹介されています。
+    ポインセチアの赤もそこに入るので、新築祝いにするなら少し気にしておくと安心です。
+    選び方は<a href="/guides/gift-plants/">贈り物にする観葉植物の選び方</a>にまとめています。
+  </p>
+
+  <h2>迷ったら診断で</h2>
+  <p>
+    クリスマスの鉢のあとに、ずっとそばに置ける観葉植物を迎えたくなったら、
+    <a href="/#diagnosis">4つの質問の診断</a>で、お部屋の日当たりとお世話の手間から
+    合う種類を出してみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 早見表。ほかのガイドの比較表と見た目をそろえている。
+   * 和文セルに white-space: nowrap は付けない（SP幅でページごとはみ出す）。
+   */
+  .xmas-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .xmas-table th,
+  .xmas-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .xmas-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .xmas-table tbody th {
+    font-weight: 600;
+  }
+</style>

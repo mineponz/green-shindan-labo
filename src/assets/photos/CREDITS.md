@@ -221,3 +221,6 @@
   - `leaf-cleaning.jpg`: 片手で濃い緑の葉を支え、もう一方の手で布を当てて拭く手元（顔は写らない・1600×1067）。撮影者: Gustavo Fring（Pexels）。ページ: https://www.pexels.com/photo/cleaning-leaves-in-close-up-5635497/
 - 2026-10-19: ガイド記事33本目用に1枚追加（新規調達・Pexels License・取得日2026-10-19、`?auto=compress&cs=tinysrgb&w=1600`で取得）。種名は断定しない。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
   - `temperature-swings.jpg`: 窓ぎわの窓台に並ぶ数鉢の観葉植物と、手前のソファの肘掛けに掛けたカラフルな編みのひざ掛け・編みクッション、左に背の高い鉢植えとカーテン（顔は写らない）。**構図を切り出している**（原本1600×2397の縦長を`sips -c 1200 1600 --cropOffset 880 0`で4:3=1600×1200に）。撮影者: Ksenia Chernaya（Pexels）。ページ: https://www.pexels.com/photo/cozy-corner-in-room-by-window-5806983/
+- 2026-10-23: ガイド記事34〜35本目用に2枚追加（いずれも新規調達・Pexels License・取得日2026-10-23、`?auto=compress&cs=tinysrgb&w=1600`で取得、検索は`r.jina.ai`経由）。種名は断定しない。植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている。
+  - `winter-humidity.jpg`: 壁ぎわの棚・丸椅子に大きな葉の観葉植物が多数並び、足元に白い加湿器が2台ある室内（顔は写らない）。**構図を切り出している**（原本1600×1215を`sips -c 1200 1600 --cropOffset 0 0`で4:3=1600×1200に）。撮影者: Huy Phan（Pexels）。ページ: https://www.pexels.com/photo/potted-plants-inside-a-house-7907407/
+  - `christmas-plants.jpg`: 室内のラウンジ、丸いサイドテーブルに赤いポインセチアと針葉樹の寄せ植え鉢、左右にアームチェア（顔は写らない）。**構図を切り出している**（原本1600×2133の縦長を`sips -c 1200 1600 --cropOffset 450 0`で4:3=1600×1200に）。撮影者: Rafael Rodrigues（Pexels）。ページ: https://www.pexels.com/photo/elegant-modern-lounge-area-with-poinsettias-35304952/

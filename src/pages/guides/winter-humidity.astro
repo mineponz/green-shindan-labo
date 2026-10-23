@@ -1,0 +1,236 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import TableScroll from '../../components/TableScroll.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('winter-humidity')!;
+
+/**
+ * 早見表の「乾燥への強さと冬の気をつけどころ」。植物の slug → 一言。
+ * 内容は既存の植物ページ・ガイド（pest-control・watering）の記述の範囲だけ。新しい数値は書かない。
+ * ここに無い slug（将来種が増えたとき）は FALLBACK_NOTE で表示する。
+ * 植物名・リンク・並び順・種数は plants.ts から描き、手書きしない。
+ */
+const DRY_NOTES: Record<string, string> = {
+  pachira: '幹に水をためるので、乾燥には強いほうです。ただ、乾燥するとハダニがつきやすくなります',
+  monstera: '乾燥した室内ではハダニが出ます。葉の裏をときどき見てあげてください',
+  sansevieria: '乾燥にとても強い種類です。冬は水やりもほとんど要らないので、加湿のことはあまり気にしなくて大丈夫です',
+  pothos: '乾燥した室内ではハダニが出ます。葉水と、葉の裏の拭き取りで予防します',
+  gajumaru: '乾燥するとハダニが出ることがあります',
+  'areca-palm': '土は少し乾かし気味でいいのですが、空気の乾燥には弱く、ハダニもつきやすい種類です。8種のなかでいちばん気にかけたいです',
+  peperomia: '厚い葉に水をためるので、乾燥には強めです',
+  tillandsia: '「乾燥に強いから水はいらない」は誤解です。霧吹きやソーキングのやり方は水やりの記事を見てください',
+};
+const FALLBACK_NOTE = '暖房の風を避けて、葉の裏をときどき見てあげてください';
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-winter-humidity.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>冬の部屋は、どうしてこんなに乾くの？</h2>
+  <p>
+    空気がふくめられる水蒸気の量は、温度が高いほど増えます。
+    Panasonicの解説では「飽和水蒸気量は空気の温度が高いほど増えていくもの」と説明されています。
+    つまり、暖房で部屋の温度を上げると、同じ水分の量でも湿度としては下がってしまうんですね。
+    冬の部屋が乾くのは、暖房をつけている以上、ある意味で自然なことなのだと思います。
+    出典：<a href="https://panasonic.jp/life/air/170095.html" target="_blank" rel="noopener noreferrer">Panasonic UP LIFE「冬、室内の湿度を上げる方法は？」</a>
+  </p>
+  <p>
+    はじめに整理しておくと、葉水は「葉のまわり」への手当てで、この記事で書くのは「部屋の空気」そのものの話です。
+    葉水のやり方や頻度は<a href="/guides/watering/">観葉植物の水やりの頻度と量</a>に、
+    暖房の風との付き合い方は<a href="/guides/seasonal-care/">観葉植物の夏越し・冬越しガイド</a>にまとめています。
+    乾燥のせいで葉先が茶色くなったときは<a href="/guides/leaf-problems/">葉の症状から原因を見分ける</a>、
+    ハダニが心配なときは<a href="/guides/pest-control/">観葉植物の虫対策ガイド</a>を見てみてください。
+  </p>
+
+  <h2>まずは湿度計で「いまの数字」を知る</h2>
+  <p>
+    湿度は目に見えないので、まずは数字で知るのがいちばんだと私は思っています。
+    目安は、<a href="/guides/airflow/">風通しのつくり方</a>でも紹介した三菱電機 霧ヶ峰PR事務局の
+    室内の湿度は50〜60%が理想、という説明にそろえました。
+    先ほどのPanasonicの解説では、人にとって快適で、カビやダニのリスクが抑えられる湿度は「40〜60％と言われています」とあります。
+    上限のほうは、板橋区が「室内の湿度を60％以下に保つことが有効です」と書いています（カビを増やさないための説明です）。
+    出典：<a href="https://www.city.itabashi.tokyo.jp/kenko/eisei/sumai/kuuki/1003862.html" target="_blank" rel="noopener noreferrer">板橋区「室内の空気環境 カビを増やさないために」</a>
+  </p>
+  <p>
+    これらを並べてみて、私なら「50%前後を目指して、60%を超えないくらい」を目安にします。
+    これは出典の数字そのものではなく、私の見立てです。
+    湿度計を置くなら、私は人の居場所より植物の近く、できれば葉の高さにしたいです。
+    部屋の中央と窓ぎわでは数字が違うこともあるので、測り方は
+    <a href="/guides/temperature-swings/">寒暖差が激しい時期の守り方</a>の温湿度計の話も参考にしてみてください。
+  </p>
+  <AmazonLink keyword="温湿度計 デジタル" label="Amazonで「温湿度計」を見る" />
+
+  <h2>加湿器を使うなら</h2>
+  <p>
+    いちばん手っ取り早いのはやはり加湿器だと思います。
+    Panasonicの「加湿器の選び方」には、4つの方式のメリットとデメリットが載っています。
+    そこから、植物のある部屋で気になりそうなところを抜き出しました。
+    出典：<a href="https://panasonic.jp/kashitsu/select.html" target="_blank" rel="noopener noreferrer">Panasonic「加湿器の選び方」</a>
+  </p>
+  <TableScroll label="加湿器4方式のよいところと気になるところ">
+    <table class="humid-table">
+      <thead>
+        <tr>
+          <th scope="col">方式</th>
+          <th scope="col">よいところ</th>
+          <th scope="col">気になるところ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">超音波式</th>
+          <td>ヒーターを使わないため、電気代が安い</td>
+          <td>まわりの家具などを濡らしたり、カルキの白い跡がつく</td>
+        </tr>
+        <tr>
+          <th scope="row">気化式</th>
+          <td>電気代が安い</td>
+          <td>大量の風で加湿するため、運転音・本体が大きい</td>
+        </tr>
+        <tr>
+          <th scope="row">ハイブリッド式</th>
+          <td>多くの水分を蒸発（気化）させることが可能</td>
+          <td>電気代がかかる</td>
+        </tr>
+        <tr>
+          <th scope="row">スチーム式</th>
+          <td>雑菌の放出を抑えられる</td>
+          <td>電気代がとてもかかる</td>
+        </tr>
+      </tbody>
+    </table>
+  </TableScroll>
+  <p>
+    超音波式の「カルキの白い跡」は家具の話として書かれていますが、葉や鉢に跡がつくのも避けたいなあ、と私は思います。
+    なので、私なら加湿器は植物のすぐそばには置かず、少し離して部屋全体を潤すつもりで使います。
+    ミストを葉に直接当ててよいかどうかは、はっきり書かれた資料を見つけられませんでした。
+    なので私は、直接は当てない置き方にしておきたいと思っています。
+  </p>
+  <p>
+    もうひとつ、窓から離して置くことも大切です。
+    Panasonicの解説では、結露がカーテンを濡らしてカビの原因になることがあるため、加湿器は窓から離すよう勧められています。
+    どの方式を選ぶかはお部屋の広さや音の気になり方、電気代との相談になりそうです。
+  </p>
+  <AmazonLink keyword="加湿器 卓上 気化式" label="Amazonで「卓上の加湿器」を見る" />
+
+  <h2>加湿器がなくてもできること</h2>
+  <p>
+    Panasonicの解説には洗濯物を部屋干しする、濡らしたタオルを干す、といった方法も挙がっています。
+    手軽でいいなと思うのですが、板橋区はカビ対策として「室内に洗濯物を干さない」ことを勧めていて、
+    ちょうど反対の立場です。
+    なので、湿度計を見ながら試して、上がりすぎたらやめる、という付き合い方がよさそうです。
+  </p>
+  <p>
+    鉢をまとめて置くのもよく聞く方法です。
+    Iowa State University Extensionは「Grouping plants together is an easy way to raise the humidity level」、
+    つまり植物をまとめて置くことは湿度を上げる手軽な方法だと説明しています。
+    一方、Penn State Extensionは、まとめ置きを多くの出所が有益とする方法としつつ、
+    効果は鉢の数と部屋の広さ次第だとしています。
+    鉢が少なくて部屋が広いと、あまり変わらないかもしれません。
+  </p>
+  <p>
+    小石を敷いた受け皿に水をためる方法は、意見が分かれています。
+    Iowa Stateは受け皿に砂利を敷く方法を紹介していて、鉢底は水面より上にすることとしています。
+    でもPenn Stateは、濡れた小石の受け皿は水蒸気が「部屋全体に拡散し、相対湿度にはほとんど影響しない」と書いています。
+    私は、これはおまけくらいに考えておくのがちょうどいいと思っています。
+    鉢底が水に浸かると根腐れが心配なので、やるなら水面より上、という点は守りたいです
+    （くわしくは<a href="/guides/root-rot/">観葉植物の根腐れガイド</a>）。
+    出典：<a href="https://yardandgarden.extension.iastate.edu/faq/how-can-i-raise-relative-humidity-indoors-my-houseplants" target="_blank" rel="noopener noreferrer">Iowa State University Extension</a>、
+    <a href="https://extension.psu.edu/humidity-and-houseplants" target="_blank" rel="noopener noreferrer">Penn State Extension「Humidity and Houseplants」</a>
+  </p>
+
+  <h2>上げすぎにも気をつけたい</h2>
+  <p>
+    乾燥が心配になると、ついたくさん加湿したくなります。でも、上げすぎにも注意が必要です。
+    先ほどのとおり、結露がカーテンを濡らしてカビにつながることがありますし、
+    板橋区の資料も湿度を60％以下に保つことを勧めています。
+    加湿器を窓から離して置くのは、そのためでもあります。
+  </p>
+  <p>
+    窓ぎわの鉢は夜の冷え込みも気になります。
+    夜だけ少し内側へ動かしてあげる考え方は、
+    <a href="/guides/temperature-swings/">寒暖差が激しい時期の守り方</a>や
+    <a href="/guides/seasonal-care/">観葉植物の夏越し・冬越しガイド</a>にまとめています。
+    湿気をこもらせないように、換気と風通しも合わせて考えてみてください。
+    風の通し方は<a href="/guides/airflow/">風通しのつくり方</a>に書いています。
+  </p>
+  <p>
+    春になって暖房を止めると、湿度は自然と戻ってきます。
+    加湿もそれに合わせて、少しずつ控えていって大丈夫です。
+    湿度計を置いておけば、その変わり目にも気づけると思います。
+  </p>
+
+  <h2>{PLANTS.length}種でみる、乾燥への強さと冬の気をつけどころ</h2>
+  <p>
+    このサイトで診断に使っている{PLANTS.length}種について、乾燥への強さと冬の気をつけどころをまとめました。
+    「土の乾き」と「空気の乾き」は別の話なので、そこは分けて読んでみてください。
+  </p>
+  <TableScroll label={`${PLANTS.length}種の乾燥への強さと冬の気をつけどころの早見表`}>
+    <table class="humid-table">
+      <thead>
+        <tr>
+          <th scope="col">植物</th>
+          <th scope="col">気をつけたいこと</th>
+        </tr>
+      </thead>
+      <tbody>
+        {PLANTS.map((plant) => (
+          <tr>
+            <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+            <td>{DRY_NOTES[plant.slug] ?? FALLBACK_NOTE}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </TableScroll>
+
+  <h2>迷ったら診断で</h2>
+  <p>
+    冬の乾燥はお部屋の暖房の使い方で大きく変わります。
+    <a href="/#diagnosis">4つの質問の診断</a>ではお部屋の日当たりとお世話の手間から
+    合う種類を出せるので、次に迎える一鉢の参考にしてみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 比較表・早見表。ほかのガイドの表と見た目をそろえている。
+   * 和文セルに white-space: nowrap は付けない（SP幅でページごとはみ出す）。
+   */
+  .humid-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .humid-table th,
+  .humid-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .humid-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .humid-table tbody th {
+    font-weight: 600;
+  }
+</style>

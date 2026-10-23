@@ -52,6 +52,8 @@ import airflowPhoto from '../assets/photos/airflow.jpg';
 import windowDirectionPhoto from '../assets/photos/window-direction.jpg';
 import leafCleaningPhoto from '../assets/photos/leaf-cleaning.jpg';
 import temperatureSwingsPhoto from '../assets/photos/temperature-swings.jpg';
+import winterHumidityPhoto from '../assets/photos/winter-humidity.jpg';
+import christmasPlantsPhoto from '../assets/photos/christmas-plants.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -236,6 +238,7 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  *   加工なし。出典と詳細はCREDITS.mdに記載。種名は断定しない。
  *   植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている
  * - 寒暖差（2026-10-19追加）＝**新規調達した写真**（`temperature-swings.jpg`）。原本の縦長を4:3に切り出している。出典はCREDITS.md。種名は断定しない。
+ * - 冬の加湿・クリスマス（2026-10-23追加）＝**それぞれ新規調達した写真**（`winter-humidity.jpg` / `christmas-plants.jpg`）。いずれも原本を4:3に切り出している。出典はCREDITS.md。種名は断定しない。
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -343,6 +346,14 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'temperature-swings': {
     src: temperatureSwingsPhoto,
     alt: '明るい窓の窓台に数鉢の観葉植物が並び、手前のソファの肘掛けに編みのひざ掛けとクッションが置かれている室内',
+  },
+  'winter-humidity': {
+    src: winterHumidityPhoto,
+    alt: '壁ぎわの棚や丸椅子に大きな葉の観葉植物が多数が並び、足元に白い加湿器が2台置かれている室内',
+  },
+  'christmas-plants': {
+    src: christmasPlantsPhoto,
+    alt: '丸い小さなテーブルの上に、赤い苞のポインセチアと針葉樹を寄せ植えにした鉢が置かれ、両脇にアームチェアがある室内',
   },
 };
 
