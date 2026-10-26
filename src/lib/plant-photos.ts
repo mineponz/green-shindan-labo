@@ -54,6 +54,8 @@ import leafCleaningPhoto from '../assets/photos/leaf-cleaning.jpg';
 import temperatureSwingsPhoto from '../assets/photos/temperature-swings.jpg';
 import winterHumidityPhoto from '../assets/photos/winter-humidity.jpg';
 import christmasPlantsPhoto from '../assets/photos/christmas-plants.jpg';
+import straightGrowthPhoto from '../assets/photos/straight-growth.jpg';
+import starterToolsPhoto from '../assets/photos/starter-tools.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -239,6 +241,7 @@ export function findPlantPhoto(slug: string): Photo | undefined {
  *   植物の種の紹介写真ではないため、PLANT_PHOTOSには入れず`GUIDE_PHOTOS`だけで持っている
  * - 寒暖差（2026-10-19追加）＝**新規調達した写真**（`temperature-swings.jpg`）。原本の縦長を4:3に切り出している。出典はCREDITS.md。種名は断定しない。
  * - 冬の加湿・クリスマス（2026-10-23追加）＝**それぞれ新規調達した写真**（`winter-humidity.jpg` / `christmas-plants.jpg`）。いずれも原本を4:3に切り出している。出典はCREDITS.md。種名は断定しない。
+ * - まっすぐ育てる・最初にそろえる道具（2026-10-26追加）＝**それぞれ新規調達した写真**（`straight-growth.jpg` / `starter-tools.jpg`）。いずれも原本の縦長を4:3に切り出している。出典はCREDITS.md。種名は断定しない。
  * alt はどれも「写っているもの」の説明なので、記事が変わってもそのまま使える。
  */
 export const GUIDE_PHOTOS: Record<string, Photo> = {
@@ -354,6 +357,14 @@ export const GUIDE_PHOTOS: Record<string, Photo> = {
   'christmas-plants': {
     src: christmasPlantsPhoto,
     alt: '丸い小さなテーブルの上に、赤い苞のポインセチアと針葉樹を寄せ植えにした鉢が置かれ、両脇にアームチェアがある室内',
+  },
+  'straight-growth': {
+    src: straightGrowthPhoto,
+    alt: '白い壁の前の床に、細長い葉がまっすぐ上に伸びた小さな鉢植えが置かれている',
+  },
+  'starter-tools': {
+    src: starterToolsPhoto,
+    alt: '明るい白壁の前の木のベンチに、葉の大きな観葉植物の鉢と、小ぶりな真鍮色のジョウロが置かれている',
   },
 };
 

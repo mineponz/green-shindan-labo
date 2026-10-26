@@ -1,0 +1,247 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import TableScroll from '../../components/TableScroll.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('straight-growth')!;
+
+/**
+ * 早見表の「育ち方」と「目指したい形」。植物の slug → [育ち方, 目指したい形]。
+ * 内容は既存の植物ページ・ガイド（display-by-plant・pruning）の記述の範囲だけ。新しい数値は書かない。
+ * ここに無い slug（将来種が増えたとき）は FALLBACK で表示する。
+ * 植物名・リンク・並び順・種数は plants.ts から描き、手書きしない。
+ */
+const GROWTH: Record<string, { how: string; goal: string }> = {
+  sansevieria: {
+    how: '葉が縦にまっすぐ立ちます',
+    goal: 'いちばん「まっすぐ」が似合う種類です。傾いてきたら鉢を回します',
+  },
+  pachira: {
+    how: '幹が上に伸びる木です',
+    goal: '幹がまっすぐ立っていれば十分です。枝の片寄りは鉢を回して整えます',
+  },
+  gajumaru: {
+    how: '幹を見せる木です。日当たりが片寄ると、片側だけ枝が伸びやすくなります',
+    goal: '鉢を回して、伸びすぎた枝は切り戻しで整えます',
+  },
+  monstera: {
+    how: 'つる性です。支柱がないと、横に倒れ込むように広がります',
+    goal: '上に伸ばしたいなら支柱を使います。広がる姿を楽しむのもありです',
+  },
+  pothos: {
+    how: 'つる性で、垂らして飾るのが基本です',
+    goal: 'まっすぐでなくていい種類です。垂れる姿が魅力です',
+  },
+  'areca-palm': {
+    how: '葉が横に大きく広がります',
+    goal: '葉の広がりを生かします。片寄ったら鉢を回します',
+  },
+  peperomia: {
+    how: '小さくまとまります（垂れる品種もあります）',
+    goal: 'こんもりまとまっていれば十分です',
+  },
+  tillandsia: {
+    how: '土も鉢も使いません',
+    goal: '形を気にするより、吊るしたり置いたりして楽しみます',
+  },
+};
+const FALLBACK = {
+  how: '種類によって育ち方はさまざまです',
+  goal: '傾いてきたら鉢を回して、全体のバランスを見ます',
+};
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-straight-growth.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>「まっすぐじゃない」は、3つに分けて考えます</h2>
+  <p>
+    11月11日はポッキーの日。まっすぐな形を思い浮かべたら、つい自分の植物の姿勢も気になってしまいます。
+    せっかくなので、この機会に「まっすぐ育てる」ことを考えてみましょう。
+  </p>
+  <p>
+    ひとくちに「まっすぐ育たない」といっても、様子は3つに分かれます。
+  </p>
+  <ul>
+    <li><strong>窓のほうへ傾く</strong>：光の来るほうへ、株ぜんたいが寄っていく</li>
+    <li><strong>ひょろひょろ間のびして伸びる</strong>：茎や葉の間があいて、細く長くなる</li>
+    <li><strong>重さで倒れる・曲がる</strong>：伸びた枝や茎が自分の重さを支えきれない</li>
+  </ul>
+  <p>
+    原因がちがうので、直し方もちがいます。
+    どれに近いのかを見分けるだけでも、気持ちがずいぶん楽になると私は思っています。
+  </p>
+
+  <h2>窓のほうへ傾くとき：鉢を回します</h2>
+  <p>
+    植物には、光の来るほうへ伸びる性質があります（「光屈性」と呼ばれています）。
+    窓のそばに置いていると、窓側ばかりが伸びて、傾いてしまうんですね。
+    植物が傷んでいるわけではないので、見つけても慌てなくて大丈夫だと私は思っています。
+  </p>
+  <p>
+    対策は、ときどき鉢を回して光の当たる面を変えてあげることです。
+    <a href="/guides/display-by-plant/">種類別の飾り方ガイド</a>でも、
+    同じことをすすめています。
+    回す頻度に、これといった正解はないようです。
+    私なら、水やりのついでに少し回す、くらいの気楽さでいいと思っています。
+    一度に向きを大きく変えず、少しずつ回してあげるほうが、植物にもやさしそうです。
+  </p>
+  <p>
+    そもそも光が片側からしか来ない部屋なら、置き場所を見直すのも手です。
+    窓の向きごとの考え方は<a href="/guides/window-direction/">窓の向き別の置き場所</a>にまとめています。
+  </p>
+
+  <h2>ひょろひょろ伸びるとき：まず光を疑います</h2>
+  <p>
+    茎や葉の間がのびて、色が薄く、細く伸びてしまう状態を「徒長」といいます。
+    いちばんの原因は光不足です。
+    ひょろひょろしてきたら、まずは光が足りているかを見てあげてください。
+  </p>
+  <ul>
+    <li>
+      <strong>明るい場所へ移す：</strong>
+      ただし、いきなり直射日光に当てるのは避けたいです。慣らし方は<a href="/guides/sunbathing/">観葉植物の日光浴</a>にまとめています
+    </li>
+    <li>
+      <strong>部屋が暗いなら、育成ライトで補う：</strong>
+      選び方は<a href="/guides/grow-light/">植物育成ライトの選び方</a>を見てみてください
+    </li>
+    <li>
+      <strong>暗い部屋に合う種類を選ぶ：</strong>
+      <a href="/guides/low-light-plants/">日当たりが悪い部屋でも育つ観葉植物</a>にまとめています
+    </li>
+  </ul>
+  <p>
+    いちど伸びてしまった部分が、どこまで元に戻るのかは、期待しすぎないほうがいいかもしれません。
+    それよりも「これから伸びる部分を整えてあげよう」と考えるほうが、私は気楽でいいなと思います。
+  </p>
+
+  <h2>重さで倒れる・曲がるとき：支柱で支えます</h2>
+  <p>
+    つる性の<a href="/plants/monstera/">モンステラ</a>や<a href="/plants/pothos/">ポトス</a>は、
+    ヘゴ棒などの支柱に沿わせると、上に伸びていきます。
+    反対に、幹で立つパキラやガジュマル、葉が立つサンスベリアは、基本的に支柱がいらない種類です。
+  </p>
+  <p>
+    結ぶときは、ひもを八の字にして、茎とのあいだにすき間を残します。
+    きつく結ぶと茎に食い込みそうなので、柔らかいひもがいいと私は思います。
+    傾いてしまった株を一度に起こそうとせず、少しずつ起こしてあげるのがよさそうです。
+  </p>
+  <AmazonLink keyword="モンステラ 支柱 ヘゴ棒" label="Amazonで「観葉植物用の支柱・ヘゴ棒」を見る" />
+  <AmazonLink keyword="園芸 ビニールタイ 麻ひも" label="Amazonで「園芸用のビニールタイ・麻ひも」を見る" />
+  <ul>
+    <li>
+      <strong>秋冬なら：</strong>
+      鉢に支柱を深く挿すと、根に触れてしまうことがあります。
+      根をいじる大がかりな立て直しは避けて、いまある支柱に結び直すくらいにしておくのが安心だと私は思います
+    </li>
+    <li>
+      <strong>春以降なら：</strong>
+      生長期（おおよそ5〜9月）に入ってから、支柱を立て直すとよさそうです
+    </li>
+  </ul>
+
+  <h2>もう曲がってしまったら：無理に戻さず、仕立て直します</h2>
+  <p>
+    硬くなった幹や茎を、力でまっすぐに戻そうとするのはおすすめしません。
+    折れたり、傷んだりしてしまいそうだからです。
+    形を整えたいなら、私は切り戻して仕立て直すほうをおすすめします。
+    時期ややり方は<a href="/guides/pruning/">観葉植物の剪定・切り戻しのタイミングとやり方</a>にまとめています。
+    切った枝は挿し木にもできるので、捨てるのはちょっと待って
+    <a href="/guides/propagation/">観葉植物の増やし方ガイド</a>を見てみてください。
+  </p>
+  <ul>
+    <li>
+      <strong>秋冬なら：</strong>
+      いまは、鉢を回す・置き場所を明るくする、くらいにしておくのがいいと思います。
+      切るのは、生長期（おおよそ5〜9月）に入るまで待ちます。とくに真冬（12〜2月）は避けたいです
+    </li>
+    <li>
+      <strong>春以降なら：</strong>
+      生長期に入ってから切り戻します。切ったあとの株の様子を見ながら、少しずつ整えていきましょう
+    </li>
+  </ul>
+
+  <h2>{PLANTS.length}種でみる、それぞれの「まっすぐ」</h2>
+  <p>
+    このサイトで診断に使っている{PLANTS.length}種について、育ち方と、目指したい形をまとめました。
+    「まっすぐ」の正解は、種類によってずいぶんちがいます。
+  </p>
+  <TableScroll label={`${PLANTS.length}種の育ち方と目指したい形の早見表`}>
+    <table class="growth-table">
+      <thead>
+        <tr>
+          <th scope="col">植物</th>
+          <th scope="col">育ち方</th>
+          <th scope="col">目指したい形</th>
+        </tr>
+      </thead>
+      <tbody>
+        {PLANTS.map((plant) => {
+          const g = GROWTH[plant.slug] ?? FALLBACK;
+          return (
+            <tr>
+              <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+              <td>{g.how}</td>
+              <td>{g.goal}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </TableScroll>
+  <p>
+    ですから、全部をまっすぐにしなくていいと私は思っています。
+    ポトスのように垂れるのが魅力の種類もありますし、少し傾いた姿が愛らしく見えることもあります。
+    ポッキーの日には、まっすぐな植物も、のびのび広がる植物も、どちらも「いいね」と眺めてあげたいです。
+  </p>
+
+  <h2>迷ったら診断で</h2>
+  <p>
+    どんな形の植物が合うかは、お部屋によって答えが変わります。
+    <a href="/#diagnosis">4つの質問の診断</a>では、お部屋の日当たりとお世話の手間から
+    合う種類を出せるので、次に迎える一鉢の参考にしてみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 早見表。ほかのガイドの比較表と見た目をそろえている。
+   * 和文セルに white-space: nowrap は付けない（SP幅でページごとはみ出す）。
+   */
+  .growth-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .growth-table th,
+  .growth-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .growth-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .growth-table tbody th {
+    font-weight: 600;
+  }
+</style>
