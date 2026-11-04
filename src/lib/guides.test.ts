@@ -32,7 +32,7 @@ test('GUIDES に形式エラーがない（relatedPlants が実在する植物�
   assert.deepEqual(validateGuides(GUIDES, PLANT_SLUGS), []);
 });
 
-test('GUIDES は決定した37本を過不足なく持つ', () => {
+test('GUIDES は決定した38本を過不足なく持つ', () => {
   assert.deepEqual(
     GUIDES.map((g) => g.slug).sort(),
     [
@@ -47,6 +47,7 @@ test('GUIDES は決定した37本を過不足なく持つ', () => {
       'fertilizer',
       'gift-plants',
       'grow-light',
+      'hanging-plants',
       'hyakkin-plants',
       'hydroculture',
       'leaf-cleaning',
@@ -196,10 +197,10 @@ test('latestGuides: 同じpublishedDateは配列順（GUIDESの並び順）で�
   );
 });
 
-test('latestGuides: 実際のGUIDESで先頭3本を出すと straight-growth → starter-tools → winter-humidity になる（同日タイブレークの実例）', () => {
+test('latestGuides: 実際のGUIDESで新着3本を出すと hanging-plants → straight-growth → starter-tools になる（日付が異なる新着3本の並び）', () => {
   assert.deepEqual(
     latestGuides(3).map((g) => g.slug),
-    ['straight-growth', 'starter-tools', 'winter-humidity']
+    ['hanging-plants', 'straight-growth', 'starter-tools']
   );
 });
 

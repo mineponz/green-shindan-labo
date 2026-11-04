@@ -1,0 +1,296 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideArticleHeader from '../../components/GuideArticleHeader.astro';
+import RelatedGuides from '../../components/RelatedGuides.astro';
+import AmazonLink from '../../components/AmazonLink.astro';
+import BackToDiagnosis from '../../components/BackToDiagnosis.astro';
+import TableScroll from '../../components/TableScroll.astro';
+import { findGuide } from '../../lib/guides.ts';
+import { PLANTS } from '../../lib/plants.ts';
+
+const guide = findGuide('hanging-plants')!;
+
+/**
+ * 「このサイトの{PLANTS.length}種で吊るせるもの」表。植物の slug → [吊るすなら, ひとこと]。
+ * 内容は既存の植物ページ・display-by-plant の記述の範囲だけ。新しい数値は書かない。
+ * ここに無い slug（将来種が増えたとき）は FALLBACK で表示する。
+ * 植物名・リンク・並び順・種数は plants.ts から描き、手書きしない。
+ */
+const HANGING: Record<string, { fit: string; note: string }> = {
+  pothos: {
+    fit: '向いています',
+    note: 'つるを垂らすのが基本です。吊るすなら軽い鉢で',
+  },
+  tillandsia: {
+    fit: '向いています',
+    note: '土が要らないので、ワイヤーやひもで吊るせます。水やりのたびに外しやすいかも見ておきます',
+  },
+  peperomia: {
+    fit: '垂れて育つ品種なら',
+    note: 'こんもりまとまる品種は、棚やデスクのほうが似合います',
+  },
+  monstera: {
+    fit: '小型種なら',
+    note: 'アダンソニーのような小型種は、吊るして垂らすのもありです。大きく育つ種は床置きが向いています',
+  },
+  pachira: {
+    fit: '床や棚向きです',
+    note: '上や横に育つので、床や棚に置いたほうが形が生きます',
+  },
+  gajumaru: {
+    fit: '床や棚向きです',
+    note: '上や横に育つので、床や棚に置いたほうが形が生きます',
+  },
+  sansevieria: {
+    fit: '床や棚向きです',
+    note: '上や横に育つので、床や棚に置いたほうが形が生きます',
+  },
+  'areca-palm': {
+    fit: '床や棚向きです',
+    note: '上や横に育つので、床や棚に置いたほうが形が生きます',
+  },
+};
+const FALLBACK = {
+  fit: '育ち方しだいです',
+  note: '育ち方を見て、つるが垂れるなら吊るす候補に入れてみてください',
+};
+
+/** サイトの種類以外で吊るすのが定番の種類。事実確認（researcher報告・未検証）の範囲だけ。 */
+const OTHERS = [
+  {
+    name: 'グリーンネックレス',
+    look: '丸い粒のような葉が連なって垂れます',
+    care: '明るい間接光が向きます。直射日光は葉焼けに注意です。水はけのいい土を使います',
+  },
+  {
+    name: 'ハートカズラ',
+    look: 'ハート形の小さな葉が、細いつるに並びます',
+    care: '土が乾いてから水をやります。冬はさらに控えめにします',
+  },
+  {
+    name: 'ディスキディア',
+    look: '小さな丸い葉がつるに連なります',
+    care: '過湿にとても弱い種類です。直射日光は避けます',
+  },
+  {
+    name: 'ホヤ',
+    look: '厚みのある葉のつるが伸びます',
+    care: '一年中、明るい間接光が理想です。土が乾いてから水をやります。水が多すぎても少なすぎても葉が落ちます',
+  },
+  {
+    name: 'リプサリス',
+    look: '細い茎がたくさん垂れ下がります（サボテンの仲間です）',
+    care: '土が乾いたら水をやります。冬は控えめにします',
+  },
+  {
+    name: 'シュガーバイン',
+    look: '小さな葉のつるが、軽やかに伸びます',
+    care: '明るい場所から半日陰で育ちます。冬は水を控えます',
+  },
+  {
+    name: 'ヘデラ（アイビー）',
+    look: 'つるがよく伸びます',
+    care: '日なたから半日陰まで、幅広い明るさで育つと言われます',
+  },
+  {
+    name: 'ビカクシダ',
+    look: '鉢ではなく板に付けて、壁に掛けて飾ります',
+    care: '空気が乾くときは加湿します。過湿は根腐れのもとです',
+  },
+];
+---
+
+<BaseLayout
+  title={guide.navLabel}
+  description={guide.description}
+  breadcrumb={[{ label: 'ガイド記事', href: '/guides/' }]}
+  ogImagePath="/og/guide-hanging-plants.jpg"
+>
+  <GuideArticleHeader guide={guide} />
+
+  <h2>吊るすと「輝く」のは、垂れて育つ植物</h2>
+  <p>
+    つるが垂れたり、枝垂れたりして育つ植物は、棚に置くと垂れた部分が棚の上にのってしまいます。
+    吊るすと、その部分が下へ自由に流れていきます。同じ植物でも、見え方がずいぶん変わるんですね。
+  </p>
+  <p>
+    目線より上に緑が入ると、部屋の印象が変わると私は思っています。
+    下から見上げる形になるので、垂れた葉の一枚一枚がよく見えるのも、私が好きなところです。
+  </p>
+  <p>
+    どの種類を吊るすかの全体像は、<a href="/guides/display-by-plant/">種類別の飾り方ガイド</a>と
+    <a href="/guides/display-ideas/">観葉植物の飾り方ガイド</a>にまとめています。
+    この記事では吊るせる種類を整理したうえで、吊るす場所、鉢と金具、水やりの段取りを順に見ていきます。
+  </p>
+
+  <h2>このサイトの{PLANTS.length}種で吊るせるもの</h2>
+  <p>
+    診断に使っている{PLANTS.length}種について、吊るす飾り方が合うかどうかを表にしました。
+  </p>
+  <TableScroll label={`${PLANTS.length}種の吊るす飾り方の早見表`}>
+    <table class="hanging-table">
+      <thead>
+        <tr>
+          <th scope="col">植物</th>
+          <th scope="col">吊るすなら</th>
+          <th scope="col">ひとこと</th>
+        </tr>
+      </thead>
+      <tbody>
+        {PLANTS.map((plant) => {
+          const h = HANGING[plant.slug] ?? FALLBACK;
+          return (
+            <tr>
+              <th scope="row"><a href={`/plants/${plant.slug}/`}>{plant.name}</a></th>
+              <td>{h.fit}</td>
+              <td>{h.note}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </TableScroll>
+
+  <h2>{PLANTS.length}種以外で、吊るすのが定番の種類</h2>
+  <p>
+    このサイトの{PLANTS.length}種以外にも、吊るして飾るのが定番の種類があります。
+    育て方は種類ごとに少しずつ違うので、気をつけたいところもあわせて並べました。
+  </p>
+  <TableScroll label={`${PLANTS.length}種以外で吊るすのが定番の種類の早見表`}>
+    <table class="hanging-table">
+      <thead>
+        <tr>
+          <th scope="col">種類</th>
+          <th scope="col">吊るすと映えるところ</th>
+          <th scope="col">育てるときに気をつけたいこと</th>
+        </tr>
+      </thead>
+      <tbody>
+        {OTHERS.map((o) => (
+          <tr>
+            <th scope="row">{o.name}</th>
+            <td>{o.look}</td>
+            <td>{o.care}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </TableScroll>
+  <p>
+    明るい間接光が好きな種類が多いので、吊るす場所は窓の近くの明るいところから考えると、
+    私は迷いにくいと思います。
+  </p>
+
+  <h2>どこに吊るすか：明るさ・冷え・風</h2>
+  <p>
+    先ほどの表のとおり、明るい間接光が向く種類が多いです。
+    窓の向きごとの考え方は<a href="/guides/window-direction/">窓の向き別の置き場所</a>にまとめています。
+  </p>
+  <p>
+    部屋の上のほうは、下より暖かく乾きやすいと言われます。
+    床置きの感覚のままだと水切れに気づきにくいので、乾き具合を見る回数を少し増やしたいところです。
+  </p>
+  <p>
+    冬は、窓ぎわが冷えやすくなります。窓ガラスに葉が触れない位置に吊るしてあげてください。
+    暖房の吹き出し口や、冷たいすき間風が来る場所からも離します。
+    冬の過ごし方は<a href="/guides/seasonal-care/">観葉植物の夏越し・冬越しガイド</a>、
+    風の通し方は<a href="/guides/airflow/">風通しのつくり方</a>が参考になります。
+  </p>
+  <p>
+    エアコンの風が直接当たる位置は、私なら避けます。
+    風が当たり続けると葉が乾きやすいと言われることもあるので、念のため、という気持ちです。
+  </p>
+
+  <h2>鉢と金具は、水をやったあとの重さで考える</h2>
+  <p>
+    吊るすなら、軽い鉢が向いています。
+    プラスチックの鉢に鉢カバーを重ねる形が扱いやすいと思います。
+    鉢選びは<a href="/guides/pot-guide/">おしゃれな鉢・プランターの選び方</a>にまとめています。
+  </p>
+  <p>
+    鉢は水を含むと重くなります。
+    金具は乾いているときの重さではなく、水やり後の重さを基準に選びたいです。
+    製品の耐荷重の表示を、買う前に確かめてください。
+  </p>
+  <ul>
+    <li>
+      天井に吊るすなら、下地（梁など）のある場所に固定するのがいちばん強いです。
+      石膏ボードだけの場所は専用の留め具が必要で、それでも強度は落ちます
+    </li>
+    <li>
+      賃貸で穴を開けたくないなら、突っ張り棒やポールを使う方法があります。ただし、軽い鉢に限ります
+    </li>
+    <li>
+      落下すると鉢も株も傷みます。取り付けたあとは、たまに揺らして緩んでいないかを確かめる習慣をつけておくと安心です
+    </li>
+  </ul>
+  <AmazonLink keyword="ハンギングプランター 観葉植物 吊り下げ" label="Amazonで「ハンギングプランター」を見る" />
+  <AmazonLink keyword="突っ張り棒 ハンギング 植物" label="Amazonで「ハンギング用の突っ張り棒」を見る" />
+
+  <h2>水やりと水だれの段取り</h2>
+  <p>
+    吊るしたまま上から水をやると、水が鉢底から流れ出て床が濡れやすくなります。
+    私なら、いったん下ろして、シンクやお風呂場で鉢底から流れ出るまで水をやります。
+    水がしっかり切れてから、元の場所に戻します。
+  </p>
+  <p>
+    受け皿付きの吊り鉢や鉢カバーを使っているときは、中にたまった水を捨ててください。
+    高い位置の鉢は目に入りにくく、水やりを忘れやすいです。
+    目につく高さに吊るしておくと、世話を後回しにしにくくなります。
+  </p>
+  <p>
+    冬は土の乾きが遅くなるので、水やりの回数は控えめにします。
+    頻度と量は<a href="/guides/watering/">観葉植物の水やりの頻度と量</a>を見てみてください。
+  </p>
+  <p>
+    いまの鉢から吊り鉢へ植え替えたいときは、時期で分かれます。
+  </p>
+  <ul>
+    <li>
+      秋冬なら、植え替えはせず、いまの鉢のまま鉢カバーごと吊るすのが安心だと私は思います
+    </li>
+    <li>
+      春以降なら、生長期（おおよそ5〜9月）に入ってから植え替えます。やり方は
+      <a href="/guides/repotting/">観葉植物の植え替えのタイミングとやり方</a>にまとめています
+    </li>
+  </ul>
+
+  <h2>迷ったら診断で</h2>
+  <p>
+    吊るすのが合うかどうかは、お部屋の明るさやお世話にかけられる手間でも変わります。
+    <a href="/#diagnosis">4つの質問の診断</a>ではお部屋の日当たりとお世話の手間から
+    合う種類を出せるので、次に迎える一鉢の参考にしてみてください。
+  </p>
+
+  <RelatedGuides currentSlug={guide.slug} />
+
+  <BackToDiagnosis />
+</BaseLayout>
+
+<style>
+  /*
+   * 早見表。ほかのガイドの比較表と見た目をそろえている。
+   * 和文セルに white-space: nowrap は付けない（SP幅でページごとはみ出す）。
+   */
+  .hanging-table {
+    width: 100%;
+    margin-bottom: var(--space-2);
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    text-align: left;
+  }
+  .hanging-table th,
+  .hanging-table td {
+    padding: var(--space-1);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .hanging-table thead th {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .hanging-table tbody th {
+    font-weight: 600;
+  }
+</style>
